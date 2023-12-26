@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerPreset
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: d4df1703afc2f3b4ca5c736348c2dc2c, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: PlayerLayer.m_Bits
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: SnapInput
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: VerticalDeadZoneThreshold
+    value: 0.3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: HorizontalDeadZoneThreshold
+    value: 0.1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: MaxSpeed
+    value: 60
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: Acceleration
+    value: 120
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: GroundDeceleration
+    value: 400
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: AirDeceleration
+    value: 600
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: GroundingForce
+    value: -1.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: GrounderDistance
+    value: 2.7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: JumpPower
+    value: 120
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: MaxFallSpeed
+    value: 90
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: FallAcceleration
+    value: 200
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: JumpEndEarlyGravityModifier
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: CoyoteTime
+    value: 0.15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: JumpBuffer
+    value: 0.2
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []

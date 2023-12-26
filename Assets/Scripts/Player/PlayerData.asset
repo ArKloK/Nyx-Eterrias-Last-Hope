@@ -12,42 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4df1703afc2f3b4ca5c736348c2dc2c, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  gravityStrength: -0.6
-  gravityScale: 0.06116208
-  fallGravityMult: 30
-  maxFallSpeed: 100
-  fastFallGravityMult: 10
-  maxFastFallSpeed: 20
-  runMaxSpeed: 40
-  runAcceleration: 4
-  runAccelAmount: 5
-  runDecceleration: 4
-  runDeccelAmount: 5
-  accelInAir: 0.572
-  deccelInAir: 1
-  doConserveMomentum: 1
-  jumpHeight: 30
-  jumpTimeToApex: 10
-  jumpForce: 6
-  jumpCutGravityMult: 5
-  jumpHangGravityMult: 1
-  jumpHangTimeThreshold: 1
-  jumpHangAccelerationMult: 6
-  jumpHangMaxSpeedMult: 6
-  wallJumpForce: {x: 1, y: 0.4}
-  wallJumpRunLerp: 0.3
-  wallJumpTime: 0
-  doTurnOnWallJump: 0
-  slideSpeed: 0
-  slideAccel: 0
-  coyoteTime: 0.01
-  jumpInputBufferTime: 0
-  dashAmount: 0
-  dashSpeed: 0
-  dashSleepTime: 0
-  dashAttackTime: 0
-  dashEndTime: 0
-  dashEndSpeed: {x: 0, y: 0}
-  dashEndRunLerp: 0
-  dashRefillTime: 0
-  dashInputBufferTime: 0
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  SnapInput: 0
+  VerticalDeadZoneThreshold: 0.3
+  HorizontalDeadZoneThreshold: 0.1
+  MaxSpeed: 40
+  Acceleration: 120
+  GroundDeceleration: 400
+  AirDeceleration: 30
+  GroundingForce: -1.5
+  GrounderDistance: 2.7
+  JumpPower: 60
+  MaxFallSpeed: 40
+  FallAcceleration: 110
+  JumpEndEarlyGravityModifier: 3
+  CoyoteTime: 0.15
+  JumpBuffer: 0.2
