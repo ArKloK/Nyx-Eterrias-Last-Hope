@@ -5,10 +5,12 @@ namespace TarodevController
     [CreateAssetMenu]
     public class ScriptableStats : ScriptableObject
     {
-        [Header("LAYERS")] [Tooltip("Set this to the layer your player is on")]
+        [Header("LAYERS")]
+        [Tooltip("Set this to the layer your player is on")]
         public LayerMask PlayerLayer;
 
-        [Header("INPUT")] [Tooltip("Makes all Input snap to an integer. Prevents gamepads from walking slowly. Recommended value is true to ensure gamepad/keybaord parity.")]
+        [Header("INPUT")]
+        [Tooltip("Makes all Input snap to an integer. Prevents gamepads from walking slowly. Recommended value is true to ensure gamepad/keybaord parity.")]
         public bool SnapInput = true;
 
         [Tooltip("Minimum input required before you mount a ladder or climb a ledge. Avoids unwanted climbing using controllers"), Range(0.01f, 0.99f)]
@@ -17,7 +19,8 @@ namespace TarodevController
         [Tooltip("Minimum input required before a left or right is recognized. Avoids drifting with sticky controllers"), Range(0.01f, 0.99f)]
         public float HorizontalDeadZoneThreshold = 0.1f;
 
-        [Header("MOVEMENT")] [Tooltip("The top horizontal movement speed")]
+        [Header("MOVEMENT")]
+        [Tooltip("The top horizontal movement speed")]
         public float MaxSpeed = 14;
 
         [Tooltip("The player's capacity to gain horizontal speed")]
@@ -35,7 +38,8 @@ namespace TarodevController
         [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 2.7f)]
         public float GrounderDistance = 2.7f;
 
-        [Header("JUMP")] [Tooltip("The immediate velocity applied when jumping")]
+        [Header("JUMP")]
+        [Tooltip("The immediate velocity applied when jumping")]
         public float JumpPower = 36;
 
         [Tooltip("The maximum vertical movement speed")]
@@ -52,5 +56,20 @@ namespace TarodevController
 
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
+
+        [Header("DOUBLE JUMP")]        
+        [Tooltip("The speed at which the player double jumps")]
+        public float DoubleJumpHeight = 4f;
+
+        // [Header("DASH")]
+        // [Tooltip("The speed at which the player dashes")]
+        // public float DashSpeed = 20;
+        // [Tooltip("The duration of the dash")]
+        // public float DashDuration = 0.2f;
+        // [Tooltip("The cooldown of the dash")]
+        // public float DashCooldown = 0.5f;
+        // [Tooltip("The gravity applied to the player while dashing")]
+        // public float DashGravity = 0.5f;
+
     }
 }

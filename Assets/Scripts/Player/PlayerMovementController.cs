@@ -15,7 +15,7 @@ namespace TarodevController
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
-        [SerializeField] private ScriptableStats _stats;
+        [SerializeField] private ScriptableStats _data;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -25,7 +25,13 @@ namespace TarodevController
         #region Checkers
 
         private bool _isFacingRight;
+        bool groundHit;
+        bool ceilingHit;
 
+        #endregion
+
+        #region Abilities unlocked
+        public bool doubleJumpUnlocked;
         #endregion
 
         #region Interface
@@ -57,22 +63,32 @@ namespace TarodevController
         {
             _frameInput = new FrameInput
             {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
-                JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
+                JumpDown = Input.GetButtonDown("Jump"),
+                JumpHeld = Input.GetButton("Jump"),
                 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
 
             };
 
-            if (_stats.SnapInput)
+            if (_data.SnapInput)
             {
-                _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < _stats.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
-                _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < _stats.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
+                _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < _data.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
+                _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < _data.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
             }
 
             if (_frameInput.JumpDown)
             {
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
+            }
+
+            if (_grounded) _doubleJumpUsed = false;
+
+            if (_frameInput.JumpDown && doubleJumpUnlocked)
+            {
+                if (!_grounded && !_doubleJumpUsed)
+                {
+                    _doubleJumpToConsume = true;
+                }
             }
         }
 
@@ -81,6 +97,7 @@ namespace TarodevController
             CheckCollisions();
 
             HandleJump();
+            HandleDoubleJump();
             HandleDirection();
             HandleGravity();
 
@@ -97,8 +114,8 @@ namespace TarodevController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            bool groundHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-            bool ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            groundHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.down, _data.GrounderDistance, ~_data.PlayerLayer);
+            ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.up, _data.GrounderDistance, ~_data.PlayerLayer);
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
@@ -134,8 +151,8 @@ namespace TarodevController
         private bool _coyoteUsable;
         private float _timeJumpWasPressed;
 
-        private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
-        private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
+        private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _data.JumpBuffer;
+        private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _data.CoyoteTime;
 
         private void HandleJump()
         {
@@ -154,8 +171,26 @@ namespace TarodevController
             _timeJumpWasPressed = 0;
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
-            _frameVelocity.y = _stats.JumpPower;
+            _frameVelocity.y = _data.JumpPower;
             Jumped?.Invoke();
+        }
+
+        #endregion
+
+        #region Double Jump
+        private bool _doubleJumpUsed;
+        private bool _doubleJumpToConsume;
+        private void HandleDoubleJump()
+        {
+            if (!_doubleJumpToConsume) return;
+            ExectuteDoubleJump();
+        }
+
+        private void ExectuteDoubleJump()
+        {
+            _frameVelocity.y = _data.DoubleJumpHeight;
+            _doubleJumpToConsume = false;
+            _doubleJumpUsed = true;
         }
 
         #endregion
@@ -166,12 +201,12 @@ namespace TarodevController
         {
             if (_frameInput.Move.x == 0)
             {
-                var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
+                var deceleration = _grounded ? _data.GroundDeceleration : _data.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             }
             else
             {
-                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _data.MaxSpeed, _data.Acceleration * Time.fixedDeltaTime);
                 //Turns if you're moving in the opposite direction only if you´re moving
                 Turn(_frameInput.Move.x > 0f);
             }
@@ -185,13 +220,13 @@ namespace TarodevController
         {
             if (_grounded && _frameVelocity.y <= 0f)
             {
-                _frameVelocity.y = _stats.GroundingForce;
+                _frameVelocity.y = _data.GroundingForce;
             }
             else
             {
-                var inAirGravity = _stats.FallAcceleration;
-                if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= _stats.JumpEndEarlyGravityModifier;
-                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+                var inAirGravity = _data.FallAcceleration;
+                if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= _data.JumpEndEarlyGravityModifier;
+                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_data.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
             }
         }
 
@@ -213,7 +248,7 @@ namespace TarodevController
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
+            if (_data == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
         }
 #endif
     }
