@@ -3,15 +3,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-namespace TarodevController
+namespace PlayerMovementController
 {
-    /// <summary>
-    /// Hey!
-    /// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
-    /// I have a premium version on Patreon, which has every feature you'd expect from a polished controller. Link: https://www.patreon.com/tarodev
-    /// You can play and compete for best times here: https://tarodev.itch.io/extended-ultimate-2d-controller
-    /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
-    /// </summary>
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
@@ -208,8 +201,20 @@ namespace TarodevController
             {
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _data.MaxSpeed, _data.Acceleration * Time.fixedDeltaTime);
                 //Turns if you're moving in the opposite direction only if you´re moving
-                Turn(_frameInput.Move.x > 0f);
+                Turn();
             }
+        }
+
+        #endregion
+
+        #region Wall Jump
+
+        public Transform wallCheck;
+        public LayerMask wallLayer;
+
+        private bool IsWalled()
+        {
+            return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
         }
 
         #endregion
@@ -234,9 +239,9 @@ namespace TarodevController
 
         private void ApplyMovement() => _rb.velocity = _frameVelocity;
 
-        private void Turn(bool movingRight)
+        private void Turn()
         {
-            if (movingRight != _isFacingRight)
+            if ( _isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0)
             {
                 Vector3 scale = transform.localScale;
                 scale.x *= -1;

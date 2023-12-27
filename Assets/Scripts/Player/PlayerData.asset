@@ -30,6 +30,4 @@ MonoBehaviour:
   JumpEndEarlyGravityModifier: 3
   CoyoteTime: 0.15
   JumpBuffer: 0.2
-  JumpTime: 0.2
-  DoubleJumpHeight: 160
-  JumpGravity: 0.5
+  DoubleJumpHeight: 130
