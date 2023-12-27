@@ -336,6 +336,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1351157366}
+  - {fileID: 980150228}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &599093898
@@ -422,8 +423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c3f0759220db0d4596a279bde433d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: e5de614e7e5b2b5448b7fd1529298d07, type: 2}
-  doubleJumpUnlocked: 0
+  Data: {fileID: 11400000, guid: e5de614e7e5b2b5448b7fd1529298d07, type: 2}
+  doubleJumpUnlocked: 1
+  WallCheck: {fileID: 980150228}
 --- !u!1 &885254067
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +497,37 @@ Transform:
   m_Children:
   - {fileID: 1300817235}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &980150227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 980150228}
+  m_Layer: 3
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &980150228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980150227}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.486, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 599093897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1032865043
 GameObject:
@@ -897,7 +930,7 @@ GameObject:
   - component: {fileID: 1289363058}
   - component: {fileID: 1289363057}
   - component: {fileID: 1289363056}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1206,7 +1239,7 @@ GameObject:
   - component: {fileID: 1592959919}
   - component: {fileID: 1592959918}
   - component: {fileID: 1592959917}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

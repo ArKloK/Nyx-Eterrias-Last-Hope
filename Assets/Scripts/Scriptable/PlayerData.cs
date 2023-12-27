@@ -8,6 +8,8 @@ namespace PlayerMovementController
         [Header("LAYERS")]
         [Tooltip("Set this to the layer your player is on")]
         public LayerMask PlayerLayer;
+        [Tooltip("Set this to the layer the wall is on")]
+        public LayerMask WallLayer;
 
         [Header("INPUT")]
         [Tooltip("Makes all Input snap to an integer. Prevents gamepads from walking slowly. Recommended value is true to ensure gamepad/keybaord parity.")]
@@ -57,9 +59,19 @@ namespace PlayerMovementController
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
 
-        [Header("DOUBLE JUMP")]        
+        [Header("DOUBLE JUMP")]
         [Tooltip("The speed at which the player double jumps")]
         public float DoubleJumpHeight = 4f;
+
+        [Header("WALL JUMP")]
+        [Tooltip("The speed at which the player slides down a wall")]
+        public float WallSlidingSpeed = 3f;
+        [Tooltip("The time the player can jump after leaving a wall")]
+        public float WallJumpingTime = 0.2f;
+        [Tooltip("The duration of the wall jump")]
+        public float WallJumpingDuration = 0.4f;
+        [Tooltip("The power of the wall jump")]
+        public Vector2 WallJumpingPower = new Vector2(8f, 16f);
 
         // [Header("DASH")]
         // [Tooltip("The speed at which the player dashes")]

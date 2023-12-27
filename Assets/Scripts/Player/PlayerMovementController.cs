@@ -8,7 +8,7 @@ namespace PlayerMovementController
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
-        [SerializeField] private ScriptableStats _data;
+        [SerializeField] private ScriptableStats Data;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -61,11 +61,11 @@ namespace PlayerMovementController
                 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
 
             };
-
-            if (_data.SnapInput)
+            #region Movement And Jump Input
+            if (Data.SnapInput)
             {
-                _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < _data.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
-                _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < _data.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
+                _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < Data.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
+                _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < Data.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
             }
 
             if (_frameInput.JumpDown)
@@ -73,7 +73,8 @@ namespace PlayerMovementController
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
             }
-
+            #endregion
+            #region Double Jump Input
             if (_grounded) _doubleJumpUsed = false;
 
             if (_frameInput.JumpDown && doubleJumpUnlocked)
@@ -83,6 +84,13 @@ namespace PlayerMovementController
                     _doubleJumpToConsume = true;
                 }
             }
+            #endregion
+            #region Wall Jump Input
+            if (_frameInput.JumpDown && wallJumpingCounter > 0)
+            {
+                isWallJumping = true;
+            }
+            #endregion
         }
 
         private void FixedUpdate()
@@ -91,6 +99,8 @@ namespace PlayerMovementController
 
             HandleJump();
             HandleDoubleJump();
+            HandleWallSlide();
+            HandleWallJump();
             HandleDirection();
             HandleGravity();
 
@@ -107,8 +117,10 @@ namespace PlayerMovementController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            groundHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.down, _data.GrounderDistance, ~_data.PlayerLayer);
-            ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.up, _data.GrounderDistance, ~_data.PlayerLayer);
+            groundHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.down, Data.GrounderDistance, ~Data.PlayerLayer);
+            ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.up, Data.GrounderDistance, ~Data.PlayerLayer);
+
+            Debug.Log(groundHit);
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
@@ -144,8 +156,8 @@ namespace PlayerMovementController
         private bool _coyoteUsable;
         private float _timeJumpWasPressed;
 
-        private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _data.JumpBuffer;
-        private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _data.CoyoteTime;
+        private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + Data.JumpBuffer;
+        private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + Data.CoyoteTime;
 
         private void HandleJump()
         {
@@ -164,7 +176,7 @@ namespace PlayerMovementController
             _timeJumpWasPressed = 0;
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
-            _frameVelocity.y = _data.JumpPower;
+            _frameVelocity.y = Data.JumpPower;
             Jumped?.Invoke();
         }
 
@@ -181,7 +193,7 @@ namespace PlayerMovementController
 
         private void ExectuteDoubleJump()
         {
-            _frameVelocity.y = _data.DoubleJumpHeight;
+            _frameVelocity.y = Data.DoubleJumpHeight;
             _doubleJumpToConsume = false;
             _doubleJumpUsed = true;
         }
@@ -192,29 +204,97 @@ namespace PlayerMovementController
 
         private void HandleDirection()
         {
-            if (_frameInput.Move.x == 0)
+            if (!isWallJumping)
             {
-                var deceleration = _grounded ? _data.GroundDeceleration : _data.AirDeceleration;
-                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+                if (_frameInput.Move.x == 0)
+                {
+                    var deceleration = _grounded ? Data.GroundDeceleration : Data.AirDeceleration;
+                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+                }
+                else
+                {
+                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
+                    //Turns if you're moving in the opposite direction only if you´re moving
+                    Turn();
+                }
             }
-            else
-            {
-                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _data.MaxSpeed, _data.Acceleration * Time.fixedDeltaTime);
-                //Turns if you're moving in the opposite direction only if you´re moving
-                Turn();
-            }
+
         }
 
         #endregion
 
         #region Wall Jump
 
-        public Transform wallCheck;
-        public LayerMask wallLayer;
 
+        [Tooltip("The object used to check if the player is touching a wall")]
+        public Transform WallCheck;
+        private bool turnOnWallJump;
+        private bool isWallSliding;
+        private bool isWallJumping;
+        private float wallJumpingDirection;
+        private float wallJumpingCounter;
+
+        private void HandleWallJump()
+        {
+            if (isWallSliding)
+            {
+                isWallJumping = false;
+                wallJumpingDirection = -transform.localScale.x;
+                wallJumpingCounter = Data.WallJumpingTime;
+
+                CancelInvoke(nameof(StopWallJumping));
+            }
+            else
+            {
+                wallJumpingCounter -= Time.deltaTime;
+            }
+
+            if (isWallJumping)
+            {
+                ExecuteWallJump();
+            }
+        }
         private bool IsWalled()
         {
-            return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+            return Physics2D.OverlapCircle(WallCheck.position, 0.2f, Data.WallLayer);
+        }
+        private void HandleWallSlide()
+        {
+            if (IsWalled() && !_grounded)
+            {
+                isWallSliding = true;
+                ExecuteWallSlide();
+            }
+            else
+            {
+                isWallSliding = false;
+            }
+        }
+
+        private void ExecuteWallJump()
+        {
+            _frameVelocity = new Vector2(wallJumpingDirection * Data.WallJumpingPower.x, Data.WallJumpingPower.y);
+            wallJumpingCounter = 0;
+
+            if (transform.localScale.x != wallJumpingDirection)
+            {
+                turnOnWallJump = true;
+                Turn();
+                turnOnWallJump = false;
+            }
+
+            Invoke(nameof(StopWallJumping), Data.WallJumpingDuration);
+
+        }
+
+        private void StopWallJumping()
+        {
+            isWallJumping = false;
+        }
+
+        private void ExecuteWallSlide()
+        {
+            _frameVelocity = new Vector2(_frameVelocity.x, Mathf.Clamp(_frameVelocity.y, -Data.WallSlidingSpeed, float.MaxValue));
         }
 
         #endregion
@@ -225,23 +305,22 @@ namespace PlayerMovementController
         {
             if (_grounded && _frameVelocity.y <= 0f)
             {
-                _frameVelocity.y = _data.GroundingForce;
+                _frameVelocity.y = Data.GroundingForce;
             }
             else
             {
-                var inAirGravity = _data.FallAcceleration;
-                if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= _data.JumpEndEarlyGravityModifier;
-                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_data.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+                var inAirGravity = Data.FallAcceleration;
+                if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= Data.JumpEndEarlyGravityModifier;
+                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -Data.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
             }
         }
 
         #endregion
 
-        private void ApplyMovement() => _rb.velocity = _frameVelocity;
-
+        #region Auxiliar Methods
         private void Turn()
         {
-            if ( _isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0)
+            if (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump)
             {
                 Vector3 scale = transform.localScale;
                 scale.x *= -1;
@@ -249,11 +328,14 @@ namespace PlayerMovementController
                 _isFacingRight = !_isFacingRight;
             }
         }
+        #endregion
+
+        private void ApplyMovement() => _rb.velocity = _frameVelocity;
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_data == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
+            if (Data == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
         }
 #endif
     }
