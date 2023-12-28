@@ -29,6 +29,10 @@ Preset:
     value: 8
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: WallLayer.m_Bits
+    value: 128
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: SnapInput
     value: 1
     objectReference: {fileID: 0}
@@ -46,15 +50,15 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: Acceleration
-    value: 120
+    value: 1000
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: GroundDeceleration
-    value: 400
+    value: 6000
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: AirDeceleration
-    value: 600
+    value: 6000
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: GroundingForce
@@ -87,5 +91,41 @@ Preset:
   - target: {fileID: 0}
     propertyPath: JumpBuffer
     value: 0.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: DoubleJumpHeight
+    value: 160
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: WallSlidingSpeed
+    value: 54.6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: WallJumpingTime
+    value: 0.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: WallJumpingDuration
+    value: 0.1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: WallJumpingPower.x
+    value: 14
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: WallJumpingPower.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: DashingPower
+    value: 24
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: DashingTime
+    value: 0.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: DashingCooldown
+    value: 0.5
     objectReference: {fileID: 0}
   m_ExcludedProperties: []
