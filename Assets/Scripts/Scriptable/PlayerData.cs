@@ -28,12 +28,6 @@ namespace PlayerMovementController
         [Tooltip("The player's capacity to gain horizontal speed")]
         public float Acceleration = 120;
 
-        [Tooltip("The pace at which the player comes to a stop")]
-        public float GroundDeceleration = 60;
-
-        [Tooltip("Deceleration in air only after stopping input mid-air")]
-        public float AirDeceleration = 30;
-
         [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
         public float GroundingForce = -1.5f;
 
@@ -73,15 +67,12 @@ namespace PlayerMovementController
         [Tooltip("The power of the wall jump")]
         public Vector2 WallJumpingPower = new Vector2(8f, 16f);
 
-        // [Header("DASH")]
-        // [Tooltip("The speed at which the player dashes")]
-        // public float DashSpeed = 20;
-        // [Tooltip("The duration of the dash")]
-        // public float DashDuration = 0.2f;
-        // [Tooltip("The cooldown of the dash")]
-        // public float DashCooldown = 0.5f;
-        // [Tooltip("The gravity applied to the player while dashing")]
-        // public float DashGravity = 0.5f;
-
+        [Header("DASH")]
+        [Tooltip("The speed at which the player dashes")]
+        public float DashingPower = 20f;
+        [Tooltip("The duration of the dash")]
+        public float DashingTime = 0.2f;
+        [Tooltip("The cooldown of the dash")]
+        public float DashingCooldown = 0.5f;
     }
 }

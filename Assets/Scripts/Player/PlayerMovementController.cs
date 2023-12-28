@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -54,6 +55,9 @@ namespace PlayerMovementController
 
         private void GatherInput()
         {
+            //If you're dashing, you can't move
+            if (_isDashing) return;
+
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump"),
@@ -86,9 +90,16 @@ namespace PlayerMovementController
             }
             #endregion
             #region Wall Jump Input
+
             if (_frameInput.JumpDown && wallJumpingCounter > 0)
             {
                 isWallJumping = true;
+            }
+            #endregion
+            #region Dash Input
+            if (Input.GetButtonDown("Dash") && _canDash)
+            {
+                StartCoroutine(ExecuteDash());
             }
             #endregion
         }
@@ -187,7 +198,7 @@ namespace PlayerMovementController
         private bool _doubleJumpToConsume;
         private void HandleDoubleJump()
         {
-            if (!_doubleJumpToConsume) return;
+            if (!_doubleJumpToConsume || IsWalled()) return;
             ExectuteDoubleJump();
         }
 
@@ -204,18 +215,17 @@ namespace PlayerMovementController
 
         private void HandleDirection()
         {
-            if (!isWallJumping)
+            if (!isWallJumping && !_isDashing)
             {
-                if (_frameInput.Move.x == 0)
+
+                if (_frameInput.Move.x != 0)
                 {
-                    var deceleration = _grounded ? Data.GroundDeceleration : Data.AirDeceleration;
-                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
+                    Turn();
                 }
                 else
                 {
-                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
-                    //Turns if you're moving in the opposite direction only if you´re moving
-                    Turn();
+                    _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
             }
 
@@ -254,23 +264,6 @@ namespace PlayerMovementController
                 ExecuteWallJump();
             }
         }
-        private bool IsWalled()
-        {
-            return Physics2D.OverlapCircle(WallCheck.position, 0.2f, Data.WallLayer);
-        }
-        private void HandleWallSlide()
-        {
-            if (IsWalled() && !_grounded)
-            {
-                isWallSliding = true;
-                ExecuteWallSlide();
-            }
-            else
-            {
-                isWallSliding = false;
-            }
-        }
-
         private void ExecuteWallJump()
         {
             _frameVelocity = new Vector2(wallJumpingDirection * Data.WallJumpingPower.x, Data.WallJumpingPower.y);
@@ -289,12 +282,48 @@ namespace PlayerMovementController
 
         private void StopWallJumping()
         {
+            _doubleJumpUsed = false;
             isWallJumping = false;
         }
-
+        private bool IsWalled()
+        {
+            return Physics2D.OverlapCircle(WallCheck.position, 0.2f, Data.WallLayer);
+        }
+        private void HandleWallSlide()
+        {
+            if (IsWalled() && !_grounded)
+            {
+                isWallSliding = true;
+                ExecuteWallSlide();
+            }
+            else
+            {
+                isWallSliding = false;
+            }
+        }
         private void ExecuteWallSlide()
         {
             _frameVelocity = new Vector2(_frameVelocity.x, Mathf.Clamp(_frameVelocity.y, -Data.WallSlidingSpeed, float.MaxValue));
+        }
+
+        #endregion
+
+        #region Dash
+        private bool _canDash = true;
+        private bool _isDashing;
+
+        private IEnumerator ExecuteDash()
+        {
+            _canDash = false;
+            _isDashing = true;
+            float originalGravity = _rb.gravityScale;
+            _rb.gravityScale = 0f;
+            _frameVelocity = new Vector2(transform.localScale.x * Data.DashingPower, 0f);
+            yield return new WaitForSeconds(Data.DashingTime);
+            _rb.gravityScale = originalGravity;
+            _isDashing = false;
+            yield return new WaitForSeconds(Data.DashingCooldown);
+            _canDash = true;
         }
 
         #endregion
