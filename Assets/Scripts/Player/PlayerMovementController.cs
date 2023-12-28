@@ -221,12 +221,25 @@ namespace PlayerMovementController
                 if (_frameInput.Move.x != 0)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
+                    //_frameVelocity = new Vector2(_frameInput.Move.x * Data.MaxSpeed, _frameVelocity.y);
                     Turn();
                 }
                 else
                 {
                     _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
+
+                // if (_frameInput.Move.x == 0)
+                // {
+                //     var deceleration = _grounded ? Data.GroundDeceleration : Data.AirDeceleration;
+                //     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+                // }
+                // else
+                // {
+                //     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
+                //     //Turns if you're moving in the opposite direction only if you´re moving
+                //     Turn();
+                // }
             }
 
         }
