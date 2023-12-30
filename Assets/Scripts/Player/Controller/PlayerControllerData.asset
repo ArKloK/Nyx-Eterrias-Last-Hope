@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealthPoints: 5
   MaxSpiritualEnergyPoints: 5
-  AttackPower: 0
-  MaxExperiencePoints: 10
+  AttackPower: 1
+  MaxExperiencePoints: 4
   AttackSpeed: 0
   DefensePower: 0
