@@ -3,7 +3,7 @@ using UnityEngine;
 namespace PlayerMovementController
 {
     [CreateAssetMenu]
-    public class ScriptableStats : ScriptableObject
+    public class PlayerMovementData : ScriptableObject
     {
         [Header("LAYERS")]
         [Tooltip("Set this to the layer your player is on")]

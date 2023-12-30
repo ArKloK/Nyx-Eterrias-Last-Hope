@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21343ad7f42c26c42ab4e1720c6897b8, type: 3}
+  m_Name: PlayerControllerData
+  m_EditorClassIdentifier: 
+  MaxHealthPoints: 5
+  MaxSpiritualEnergyPoints: 5
+  AttackPower: 0
+  MaxExperiencePoints: 10
+  AttackSpeed: 0
+  DefensePower: 0

@@ -9,7 +9,7 @@ namespace PlayerMovementController
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
-        [SerializeField] private ScriptableStats Data;
+        [SerializeField] private PlayerMovementData Data;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -130,8 +130,6 @@ namespace PlayerMovementController
             // Ground and Ceiling
             groundHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.down, Data.GrounderDistance, ~Data.PlayerLayer);
             ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.size, 0, Vector2.up, Data.GrounderDistance, ~Data.PlayerLayer);
-
-            Debug.Log(groundHit);
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
