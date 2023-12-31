@@ -5,7 +5,6 @@ using UnityEngine;
 public class ExperienceManager : MonoBehaviour
 {
     public static ExperienceManager Instance;
-
     public delegate void ExperienceChangedHandler(int amount);
     public event ExperienceChangedHandler OnExperienceChanged;
 

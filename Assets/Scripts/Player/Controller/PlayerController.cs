@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -21,6 +19,10 @@ public class PlayerController : MonoBehaviour
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
         currentSpiritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
+    }
+
+    void Start()
+    {
         currentExperiencePoints = 0;
         maxExperiencePoints = Data.MaxExperiencePoints;
         currentLevel = 1;
@@ -28,6 +30,11 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
+        //Singleton check
+        if (ExperienceManager.Instance == null)
+        {
+            ExperienceManager.Instance = new GameObject("ExperienceManager").AddComponent<ExperienceManager>();
+        }
         ExperienceManager.Instance.OnExperienceChanged += HandleExperienceChanged;
     }
 
