@@ -2,12 +2,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Script References")]
     public PlayerControllerData Data;
+    public HealthBar HealthBar;
+    
+    [Header("Health and Energy Variables")]
     #region Health and Energy Variables
     private int maxHealthPoints;
     private int currentHealthPoints;
     private int currentSpiritualEnergyPoints;
     #endregion
+
+    [Header("Level Variables")]
     #region Level Variables
     private int currentExperiencePoints;
     private int maxExperiencePoints;
@@ -26,6 +32,8 @@ public class PlayerController : MonoBehaviour
         currentExperiencePoints = 0;
         maxExperiencePoints = Data.MaxExperiencePoints;
         currentLevel = 1;
+
+        HealthBar.SetMaxHealth(maxHealthPoints);
     }
 
     void OnEnable()
@@ -69,10 +77,21 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealthPoints -= damage;
+        HealthBar.SetHealth(currentHealthPoints);
         if (currentHealthPoints <= 0)
         {
             Die();
         }
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealthPoints += amount;
+        if (currentHealthPoints > maxHealthPoints)
+        {
+            currentHealthPoints = maxHealthPoints;
+        }
+        HealthBar.SetHealth(currentHealthPoints);
     }
 
     #region Level Methods
