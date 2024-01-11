@@ -86,25 +86,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage, Vector2 knockbackDirection){
+    public void TakeDamage(int damage, Vector2 knockbackDirection)
+    {
         currentHealthPoints -= damage;
         healthBar.SetHealth(currentHealthPoints);
         if (currentHealthPoints <= 0)
         {
             Die();
-        }else{
+        }
+        else
+        {
             StartCoroutine(LoseControl());
+            StartCoroutine(DisableCollider());
             playerMovementController.KnockBack(knockbackDirection);
         }
-        
+
     }
 
-    private IEnumerator LoseControl(){
+    private IEnumerator LoseControl()
+    {
         playerMovementController.canMove = false;
         yield return new WaitForSeconds(Data.LoseControlTime);
         playerMovementController.canMove = true;
     }
 
+    private IEnumerator DisableCollider()
+    {
+        Physics2D.IgnoreLayerCollision(3, 8, true); 
+        yield return new WaitForSeconds(Data.InvincibleTime);
+        Physics2D.IgnoreLayerCollision(3, 8, false); 
+    }
     public void Heal(int amount)
     {
         currentHealthPoints += amount;

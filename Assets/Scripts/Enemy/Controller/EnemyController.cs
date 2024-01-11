@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour
             if (playerController != null)
             {
                 playerController.TakeDamage(Data.AttackPower, other.GetContact(0).normal);
+                
                 Debug.Log("Player took damage"); 
             }
         }

@@ -75,7 +75,7 @@ namespace PlayerMovementController
         [Tooltip("The cooldown of the dash")]
         public float DashingCooldown = 0.5f;
 
-        [Header("AUXILIAR DATA")]
+        [Header("KNOCKBACK DATA")]
         public Vector2 KnockBackPower;
     }
 }

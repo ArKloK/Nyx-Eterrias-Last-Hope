@@ -19,9 +19,11 @@ public class PlayerControllerData : ScriptableObject
     [Tooltip("The maximum experience the player needs to level up, this will increase as the player levels up")]
     public int MaxExperiencePoints;
 
-    [Header("AUXILIAR DATA")]
+    [Header("KNOCKBACK DATA")]
     [Tooltip("The amount of time the player can't move after being hit")]
     public float LoseControlTime;
+    [Tooltip("The amount of time the player is invincible after being hit")]
+    public float InvincibleTime;
 
     [Header("TURN BASED COMBAT")]
     [Tooltip("The speed of the player's attack in the TB combat")]

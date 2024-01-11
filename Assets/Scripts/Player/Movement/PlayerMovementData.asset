@@ -39,4 +39,4 @@ MonoBehaviour:
   DashingPower: 24
   DashingTime: 0.2
   DashingCooldown: 0.5
-  KnockBackPower: {x: 200, y: 40}
+  KnockBackPower: {x: 50, y: 50}

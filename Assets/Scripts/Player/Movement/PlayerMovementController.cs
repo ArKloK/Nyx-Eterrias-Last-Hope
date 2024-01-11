@@ -214,7 +214,7 @@ namespace PlayerMovementController
 
         private void HandleDirection()
         {
-            if (!isWallJumping && !_isDashing)
+            if (!isWallJumping && !_isDashing && canMove)
             {
 
                 if (_frameInput.Move.x != 0)
