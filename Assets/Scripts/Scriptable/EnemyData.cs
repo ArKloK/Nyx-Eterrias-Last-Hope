@@ -12,4 +12,8 @@ public class EnemyData : ScriptableObject
     [Header("EXPERIENCE")]
     [Tooltip("The amount of experience the player gets for killing this enemy")]
     public int ExperiencePoints;
+
+    [Header("ATTACK")]
+    [Tooltip("The amount of damage the enemy does")]
+    public int AttackPower;
 }

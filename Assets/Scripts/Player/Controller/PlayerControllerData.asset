@@ -16,5 +16,6 @@ MonoBehaviour:
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
   MaxExperiencePoints: 4
+  LoseControlTime: 0.1
   AttackSpeed: 0
   DefensePower: 0

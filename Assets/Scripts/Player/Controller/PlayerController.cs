@@ -1,19 +1,19 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Script References")]
     public PlayerControllerData Data;
-    public HealthBar HealthBar;
-    
-    [Header("Health and Energy Variables")]
+    public HealthBar healthBar;
+    private PlayerMovementController.PlayerMovementController playerMovementController;
+
     #region Health and Energy Variables
     private int maxHealthPoints;
     private int currentHealthPoints;
     private int currentSpiritualEnergyPoints;
     #endregion
 
-    [Header("Level Variables")]
     #region Level Variables
     private int currentExperiencePoints;
     private int maxExperiencePoints;
@@ -29,11 +29,13 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        playerMovementController = GetComponent<PlayerMovementController.PlayerMovementController>();
+
         currentExperiencePoints = 0;
         maxExperiencePoints = Data.MaxExperiencePoints;
         currentLevel = 1;
 
-        HealthBar.SetMaxHealth(maxHealthPoints);
+        healthBar.SetMaxHealth(maxHealthPoints);
     }
 
     void OnEnable()
@@ -77,11 +79,30 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealthPoints -= damage;
-        HealthBar.SetHealth(currentHealthPoints);
+        healthBar.SetHealth(currentHealthPoints);
         if (currentHealthPoints <= 0)
         {
             Die();
         }
+    }
+
+    public void TakeDamage(int damage, Vector2 knockbackDirection){
+        currentHealthPoints -= damage;
+        healthBar.SetHealth(currentHealthPoints);
+        if (currentHealthPoints <= 0)
+        {
+            Die();
+        }else{
+            StartCoroutine(LoseControl());
+            playerMovementController.KnockBack(knockbackDirection);
+        }
+        
+    }
+
+    private IEnumerator LoseControl(){
+        playerMovementController.canMove = false;
+        yield return new WaitForSeconds(Data.LoseControlTime);
+        playerMovementController.canMove = true;
     }
 
     public void Heal(int amount)
@@ -91,7 +112,7 @@ public class PlayerController : MonoBehaviour
         {
             currentHealthPoints = maxHealthPoints;
         }
-        HealthBar.SetHealth(currentHealthPoints);
+        healthBar.SetHealth(currentHealthPoints);
     }
 
     #region Level Methods
@@ -111,6 +132,7 @@ public class PlayerController : MonoBehaviour
         maxExperiencePoints += 10;
         maxHealthPoints += 10;
         currentHealthPoints = maxHealthPoints;
+        healthBar.SetMaxHealth(maxHealthPoints);
         Debug.Log("Player leveled up to level " + currentLevel);
     }
     #endregion

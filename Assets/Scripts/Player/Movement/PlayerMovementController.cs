@@ -21,6 +21,7 @@ namespace PlayerMovementController
         private bool _isFacingRight;
         bool groundHit;
         bool ceilingHit;
+        public bool canMove = true;
 
         #endregion
 
@@ -55,8 +56,8 @@ namespace PlayerMovementController
 
         private void GatherInput()
         {
-            //If you're dashing, you can't move
-            if (_isDashing) return;
+            //If you're dashing or is hitted by an enemy, you can't move
+            if (_isDashing || !canMove) return;
 
             _frameInput = new FrameInput
             {
@@ -367,6 +368,11 @@ namespace PlayerMovementController
                 transform.localScale = scale;
                 _isFacingRight = !_isFacingRight;
             }
+        }
+
+        public void KnockBack(Vector2 direction)
+        {
+            _frameVelocity = new Vector2(-Data.KnockBackPower.x * direction.x, Data.KnockBackPower.y);
         }
         #endregion
 

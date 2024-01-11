@@ -22,6 +22,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.TakeDamage(Data.AttackPower, other.GetContact(0).normal);
+                Debug.Log("Player took damage"); 
+            }
+        }
+    }
+
     public void Die()
     {
         ExperienceManager.Instance.AddExperience(Data.ExperiencePoints);
