@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public static event Action <List<InventoryItem>> OnInventoryChange;
+
     public List<InventoryItem> inventoryItems = new List<InventoryItem>();
     private Dictionary<ItemData, InventoryItem> inventoryDictionary = new Dictionary<ItemData, InventoryItem>();
 
@@ -23,6 +26,7 @@ public class Inventory : MonoBehaviour
         {
             item.AddQuantity();
             Debug.Log($"{itemData.itemName} total stack is now {item.quantity}");
+            OnInventoryChange?.Invoke(inventoryItems);
         }
         else
         {
@@ -30,6 +34,7 @@ public class Inventory : MonoBehaviour
             inventoryItems.Add(newInventoryItem);
             inventoryDictionary.Add(itemData, newInventoryItem);
             Debug.Log($"Added {itemData.itemName} to inventory for the first time.");
+            OnInventoryChange?.Invoke(inventoryItems);
         }
     }
 
@@ -43,6 +48,12 @@ public class Inventory : MonoBehaviour
                 inventoryItems.Remove(item);
                 inventoryDictionary.Remove(itemData);
             }
+            OnInventoryChange?.Invoke(inventoryItems);
         }
+    }
+
+    public void LaunchInventoryChange()
+    {
+        OnInventoryChange?.Invoke(inventoryItems);
     }
 }
