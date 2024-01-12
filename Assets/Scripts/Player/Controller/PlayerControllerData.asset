@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21343ad7f42c26c42ab4e1720c6897b8, type: 3}
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
+  PlayerElement: 0
   MaxHealthPoints: 5
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
