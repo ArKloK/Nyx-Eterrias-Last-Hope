@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu]
 public class PlayerControllerData : ScriptableObject
 {
+    [Header("PLAYER ELEMENT")]
+    [Tooltip("The element of the player")]
+    public Element PlayerElement;
+
     [Header("HEALTH AND ENERGY")]
     [Tooltip("The maximum health for the player at level 1, this will increase as the player levels up")]
     public int MaxHealthPoints;
@@ -30,5 +34,13 @@ public class PlayerControllerData : ScriptableObject
     public float AttackSpeed;
     [Tooltip("The amount of damage the player can take")]
     public float DefensePower;
+
+    public enum Element
+    {
+        None,
+        Fire,
+        Water,
+        Plant
+    }
 
 }
