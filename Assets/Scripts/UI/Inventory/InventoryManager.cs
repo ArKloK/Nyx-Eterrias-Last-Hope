@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,16 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public GameObject slotPrefab;
+    public InventoryDescription inventoryDescription;
+    public Transform inventorySlotsPanel;
+    public string descriptionText;
     public List<InventorySlot> inventorySlots = new List<InventorySlot>(32);
+    
 
+    void Awake()
+    {
+        inventoryDescription.ResetDescription();
+    }
     void OnEnable()
     {
         Inventory.OnInventoryChange += DrawInventory;
@@ -19,7 +28,7 @@ public class InventoryManager : MonoBehaviour
 
     void ResetInventory()
     {
-        foreach (Transform slot in transform)
+        foreach (Transform slot in inventorySlotsPanel)
         {
             Destroy(slot.gameObject);
         }
@@ -30,6 +39,7 @@ public class InventoryManager : MonoBehaviour
     {
         Debug.Log("Drawing inventory");
         ResetInventory();
+        inventoryDescription.ResetDescription();
         for (int i = 0; i < inventorySlots.Capacity; i++)
         {
             CreateInventorySlot();
@@ -38,13 +48,19 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < items.Count; i++)
         {
             inventorySlots[i].DrawSlot(items[i]);
+            inventorySlots[i].OnSlotClicked += HandleSlotClicked;
         }
+    }
+
+    private void HandleSlotClicked(InventorySlot slot)
+    {
+        inventoryDescription.SetDescription(slot.itemDescription);
     }
 
     void CreateInventorySlot()
     {
         GameObject slot = Instantiate(slotPrefab);
-        slot.transform.SetParent(transform, false);
+        slot.transform.SetParent(inventorySlotsPanel, false);
         InventorySlot newInventorySlot = slot.GetComponent<InventorySlot>();
         newInventorySlot.ClearSlot();
         inventorySlots.Add(newInventorySlot);
