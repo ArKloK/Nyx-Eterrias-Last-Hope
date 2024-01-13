@@ -12,11 +12,13 @@ public class Inventory : MonoBehaviour
 
     void OnEnable()
     {
+        Potion.OnPotionCollected += AddItem;
         Coin.OnCoinCollected += AddItem;
     }
 
     void OnDisable()
     {
+        Potion.OnPotionCollected -= AddItem;
         Coin.OnCoinCollected -= AddItem;
     }
 

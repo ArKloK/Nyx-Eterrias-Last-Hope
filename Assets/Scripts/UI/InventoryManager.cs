@@ -30,7 +30,6 @@ public class InventoryManager : MonoBehaviour
     {
         Debug.Log("Drawing inventory");
         ResetInventory();
-        Debug.Log($"Inventory has {inventorySlots.Capacity} slots");
         for (int i = 0; i < inventorySlots.Capacity; i++)
         {
             CreateInventorySlot();
