@@ -17,6 +17,7 @@ public class RespawnController : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             other.transform.position = respawnPoint.position;
+            other.GetComponent<PlayerController>().TakeDamage(1);
         }
     }
 }
