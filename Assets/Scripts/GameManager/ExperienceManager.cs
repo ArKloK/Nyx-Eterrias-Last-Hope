@@ -6,16 +6,12 @@ public class ExperienceManager : MonoBehaviour
 {
     public static ExperienceManager Instance;
     public delegate void ExperienceChangedHandler(int amount);
-    public event ExperienceChangedHandler OnExperienceChanged;
+    public static event ExperienceChangedHandler OnExperienceChanged;
 
     //Singleton check
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
         }

@@ -1,5 +1,16 @@
+using System;
 using System.Collections;
 using UnityEngine;
+
+public class PlayerEventArgs : EventArgs
+{
+    public PlayerController PlayerController { get; set; }
+
+    public PlayerEventArgs(PlayerController player)
+    {
+        PlayerController = player;
+    }
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,13 +31,16 @@ public class PlayerController : MonoBehaviour
     private int currentLevel;
     #endregion
 
+    #region Events
+    public static event EventHandler<PlayerEventArgs> OnPlayerDeath;
+    #endregion
+
     void Awake()
     {
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
         currentSpiritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
     }
-
     void Start()
     {
         playerMovementController = GetComponent<PlayerMovementController.PlayerMovementController>();
@@ -40,17 +54,12 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
-        //Singleton check
-        if (ExperienceManager.Instance == null)
-        {
-            ExperienceManager.Instance = new GameObject("ExperienceManager").AddComponent<ExperienceManager>();
-        }
-        ExperienceManager.Instance.OnExperienceChanged += HandleExperienceChanged;
+        ExperienceManager.OnExperienceChanged += HandleExperienceChanged;
     }
 
     void OnDisable()
     {
-        ExperienceManager.Instance.OnExperienceChanged -= HandleExperienceChanged;
+        ExperienceManager.OnExperienceChanged -= HandleExperienceChanged;
     }
 
     // Update is called once per frame
@@ -112,9 +121,9 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DisableCollider()
     {
-        Physics2D.IgnoreLayerCollision(3, 8, true); 
+        Physics2D.IgnoreLayerCollision(3, 8, true);
         yield return new WaitForSeconds(Data.InvincibleTime);
-        Physics2D.IgnoreLayerCollision(3, 8, false); 
+        Physics2D.IgnoreLayerCollision(3, 8, false);
     }
     public void Heal(int amount)
     {
@@ -150,12 +159,18 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        this.gameObject.SetActive(false);
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        OnPlayerDeath?.Invoke(this, new PlayerEventArgs(this));
+
+        // #if UNITY_EDITOR
+        //         UnityEditor.EditorApplication.isPlaying = false;
+        // #else
+        //         Application.Quit();
+        // #endif
     }
 
+    internal void setmaxHealthPoints()
+    {
+        currentHealthPoints = maxHealthPoints;
+        healthBar.SetHealth(currentHealthPoints);
+    }
 }
