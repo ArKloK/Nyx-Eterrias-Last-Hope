@@ -42,5 +42,6 @@ public enum Element
     None,
     Fire,
     Water,
-    Plant
+    Plant,
+    Darkness,
 }

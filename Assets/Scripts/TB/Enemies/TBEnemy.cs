@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TBEnemy
 {
-    TBEnemyData enemyData;
-    private int currentHp;
-    private int level;
+    public TBEnemyData enemyData;
+    public int currentHp;
+    public int level;
 
     public TBEnemy(TBEnemyData enemyData, int level)
     {

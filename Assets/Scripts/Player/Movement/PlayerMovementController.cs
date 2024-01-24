@@ -227,18 +227,6 @@ namespace PlayerMovementController
                 {
                     _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
-
-                // if (_frameInput.Move.x == 0)
-                // {
-                //     var deceleration = _grounded ? Data.GroundDeceleration : Data.AirDeceleration;
-                //     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
-                // }
-                // else
-                // {
-                //     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
-                //     //Turns if you're moving in the opposite direction only if you´re moving
-                //     Turn();
-                // }
             }
 
         }
@@ -361,7 +349,7 @@ namespace PlayerMovementController
         #region Auxiliar Methods
         private void Turn()
         {
-            if (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump)
+            if (canMove && (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump))
             {
                 Vector3 scale = transform.localScale;
                 scale.x *= -1;
