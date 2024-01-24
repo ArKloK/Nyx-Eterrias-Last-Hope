@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -22.178799, y: -13.343601}
-  m_SizeDelta: {x: 44.3576, y: 26.6872}
+  m_AnchoredPosition: {x: -31.725, y: -20.6}
+  m_SizeDelta: {x: 63.45, y: 41.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6148113115414259879
 CanvasRenderer:
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 51.11
+  m_fontSizeBase: 51.11
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -167,11 +167,11 @@ RectTransform:
   - {fileID: 1241644455406290243}
   m_Father: {fileID: 9105374718000156324}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -37.2}
-  m_SizeDelta: {x: 113, y: 20.1211}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0.00016021729, y: 0}
+  m_SizeDelta: {x: 97.243, y: 48.2817}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8324163756658258088
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -326,6 +326,7 @@ MonoBehaviour:
   icon: {fileID: 925211432502885796}
   labelText: {fileID: 5350931917193410924}
   stackSizeText: {fileID: 6202663566525004602}
+  itemDescription: 
 --- !u!114 &1192189674545229680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,8 +448,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.73
-  m_fontSizeBase: 19.73
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -516,7 +517,7 @@ RectTransform:
   m_GameObject: {fileID: 8145688766918259216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.67, y: 0.67, z: 0.67}
+  m_LocalScale: {x: 1.5000001, y: 1.5000001, z: 1.5000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9105374718000156324}

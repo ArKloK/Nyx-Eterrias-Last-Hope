@@ -35,12 +35,12 @@ public class PlayerControllerData : ScriptableObject
     [Tooltip("The amount of damage the player can take")]
     public float DefensePower;
 
-    public enum Element
-    {
-        None,
-        Fire,
-        Water,
-        Plant
-    }
+}
 
+public enum Element
+{
+    None,
+    Fire,
+    Water,
+    Plant
 }

@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
     public InventoryDescription inventoryDescription;
     public Transform inventorySlotsPanel;
     public string descriptionText;
-    public List<InventorySlot> inventorySlots = new List<InventorySlot>(32);
+    public List<InventorySlot> inventorySlots = new List<InventorySlot>(24);
     
 
     void Awake()
@@ -32,7 +32,7 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(slot.gameObject);
         }
-        inventorySlots = new List<InventorySlot>(32);
+        inventorySlots = new List<InventorySlot>(24);
     }
 
     public void DrawInventory(List<InventoryItem> items)

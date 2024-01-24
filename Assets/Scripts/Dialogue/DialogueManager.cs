@@ -6,10 +6,10 @@ using UnityEngine;
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager instance;
-
+    public GameObject player;
     public TextMeshProUGUI dialogueText;
     private Queue<DialogueLine> lines;
-    public bool isDialogueActive = false;
+    private bool isDialogueActive = false;
     public float typingSpeed = 0.2f;
 
     // Start is called before the first frame update
@@ -30,6 +30,9 @@ public class DialogueManager : MonoBehaviour
     {
         isDialogueActive = true;
         lines = new Queue<DialogueLine>();
+        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
+
         foreach (DialogueLine line in dialogue.lines)
         {
             lines.Enqueue(line);
@@ -61,6 +64,8 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
+        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
         this.gameObject.SetActive(false);
         isDialogueActive = false;
         dialogueText.text = "";
