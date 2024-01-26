@@ -17,4 +17,10 @@ public class BattleHud : MonoBehaviour
         healthBar.SetHealth(enemy.currentHp);
     }
 
+    public void setData(TBPlayer player)
+    {
+        nameText.text = player.playerData.Name;
+        levelText.text = "Lvl " + player.level;
+        healthBar.SetHealth(player.currentHp);
+    }
 }

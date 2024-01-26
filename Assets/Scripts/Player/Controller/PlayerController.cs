@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     #region Health and Energy Variables
     private int maxHealthPoints;
     private int currentHealthPoints;
+    public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
     private int currentSpiritualEnergyPoints;
     #endregion
 
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
             TakeDamage(1);
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
+
     }
 
     void OnCollisionEnter2D(Collision2D other)

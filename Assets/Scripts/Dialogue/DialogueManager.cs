@@ -30,8 +30,12 @@ public class DialogueManager : MonoBehaviour
     {
         isDialogueActive = true;
         lines = new Queue<DialogueLine>();
-        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-        player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
+        //This should avoid the script from modifying the player's movement while in TB
+        if (player != null)
+        {
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
+        }
 
         foreach (DialogueLine line in dialogue.lines)
         {
@@ -64,8 +68,12 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-        player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
+        //This should avoid the script from modifying the player's movement while in TB
+        if (player != null)
+        {
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+            player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
+        }
         this.gameObject.SetActive(false);
         isDialogueActive = false;
         dialogueText.text = "";
