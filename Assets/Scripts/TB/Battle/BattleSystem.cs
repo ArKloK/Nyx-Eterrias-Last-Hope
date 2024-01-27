@@ -30,7 +30,8 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            HandleMoveSelection();
+            if(playerUnit.player.moves.Count > 0)
+                HandleMoveSelection();
         }
     }
     public IEnumerator SetUpBattle()

@@ -30,10 +30,12 @@ public class PlayerControllerData : ScriptableObject
     public float InvincibleTime;
 
     [Header("TURN BASED COMBAT")]
+    [Tooltip("The amount of damage the player does in the TB combat")]
+    public float TBAttackPower;
     [Tooltip("The speed of the player's attack in the TB combat")]
-    public float AttackSpeed;
+    public float TBAttackSpeed;
     [Tooltip("The amount of damage the player can take")]
-    public float DefensePower;
+    public float TBDefensePower;
 
 }
 

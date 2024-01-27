@@ -13,7 +13,7 @@ public class TBPlayer
     {
         this.playerData = playerData;
         this.level = level;
-        currentHp = GameObject.Find("PLAYER").GetComponent<PlayerController>().CurrentHealthPoints;
+        this.currentHp = PlayerStats.CurrentHealthPoints;
 
         moves = new List<TBMove>();
         foreach (LearnableMove move in playerData.LearnableMoves)
@@ -30,27 +30,27 @@ public class TBPlayer
         }
     }
 
-    public int Attack
+    public float Attack
     {
         get
         {
-            return playerData.AttackPower * level;
+            return PlayerStats.TBAttackPower * level;
         }
     }
 
-    public int Defense
+    public float Defense
     {
         get
         {
-            return playerData.DefensePower * level;
+            return PlayerStats.TBDefensePower * level;
         }
     }
 
-    public int Speed
+    public float Speed
     {
         get
         {
-            return playerData.AttackSpeed * level;
+            return PlayerStats.TBAttackSpeed * level;
         }
     }
 
@@ -58,7 +58,7 @@ public class TBPlayer
     {
         get
         {
-            return playerData.MaxHealthPoints * level;
+            return PlayerStats.MaxHealthPoints;
         }
     }
 

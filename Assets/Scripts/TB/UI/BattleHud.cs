@@ -14,6 +14,7 @@ public class BattleHud : MonoBehaviour
     {
         nameText.text = enemy.enemyData.EnemyName;
         levelText.text = "Lvl " + enemy.level;
+        healthBar.SetMaxHealth(enemy.MaxHp);
         healthBar.SetHealth(enemy.currentHp);
     }
 
@@ -21,6 +22,9 @@ public class BattleHud : MonoBehaviour
     {
         nameText.text = player.playerData.Name;
         levelText.text = "Lvl " + player.level;
+        healthBar.SetMaxHealth(player.MaxHp);
         healthBar.SetHealth(player.currentHp);
+        Debug.Log("Player Max HP: " + player.MaxHp);
+        Debug.Log("Player HP: " + player.currentHp);
     }
 }

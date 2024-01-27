@@ -43,7 +43,7 @@ public class TBEnemy
     {
         get
         {
-            return enemyData.MaxHealthPoints * level;
+            return enemyData.MaxHealthPoints;
         }
     }
 

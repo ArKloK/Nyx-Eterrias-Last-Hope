@@ -12,13 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d68d1b49538a94e95d320eda09e4f8, type: 3}
   m_Name: TBPlayerData
   m_EditorClassIdentifier: 
-  Name: Player
-  element: 2
+  Name: Nyx
   Sprite: {fileID: 0}
-  MaxHealthPoints: 20
-  AttackPower: 10
-  DefensePower: 50
-  AttackSpeed: 20
   LearnableMoves:
   - Move: {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
     Level: 5

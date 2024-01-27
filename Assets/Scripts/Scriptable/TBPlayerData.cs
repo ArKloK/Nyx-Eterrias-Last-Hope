@@ -8,13 +8,7 @@ using UnityEngine.UI;
 public class TBPlayerData : ScriptableObject
 {
     public string Name;
-    public Element element;
     public Sprite Sprite;
-    //Base stats
-    public int MaxHealthPoints;
-    public int AttackPower;
-    public int DefensePower;
-    public int AttackSpeed;
     public List<LearnableMove> LearnableMoves;
 }
 

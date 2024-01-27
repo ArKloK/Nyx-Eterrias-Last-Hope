@@ -23,7 +23,18 @@ public class PlayerController : MonoBehaviour
     private int maxHealthPoints;
     private int currentHealthPoints;
     public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
+    public int MaxHealthPoints { get => maxHealthPoints; set => maxHealthPoints = value; }
     private int currentSpiritualEnergyPoints;
+    #endregion
+
+    #region Attack Variables
+    private int attackPower;
+    #endregion
+
+    #region TBCombat Variables
+    private float TBattackPower;
+    private float TBdefensePower;
+    private float TBattackSpeed;
     #endregion
 
     #region Level Variables
@@ -41,6 +52,10 @@ public class PlayerController : MonoBehaviour
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
         currentSpiritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
+        attackPower = Data.AttackPower;
+        TBattackPower = Data.TBAttackPower;
+        TBdefensePower = Data.TBDefensePower;
+        TBattackSpeed = Data.TBAttackSpeed;
     }
     void Start()
     {
@@ -72,6 +87,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
 
+        UpdateStats();
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -174,5 +190,18 @@ public class PlayerController : MonoBehaviour
     {
         currentHealthPoints = maxHealthPoints;
         healthBar.SetHealth(currentHealthPoints);
+    }
+
+    void UpdateStats()
+    {
+        PlayerStats.MaxHealthPoints = maxHealthPoints;
+        PlayerStats.CurrentHealthPoints = currentHealthPoints;
+        PlayerStats.TBAttackPower = TBattackPower;
+        PlayerStats.AttackPower = attackPower;
+        PlayerStats.TBAttackSpeed = TBattackSpeed;
+        PlayerStats.TBDefensePower = TBdefensePower;
+        PlayerStats.CurrentExperiencePoints = currentExperiencePoints;
+        PlayerStats.MaxExperiencePoints = maxExperiencePoints;
+        PlayerStats.CurrentLevel = currentLevel;
     }
 }
