@@ -8,6 +8,7 @@ public class BattleHud : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI hpText;
     public HealthBar healthBar;
 
     public void setData(TBEnemy enemy)
@@ -22,9 +23,8 @@ public class BattleHud : MonoBehaviour
     {
         nameText.text = player.playerData.Name;
         levelText.text = "Lvl " + player.level;
+        hpText.text = player.currentHp + "/" + player.MaxHp;
         healthBar.SetMaxHealth(player.MaxHp);
         healthBar.SetHealth(player.currentHp);
-        Debug.Log("Player Max HP: " + player.MaxHp);
-        Debug.Log("Player HP: " + player.currentHp);
     }
 }
