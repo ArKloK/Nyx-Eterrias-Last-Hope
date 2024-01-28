@@ -30,7 +30,7 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            if(playerUnit.player.moves.Count > 0)
+            if (playerUnit.player.moves.Count > 0)
                 HandleMoveSelection();
         }
     }
@@ -43,7 +43,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.SetMoveNames(playerUnit.player.moves);
 
-        yield return dialogueBox.TypeDialogueTB("A wild " + enemyUnit.enemyData.EnemyName + " appeared!");
+        yield return dialogueBox.TypeDialogueTB("A wild " + enemyUnit.enemyData.Name + " appeared!");
         yield return new WaitForSeconds(1f);
 
         PlayerAction();
@@ -61,6 +61,40 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableActionSelector(false);
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
+    }
+    IEnumerator PlayerMoveTurn()
+    {
+        state = BattleState.BUSY;
+        var move = playerUnit.player.moves[currentMove];
+        yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
+        yield return new WaitForSeconds(1f);
+        bool isFainted = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
+        yield return enemyHud.UpdateEnemyHp();
+        if (isFainted)
+        {
+            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+        }
+        else
+        {
+            StartCoroutine(EnemyMoveTurn());
+        }
+    }
+    IEnumerator EnemyMoveTurn()
+    {
+        state = BattleState.ENEMYMOVE;
+        var move = enemyUnit.enemy.GetRandomMove();
+        yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + " used " + move.MoveData.MoveName + "!");
+        yield return new WaitForSeconds(1f);
+        bool isFainted = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
+        yield return playerHud.UPdatePlayerHp();
+        if (isFainted)
+        {
+            yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+        }
+        else
+        {
+            PlayerAction();
+        }
     }
     private void HandleActionSelection()
     {
@@ -128,5 +162,11 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.player.moves[currentMove]);
 
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            dialogueBox.EnableMoveSelector(false);
+            dialogueBox.EnableDialogueText(true);
+            StartCoroutine(PlayerMoveTurn());
+        }
     }
 }

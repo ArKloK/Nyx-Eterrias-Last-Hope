@@ -15,6 +15,6 @@ MonoBehaviour:
   MoveName: Move2
   Description: 
   Element: 1
-  Power: 14
+  Power: 2
   Accuracy: 80
   CriticalChance: 20

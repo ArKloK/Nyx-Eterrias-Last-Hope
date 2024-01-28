@@ -62,4 +62,19 @@ public class TBPlayer
         }
     }
 
+    public bool TakeDamage(TBMove move, TBEnemy attacker)
+    {
+        //Improve the damage formula later
+        //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
+        int damage = Mathf.FloorToInt(move.MoveData.Power);
+        currentHp -= damage;
+        PlayerStats.CurrentHealthPoints = currentHp;
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+            return true;
+        }
+        return false;
+    }
+
 }

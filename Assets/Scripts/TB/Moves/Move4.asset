@@ -15,6 +15,6 @@ MonoBehaviour:
   MoveName: Move4
   Description: 
   Element: 3
-  Power: 40
+  Power: 2
   Accuracy: 20
   CriticalChance: 10

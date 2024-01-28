@@ -21,4 +21,20 @@ public class HealthBar : MonoBehaviour
         slider.value = health;
         fill.color = gradient.Evaluate(slider.normalizedValue); // normalizedValue is the value of the slider between 0 and 1
     }
+
+    //Create a IEnumerator to animate the health bar
+    public IEnumerator SetHealthAnimated(int health)
+    {
+        float currentHealth = slider.value;
+        float targetHealth = health;
+        float t = 0;
+
+        while (t < 1)
+        {
+            t += Time.deltaTime;
+            slider.value = Mathf.Lerp(currentHealth, targetHealth, t);
+            fill.color = gradient.Evaluate(slider.normalizedValue);
+            yield return null;
+        }
+    }
 }

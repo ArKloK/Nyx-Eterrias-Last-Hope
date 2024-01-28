@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
   PlayerElement: 0
-  MaxHealthPoints: 5
+  MaxHealthPoints: 20
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
   MaxExperiencePoints: 4
   LoseControlTime: 0.2
   InvincibleTime: 0.55
-  AttackSpeed: 0
-  DefensePower: 0
+  TBAttackPower: 0
+  TBAttackSpeed: 0
+  TBDefensePower: 0

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [CreateAssetMenu]
 public class TBEnemyData : ScriptableObject
 {
-    public string EnemyName;
+    public string Name;
     public Element element;
     public Sprite EnemySprite;
     //Base stats

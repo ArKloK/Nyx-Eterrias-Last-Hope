@@ -16,6 +16,6 @@ MonoBehaviour:
   Sprite: {fileID: 0}
   LearnableMoves:
   - Move: {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
-    Level: 5
+    Level: 1
   - Move: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
-    Level: 9
+    Level: 1

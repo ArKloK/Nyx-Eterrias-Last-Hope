@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217dabccb9d85f04394209dcb03db9d9, type: 3}
   m_Name: Enemy1Data
   m_EditorClassIdentifier: 
-  EnemyName: Enemy1
+  Name: Enemy1
   element: 1
   EnemySprite: {fileID: 0}
-  MaxHealthPoints: 20
-  AttackPower: 10
-  DefensePower: 5
+  MaxHealthPoints: 5
+  AttackPower: 1
+  DefensePower: 1
   AttackSpeed: 3
   Moves:
   - {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
