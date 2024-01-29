@@ -47,3 +47,23 @@ public enum Element
     Plant,
     Darkness,
 }
+
+public class TypeChart
+{
+    public static float[][] chart =
+    {
+        //HAS TO BE IMPROVED
+        //           Fire, Water, Plant, Darkness
+        new float[] {1f,   0.5f,  2f,    1f}, //Fire
+        new float[] {2f,   1f,    0.5f,  1f}, //Water
+        new float[] {0.5f, 2f,    1f,    1f}, //Plant
+        new float[] {1f,   1f,    1f,    1f}, //Darkness
+    };
+
+    public static float GetEffectiveness(Element attack, Element defense)
+    {
+        if (attack == Element.None || defense == Element.None)
+            return 1f;
+        return chart[(int)attack - 1][(int)defense - 1];
+    }
+}

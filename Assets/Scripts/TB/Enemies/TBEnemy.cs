@@ -53,18 +53,31 @@ public class TBEnemy
         }
     }
 
-    public bool TakeDamage(TBMove move, TBPlayer attacker)
+    public DamageDetails TakeDamage(TBMove move, TBPlayer attacker)
     {
+        float critical = 1f;
+        if (Random.value * 100f <= move.MoveData.CriticalChance)
+        {
+            Debug.Log("Player did Critical");
+            critical = 2f;
+        }
+        float type = TypeChart.GetEffectiveness(move.MoveData.Element, this.enemyData.element);
+        var damageDetails = new DamageDetails()
+        {
+            Fainted = false,
+            Critical = critical,
+            TypeEffectiveness = type
+        };
         //Improve the damage formula later
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
-        int damage = Mathf.FloorToInt(move.MoveData.Power);
+        int damage = Mathf.FloorToInt(move.MoveData.Power * type * critical);
         currentHp -= damage;
         if (currentHp <= 0)
         {
             currentHp = 0;
-            return true;
+            damageDetails.Fainted = true;
         }
-        return false;
+        return damageDetails;
     }
 
     //This method will be replaced with a more intelligent AI later

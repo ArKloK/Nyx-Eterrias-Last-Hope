@@ -17,7 +17,7 @@ public class BattleSystem : MonoBehaviour
     private int currentAction;
     private int currentMove;
 
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(SetUpBattle());
     }
@@ -44,7 +44,6 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.SetMoveNames(playerUnit.player.moves);
 
         yield return dialogueBox.TypeDialogueTB("A wild " + enemyUnit.enemyData.Name + " appeared!");
-        yield return new WaitForSeconds(1f);
 
         PlayerAction();
     }
@@ -67,10 +66,10 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.BUSY;
         var move = playerUnit.player.moves[currentMove];
         yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
-        yield return new WaitForSeconds(1f);
-        bool isFainted = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
+        var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
         yield return enemyHud.UpdateEnemyHp();
-        if (isFainted)
+        yield return ShowDamageDetails(damageDetails);
+        if (damageDetails.Fainted)
         {
             yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
         }
@@ -84,16 +83,32 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.ENEMYMOVE;
         var move = enemyUnit.enemy.GetRandomMove();
         yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + " used " + move.MoveData.MoveName + "!");
-        yield return new WaitForSeconds(1f);
-        bool isFainted = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
+        var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
         yield return playerHud.UPdatePlayerHp();
-        if (isFainted)
+        yield return ShowDamageDetails(damageDetails);
+        if (damageDetails.Fainted)
         {
             yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
         }
         else
         {
             PlayerAction();
+        }
+    }
+
+    IEnumerator ShowDamageDetails(DamageDetails damageDetails)
+    {
+        if (damageDetails.Critical > 1f)
+        {
+            yield return dialogueBox.TypeDialogueTB("A critical hit!");
+        }
+        if (damageDetails.TypeEffectiveness > 1f)
+        {
+            yield return dialogueBox.TypeDialogueTB("It's super effective!");
+        }
+        else if (damageDetails.TypeEffectiveness < 1f)
+        {
+            yield return dialogueBox.TypeDialogueTB("It's not very effective!");
         }
     }
     private void HandleActionSelection()

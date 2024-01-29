@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class PlayerStats
 {
-    public static Element element;
+    public static Element Element;
     public static int MaxHealthPoints;
     public static int CurrentHealthPoints;
     public static int AttackPower;

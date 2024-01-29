@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveName: Move2
   Description: 
-  Element: 1
+  Element: 3
   Power: 2
   Accuracy: 80
-  CriticalChance: 20
+  CriticalChance: 100

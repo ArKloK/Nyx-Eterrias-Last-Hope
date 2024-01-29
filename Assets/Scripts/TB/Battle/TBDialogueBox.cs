@@ -27,6 +27,7 @@ public class TBDialogueBox : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
+        yield return new WaitForSeconds(1f);
     }
 
     public void EnableDialogueText(bool enabled)

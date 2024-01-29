@@ -62,19 +62,32 @@ public class TBPlayer
         }
     }
 
-    public bool TakeDamage(TBMove move, TBEnemy attacker)
+    public DamageDetails TakeDamage(TBMove move, TBEnemy attacker)
     {
+        float critical = 1f;
+        if (Random.value * 100f <= move.MoveData.CriticalChance)
+        {
+            Debug.Log("Enemy did Critical");
+            critical = 2f;
+        }
+        float type = TypeChart.GetEffectiveness(move.MoveData.Element, PlayerStats.Element);
+        var damageDetails = new DamageDetails()
+        {
+            Fainted = false,
+            Critical = critical,
+            TypeEffectiveness = type
+        };
         //Improve the damage formula later
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
-        int damage = Mathf.FloorToInt(move.MoveData.Power);
+        int damage = Mathf.FloorToInt(move.MoveData.Power * critical * type);
         currentHp -= damage;
         PlayerStats.CurrentHealthPoints = currentHp;
         if (currentHp <= 0)
         {
             currentHp = 0;
-            return true;
+            damageDetails.Fainted = true;
         }
-        return false;
+        return damageDetails;
     }
 
 }
