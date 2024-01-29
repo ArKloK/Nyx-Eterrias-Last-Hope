@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
   PlayerElement: 0
-  MaxHealthPoints: 20
+  MaxHealthPoints: 5
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
   MaxExperiencePoints: 4
