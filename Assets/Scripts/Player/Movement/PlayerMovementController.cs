@@ -29,12 +29,11 @@ namespace PlayerMovementController
         public bool doubleJumpUnlocked;
         #endregion
 
-        #region Interface
+        #region Interface and Events
 
         public Vector2 FrameInput => _frameInput.Move;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
-
         #endregion
 
         private float _time;
@@ -48,7 +47,7 @@ namespace PlayerMovementController
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
-        private void Update()
+        public void HandleUpdate()
         {
             _time += Time.deltaTime;
             GatherInput();
@@ -105,7 +104,7 @@ namespace PlayerMovementController
             #endregion
         }
 
-        private void FixedUpdate()
+        public void HandleFixedUpdate()
         {
             CheckCollisions();
 

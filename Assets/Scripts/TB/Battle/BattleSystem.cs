@@ -14,6 +14,8 @@ public class BattleSystem : MonoBehaviour
     public BattleHud playerHud;
     public TBDialogueBox dialogueBox;
     BattleState state;
+    //This boolean is going to be true if the player wins the battle, and false if the player loses the battle.
+    public event Action<bool> OnBattleEnd;
     private int currentAction;
     private int currentMove;
 
@@ -22,7 +24,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetUpBattle());
     }
 
-    void Update()
+    public void HandleUpdate()
     {
         if (state == BattleState.PLAYERACTION)
         {
@@ -72,6 +74,8 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted)
         {
             yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+            yield return new WaitForSeconds(2f);
+            OnBattleEnd?.Invoke(true);
         }
         else
         {
@@ -89,6 +93,8 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted)
         {
             yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+            yield return new WaitForSeconds(2f);
+            OnBattleEnd?.Invoke(false);
         }
         else
         {
