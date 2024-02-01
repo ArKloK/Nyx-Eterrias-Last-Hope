@@ -51,6 +51,7 @@ public class BattleSystem : MonoBehaviour
         //ChooseFirstTurn();
     }
 
+    //THIS METHOD DOES NOT WORK PROPERLY
     void ChooseFirstTurn()
     {
         PlayerAction();
