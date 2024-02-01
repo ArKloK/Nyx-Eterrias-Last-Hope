@@ -8,9 +8,9 @@ public static class PlayerStats
     public static int MaxHealthPoints;
     public static int CurrentHealthPoints;
     public static int AttackPower;
-    public static float TBAttackSpeed;
-    public static float TBDefensePower;
-    public static float TBAttackPower;
+    public static int TBAttackSpeed;
+    public static int TBDefensePower;
+    public static int TBAttackPower;
     public static float CurrentExperiencePoints;
     public static float MaxExperiencePoints;
     public static int CurrentLevel;

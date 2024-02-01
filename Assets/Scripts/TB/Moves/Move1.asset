@@ -15,6 +15,10 @@ MonoBehaviour:
   MoveName: Move1
   Description: 
   Element: 2
+  Category: 0
+  Effects:
+    statBoosts: []
+  Target: 0
   Power: 2
   Accuracy: 100
   CriticalChance: 10

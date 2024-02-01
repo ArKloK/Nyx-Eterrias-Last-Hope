@@ -20,7 +20,4 @@ MonoBehaviour:
   DefensePower: 1
   AttackSpeed: 3
   Moves:
-  - {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
   - {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
-  - {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
-  - {fileID: 11400000, guid: 0352a9c8c39e89448899039fa8a480bc, type: 2}

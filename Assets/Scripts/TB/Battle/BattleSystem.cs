@@ -68,10 +68,30 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.BUSY;
         var move = playerUnit.player.moves[currentMove];
         yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
-        var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
-        yield return enemyHud.UpdateEnemyHp();
-        yield return ShowDamageDetails(damageDetails);
-        if (damageDetails.Fainted)
+
+        if (move.MoveData.Category == MoveCategory.Status)
+        {
+            var effects = move.MoveData.Effects;
+            if (effects.statBoosts != null)
+            {
+                if (move.MoveData.Target == MoveTarget.Self)
+                {
+                    playerUnit.player.ApplyBoosts(effects.statBoosts);
+                }
+                else
+                {
+                    enemyUnit.enemy.ApplyBoosts(effects.statBoosts);
+                }
+            }
+        }
+        else
+        {
+            var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
+            yield return enemyHud.UpdateEnemyHp();
+            yield return ShowDamageDetails(damageDetails);
+        }
+
+        if (enemyUnit.enemy.currentHp <= 0)
         {
             yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
             yield return new WaitForSeconds(2f);
@@ -87,10 +107,31 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.ENEMYMOVE;
         var move = enemyUnit.enemy.GetRandomMove();
         yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + " used " + move.MoveData.MoveName + "!");
-        var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
-        yield return playerHud.UPdatePlayerHp();
-        yield return ShowDamageDetails(damageDetails);
-        if (damageDetails.Fainted)
+
+        if (move.MoveData.Category == MoveCategory.Status)
+        {
+            var effects = move.MoveData.Effects;
+            if (effects.statBoosts != null)
+            {
+                if (move.MoveData.Target == MoveTarget.Self)
+                {
+                    enemyUnit.enemy.ApplyBoosts(effects.statBoosts);
+                }
+                else
+                {
+                    playerUnit.player.ApplyBoosts(effects.statBoosts);
+                }
+            }
+        }
+        else
+        {
+            var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
+            yield return playerHud.UPdatePlayerHp();
+            yield return ShowDamageDetails(damageDetails);
+        }
+
+
+        if (playerUnit.player.currentHp <= 0)
         {
             yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
             yield return new WaitForSeconds(2f);

@@ -32,9 +32,9 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region TBCombat Variables
-    private float TBattackPower;
-    private float TBdefensePower;
-    private float TBattackSpeed;
+    private int TBattackPower;
+    private int TBdefensePower;
+    private int TBattackSpeed;
     #endregion
 
     #region Level Variables

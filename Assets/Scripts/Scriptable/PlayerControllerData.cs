@@ -31,11 +31,11 @@ public class PlayerControllerData : ScriptableObject
 
     [Header("TURN BASED COMBAT")]
     [Tooltip("The amount of damage the player does in the TB combat")]
-    public float TBAttackPower;
+    public int TBAttackPower;
     [Tooltip("The speed of the player's attack in the TB combat")]
-    public float TBAttackSpeed;
+    public int TBAttackSpeed;
     [Tooltip("The amount of damage the player can take")]
-    public float TBDefensePower;
+    public int TBDefensePower;
 
 }
 
@@ -46,6 +46,13 @@ public enum Element
     Water,
     Plant,
     Darkness,
+}
+
+public enum Stat
+{
+    Attack,
+    Defense,
+    Speed
 }
 
 public class TypeChart

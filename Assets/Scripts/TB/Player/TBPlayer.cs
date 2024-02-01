@@ -8,12 +8,15 @@ public class TBPlayer
     public int level;
     public int currentHp;
     public List<TBMove> moves;
+    private Dictionary<Stat, int> stats;
+    private Dictionary<Stat, int> statBoosts;
 
     public TBPlayer(TBPlayerData playerData, int level)
     {
         this.playerData = playerData;
         this.level = level;
-        this.currentHp = PlayerStats.CurrentHealthPoints;
+        CalculateStats();
+        currentHp = PlayerStats.CurrentHealthPoints;
 
         moves = new List<TBMove>();
         foreach (LearnableMove move in playerData.LearnableMoves)
@@ -28,13 +31,20 @@ public class TBPlayer
                 break;
             }
         }
+
+        statBoosts = new Dictionary<Stat, int>()
+        {
+            { Stat.Attack, 0 },
+            { Stat.Defense, 0 },
+            { Stat.Speed, 0 }
+        };
     }
 
     public float Attack
     {
         get
         {
-            return PlayerStats.TBAttackPower * level;
+            return GetStat(Stat.Attack);
         }
     }
 
@@ -42,7 +52,7 @@ public class TBPlayer
     {
         get
         {
-            return PlayerStats.TBDefensePower * level;
+            return GetStat(Stat.Defense);
         }
     }
 
@@ -50,15 +60,44 @@ public class TBPlayer
     {
         get
         {
-            return PlayerStats.TBAttackSpeed * level;
+            return GetStat(Stat.Speed);
         }
     }
 
     public int MaxHp
     {
-        get
+        get; private set;
+    }
+
+    public int GetStat(Stat stat)
+    {
+        int statValue = stats[stat];
+
+        int boost = statBoosts[stat];
+        var boostValues = new float[] { 1f, 1.5f, 2f, 2.5f, 3f, 3.5f };
+
+        if (boost >= 0)
         {
-            return PlayerStats.MaxHealthPoints;
+            statValue = Mathf.FloorToInt(statValue * boostValues[boost]);
+        }
+        else
+        {
+            statValue = Mathf.FloorToInt(statValue / boostValues[-boost]);
+        }
+
+        return statValue;
+    }
+
+    public void ApplyBoosts(List<StatBoost> statBoosts)
+    {
+        foreach (var statBoost in statBoosts)
+        {
+            var stat = statBoost.stat;
+            var boost = statBoost.boost;
+
+            this.statBoosts[stat] = Mathf.Clamp(this.statBoosts[stat] + boost, -6, 6);
+
+            Debug.Log(stat + " has been boosted to " + this.statBoosts[stat]);
         }
     }
 
@@ -77,9 +116,9 @@ public class TBPlayer
             Critical = critical,
             TypeEffectiveness = type
         };
-        //Improve the damage formula later
+        //IMPROVE THIS DAMAGE FORMULA LATER
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
-        int damage = Mathf.FloorToInt(move.MoveData.Power * critical * type);
+        int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type);
         currentHp -= damage;
         PlayerStats.CurrentHealthPoints = currentHp;
         if (currentHp <= 0)
@@ -90,4 +129,15 @@ public class TBPlayer
         return damageDetails;
     }
 
+    void CalculateStats()
+    {
+        stats = new Dictionary<Stat, int>
+        {
+            { Stat.Attack, Mathf.FloorToInt(PlayerStats.TBAttackPower * level) },
+            { Stat.Defense, Mathf.FloorToInt(PlayerStats.TBDefensePower * level) },
+            { Stat.Speed, Mathf.FloorToInt(PlayerStats.TBAttackSpeed * level) }
+        };
+
+        MaxHp = PlayerStats.MaxHealthPoints;
+    }
 }
