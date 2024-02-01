@@ -11,6 +11,8 @@ public class TBEnemy
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
+    public Queue<string> statusChanges = new Queue<string>();
+
 
     public TBEnemy(TBEnemyData enemyData, int level)
     {
@@ -25,6 +27,11 @@ public class TBEnemy
             moves.Add(new TBMove(move));
         }
 
+        ResetStatBoosts();
+    }
+    
+    public void ResetStatBoosts()
+    {
         statBoosts = new Dictionary<Stat, int>()
         {
             { Stat.Attack, 0 },
@@ -90,6 +97,15 @@ public class TBEnemy
             var boost = statBoost.boost;
 
             this.statBoosts[stat] = Mathf.Clamp(this.statBoosts[stat] + boost, -6, 6);
+
+            if (boost > 0)
+            {
+                statusChanges.Enqueue($"{enemyData.Name}'s {stat} increased!");
+            }
+            else
+            {
+                statusChanges.Enqueue($"{enemyData.Name}'s {stat} decreased!");
+            }
 
             Debug.Log(stat + " has been boosted to " + this.statBoosts[stat]);
         }

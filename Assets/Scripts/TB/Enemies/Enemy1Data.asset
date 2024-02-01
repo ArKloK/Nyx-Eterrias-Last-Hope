@@ -18,6 +18,6 @@ MonoBehaviour:
   MaxHealthPoints: 5
   AttackPower: 1
   DefensePower: 1
-  AttackSpeed: 3
+  AttackSpeed: 5
   Moves:
   - {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}

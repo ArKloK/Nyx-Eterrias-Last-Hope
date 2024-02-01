@@ -10,6 +10,7 @@ public class TBPlayer
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
+    public Queue<string> statusChanges = new Queue<string>();
 
     public TBPlayer(TBPlayerData playerData, int level)
     {
@@ -32,6 +33,11 @@ public class TBPlayer
             }
         }
 
+        ResetStatBoosts();
+    }
+
+    public void ResetStatBoosts()
+    {
         statBoosts = new Dictionary<Stat, int>()
         {
             { Stat.Attack, 0 },
@@ -96,6 +102,15 @@ public class TBPlayer
             var boost = statBoost.boost;
 
             this.statBoosts[stat] = Mathf.Clamp(this.statBoosts[stat] + boost, -6, 6);
+
+            if (boost > 0)
+            {
+                statusChanges.Enqueue($"{playerData.Name}'s {stat} increased!");
+            }
+            else
+            {
+                statusChanges.Enqueue($"{playerData.Name}'s {stat} decreased!");
+            }
 
             Debug.Log(stat + " has been boosted to " + this.statBoosts[stat]);
         }
