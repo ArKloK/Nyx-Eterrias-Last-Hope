@@ -7,9 +7,11 @@ public class TBPlayer
     public TBPlayerData playerData;
     public int level;
     public int currentHp;
+    public bool hpChanged;
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
+    public Condition status;
     public Queue<string> statusChanges = new Queue<string>();
 
     public TBPlayer(TBPlayerData playerData, int level)
@@ -135,12 +137,9 @@ public class TBPlayer
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
         int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type);
         currentHp -= damage;
-        PlayerStats.CurrentHealthPoints = currentHp;
-        if (currentHp <= 0)
-        {
-            currentHp = 0;
-            damageDetails.Fainted = true;
-        }
+
+        UpdateHp(damage);
+
         return damageDetails;
     }
 
@@ -154,5 +153,26 @@ public class TBPlayer
         };
 
         MaxHp = PlayerStats.MaxHealthPoints;
+    }
+
+    public void SetStatus(ConditionID conditionId)
+    {
+        status = ConditionsDB.Conditions[conditionId];
+        statusChanges.Enqueue($"{playerData.Name} {status.StartMessage}");
+    }
+
+    public void UpdateHp(int damage)
+    {
+        if (damage == 0)
+            damage = 1;
+            
+        currentHp = Mathf.Clamp(currentHp - damage, 0, MaxHp);
+        PlayerStats.CurrentHealthPoints = currentHp;
+        hpChanged = true;
+    }
+
+    public void OnAfterTurn()
+    {
+        status?.OnEffectAppliedToPlayer?.Invoke(this);
     }
 }

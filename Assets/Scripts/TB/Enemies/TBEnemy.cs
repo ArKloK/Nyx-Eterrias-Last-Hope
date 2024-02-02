@@ -8,9 +8,11 @@ public class TBEnemy
     public TBEnemyData enemyData;
     public int currentHp;
     public int level;
+    public bool hpChanged;
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
+    public Condition status;
     public Queue<string> statusChanges = new Queue<string>();
 
 
@@ -29,7 +31,7 @@ public class TBEnemy
 
         ResetStatBoosts();
     }
-    
+
     public void ResetStatBoosts()
     {
         statBoosts = new Dictionary<Stat, int>()
@@ -130,11 +132,9 @@ public class TBEnemy
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
         int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * type * critical);
         currentHp -= damage;
-        if (currentHp <= 0)
-        {
-            currentHp = 0;
-            damageDetails.Fainted = true;
-        }
+
+        UpdateHp(damage);
+
         return damageDetails;
     }
 
@@ -154,6 +154,26 @@ public class TBEnemy
         };
 
         MaxHp = enemyData.MaxHealthPoints;
+    }
+
+    public void SetStatus(ConditionID conditionId)
+    {
+        status = ConditionsDB.Conditions[conditionId];
+        statusChanges.Enqueue($"{enemyData.Name} {status.StartMessage}");
+    }
+
+    public void UpdateHp(int damage)
+    {
+        if (damage == 0)
+            damage = 1;
+
+        currentHp = Mathf.Clamp(currentHp - damage, 0, MaxHp);
+        hpChanged = true;
+    }
+
+    public void OnAfterTurn()
+    {
+        status?.OnEffectAppliedToEnemy?.Invoke(this);
     }
 
 }

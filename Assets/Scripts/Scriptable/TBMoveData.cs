@@ -26,6 +26,7 @@ public enum MoveCategory
 public class MoveEffects
 {
     public List<StatBoost> statBoosts;
+    public ConditionID status;
 }
 
 [System.Serializable]

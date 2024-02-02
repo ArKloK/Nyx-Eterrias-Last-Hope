@@ -104,11 +104,22 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            StartCoroutine(EnemyMoveTurn());
+            //Statuses like poison will affect the player after the turn
+            // playerUnit.player.OnAfterTurn();
+            // yield return ShowPlayerStatusChanges(playerUnit.player);
+            // yield return playerHud.UpdatePlayerHp();
+            if (playerUnit.player.currentHp <= 0)
+            {
+                // yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                // yield return new WaitForSeconds(2f);
+                // EndBattle(false);
+            }
+            else
+            {
+                StartCoroutine(EnemyMoveTurn());
+            }
         }
     }
-
-
 
     IEnumerator EnemyMoveTurn()
     {
@@ -123,7 +134,7 @@ public class BattleSystem : MonoBehaviour
         else
         {
             var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
-            yield return playerHud.UPdatePlayerHp();
+            yield return playerHud.UpdatePlayerHp();
             yield return ShowDamageDetails(damageDetails);
         }
 
@@ -135,7 +146,32 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            PlayerAction();
+            //Statuses like poison will affect the enemy after the turn
+            enemyUnit.enemy.OnAfterTurn();
+            yield return ShowEnemyStatusChanges(enemyUnit.enemy);
+            yield return enemyHud.UpdateEnemyHp();
+            if (enemyUnit.enemy.currentHp <= 0)
+            {
+                yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+                yield return new WaitForSeconds(2f);
+                EndBattle(true);
+            }
+            else
+            {
+                playerUnit.player.OnAfterTurn();
+                yield return ShowPlayerStatusChanges(playerUnit.player);
+                yield return playerHud.UpdatePlayerHp();
+                if (playerUnit.player.currentHp <= 0)
+                {
+                    yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                    yield return new WaitForSeconds(2f);
+                    EndBattle(false);
+                }
+                else
+                {
+                    PlayerAction();
+                }
+            }
         }
     }
 
@@ -154,6 +190,12 @@ public class BattleSystem : MonoBehaviour
             }
         }
 
+        //Status Condition
+        if (effects.status != ConditionID.None)
+        {
+            enemy.SetStatus(effects.status);
+        }
+
         yield return ShowPlayerStatusChanges(player);
         yield return ShowEnemyStatusChanges(enemy);
     }
@@ -161,6 +203,8 @@ public class BattleSystem : MonoBehaviour
     IEnumerator RunEnemyMoveEffects(TBMove move, TBEnemy enemy, TBPlayer player)
     {
         var effects = move.MoveData.Effects;
+
+        //Stat Boosts
         if (effects.statBoosts != null)
         {
             if (move.MoveData.Target == MoveTarget.Self)
@@ -171,6 +215,12 @@ public class BattleSystem : MonoBehaviour
             {
                 player.ApplyBoosts(effects.statBoosts);
             }
+        }
+
+        //Status Condition
+        if (effects.status != ConditionID.None)
+        {
+            player.SetStatus(effects.status);
         }
 
         yield return ShowEnemyStatusChanges(enemy);

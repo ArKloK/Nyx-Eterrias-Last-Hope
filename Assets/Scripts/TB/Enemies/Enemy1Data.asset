@@ -15,9 +15,9 @@ MonoBehaviour:
   Name: Enemy1
   element: 1
   EnemySprite: {fileID: 0}
-  MaxHealthPoints: 5
+  MaxHealthPoints: 60
   AttackPower: 1
   DefensePower: 1
   AttackSpeed: 5
   Moves:
-  - {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
+  - {fileID: 11400000, guid: 9af6b0e96bf5f674a84a0135eabd88fc, type: 2}

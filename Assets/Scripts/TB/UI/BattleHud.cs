@@ -32,15 +32,23 @@ public class BattleHud : MonoBehaviour
         healthBar.SetHealth(player.currentHp);
     }
 
-    public IEnumerator UPdatePlayerHp()
+    public IEnumerator UpdatePlayerHp()
     {
-        hpText.text = player.currentHp + "/" + player.MaxHp;
-        yield return healthBar.SetHealthAnimated(player.currentHp);
+        if (player.hpChanged)
+        {
+            player.hpChanged = false;
+            hpText.text = player.currentHp + "/" + player.MaxHp;
+            yield return healthBar.SetHealthAnimated(player.currentHp);
+        }
     }
 
     public IEnumerator UpdateEnemyHp()
     {
-        yield return healthBar.SetHealthAnimated(enemy.currentHp);
+        if (enemy.hpChanged)
+        {
+            enemy.hpChanged = false;
+            yield return healthBar.SetHealthAnimated(enemy.currentHp);
+        }
     }
 
     // public void UpdatePlayerHp()

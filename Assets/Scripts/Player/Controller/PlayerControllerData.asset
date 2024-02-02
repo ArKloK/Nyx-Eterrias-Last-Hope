@@ -19,6 +19,6 @@ MonoBehaviour:
   MaxExperiencePoints: 4
   LoseControlTime: 0.2
   InvincibleTime: 0.55
-  TBAttackPower: 50
+  TBAttackPower: 2
   TBAttackSpeed: 3
   TBDefensePower: 3
