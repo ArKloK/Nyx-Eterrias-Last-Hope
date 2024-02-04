@@ -13,6 +13,7 @@ public class ConditionsDB
                 Name = "Poisoned",
                 Description = "This unit is poisoned and will take damage at the start of its turn.",
                 StartMessage = "is poisoned!",
+                RepeatedMovementMessage = "is already poisoned and can't be poisoned again!",
                 OnEffectAppliedToEnemy = (TBEnemy enemy) =>
                 {
                     enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is hurt by poison!");
@@ -32,6 +33,7 @@ public class ConditionsDB
                 Name = "Burning",
                 Description = "This unit is burning and will take damage at the start of its turn.",
                 StartMessage = "is burning!",
+                RepeatedMovementMessage = "is already burning and can't be burned again!",
                 OnEffectAppliedToEnemy = (TBEnemy enemy) =>
                 {
                     enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is hurt by burn!");
@@ -45,21 +47,26 @@ public class ConditionsDB
             }
         },
         {
-            ConditionID.Slowed,
+            ConditionID.Soaked,
             new Condition
             {
-                Name = "Slowed",
-                Description = "This unit is slowed and will have its movement reduced by 2.",
-                StartMessage = "is slowed!",
-            }
-        },
-        {
-            ConditionID.Blinded,
-            new Condition
-            {
-                Name = "Blinded",
-                Description = "This unit is blinded and will have its accuracy reduced by 50%.",
-                StartMessage = "is blinded!",
+                Name = "Soaked",
+                Description = "This unit is soaked and will have its accuracy reduced by 50%.",
+                StartMessage = "is soaked and will have its accuracy reduced by 50%!",
+                OnEffectAppliedToPlayer = (TBPlayer player) =>
+                {
+                    player.moves.ForEach(move =>
+                    {
+                        move.MoveData.Accuracy /= 2;
+                    });
+                },
+                OnEffectAppliedToEnemy = (TBEnemy enemy) =>
+                {
+                    enemy.moves.ForEach(move =>
+                    {
+                        move.MoveData.Accuracy /= 2;
+                    });
+                }
             }
         },
     };
@@ -70,6 +77,5 @@ public enum ConditionID
     None,
     Poisoned,
     Burning,
-    Slowed,
-    Blinded,
+    Soaked,
 }

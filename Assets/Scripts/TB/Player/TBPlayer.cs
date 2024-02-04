@@ -11,7 +11,7 @@ public class TBPlayer
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
-    public Condition status;
+    public List<Condition> statuses = new List<Condition>();
     public Queue<string> statusChanges = new Queue<string>();
 
     public TBPlayer(TBPlayerData playerData, int level)
@@ -155,17 +155,37 @@ public class TBPlayer
         MaxHp = PlayerStats.MaxHealthPoints;
     }
 
-    public void SetStatus(ConditionID conditionId)
+    public void AddStatus(ConditionID conditionId)
     {
-        status = ConditionsDB.Conditions[conditionId];
-        statusChanges.Enqueue($"{playerData.Name} {status.StartMessage}");
+        var condition = ConditionsDB.Conditions[conditionId];
+        if (statuses.Contains(condition))
+        {
+            statusChanges.Enqueue($"{playerData.Name} {condition.RepeatedMovementMessage}");
+            return;
+        }
+        statuses.Add(condition);
+
+        //Statuses like soaked will be applied immediately and only once
+        if (conditionId.Equals(ConditionID.Soaked))
+        {
+            condition.OnEffectAppliedToPlayer?.Invoke(this);
+        }
+        statusChanges.Enqueue($"{playerData.Name} {condition.StartMessage}");
+    }
+    public void RemoveStatus(ConditionID conditionId)
+    {
+        var condition = statuses.Find(status => status == ConditionsDB.Conditions[conditionId]);
+        if (condition != null)
+        {
+            statuses.Remove(condition);
+        }
     }
 
     public void UpdateHp(int damage)
     {
         if (damage == 0)
             damage = 1;
-            
+
         currentHp = Mathf.Clamp(currentHp - damage, 0, MaxHp);
         PlayerStats.CurrentHealthPoints = currentHp;
         hpChanged = true;
@@ -173,6 +193,12 @@ public class TBPlayer
 
     public void OnAfterTurn()
     {
-        status?.OnEffectAppliedToPlayer?.Invoke(this);
+        foreach (var status in statuses)
+        {
+            //This will avoid the soaked condition to be applied to the player more than once
+            if (status != ConditionsDB.Conditions[ConditionID.Soaked])
+                status?.OnEffectAppliedToPlayer?.Invoke(this);
+        }
+        Debug.Log("Move accuracy: " + moves[0].MoveData.Accuracy);
     }
 }

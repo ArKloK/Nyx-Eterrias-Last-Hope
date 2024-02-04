@@ -12,7 +12,7 @@ public class TBEnemy
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
-    public Condition status;
+    public List<Condition> statuses = new List<Condition>();
     public Queue<string> statusChanges = new Queue<string>();
 
 
@@ -156,10 +156,31 @@ public class TBEnemy
         MaxHp = enemyData.MaxHealthPoints;
     }
 
-    public void SetStatus(ConditionID conditionId)
+    public void AddStatus(ConditionID conditionId)
     {
-        status = ConditionsDB.Conditions[conditionId];
-        statusChanges.Enqueue($"{enemyData.Name} {status.StartMessage}");
+        var condition = ConditionsDB.Conditions[conditionId];
+        if (statuses.Contains(condition))
+        {
+            statusChanges.Enqueue($"{enemyData.Name} {condition.RepeatedMovementMessage}");
+            return;
+        }
+        statuses.Add(condition);
+
+        //Statuses like soaked will be applied immediately and only once
+        if (conditionId.Equals(ConditionID.Soaked))
+        {
+            condition.OnEffectAppliedToEnemy?.Invoke(this);
+        }
+        statusChanges.Enqueue($"{enemyData.Name} {condition.StartMessage}");
+    }
+
+    public void RemoveStatus(ConditionID conditionId)
+    {
+        var condition = statuses.Find(status => status == ConditionsDB.Conditions[conditionId]);
+        if (condition != null)
+        {
+            statuses.Remove(condition);
+        }
     }
 
     public void UpdateHp(int damage)
@@ -173,7 +194,13 @@ public class TBEnemy
 
     public void OnAfterTurn()
     {
-        status?.OnEffectAppliedToEnemy?.Invoke(this);
+        foreach (var status in statuses)
+        {
+            //This will avoid the soaked condition to be applied to the enemy more than once
+            if (status != ConditionsDB.Conditions[ConditionID.Soaked])
+                status?.OnEffectAppliedToEnemy?.Invoke(this);
+        }
+        Debug.Log("Move accuracy: " + moves[0].MoveData.Accuracy);
     }
 
 }

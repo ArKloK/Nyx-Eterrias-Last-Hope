@@ -193,7 +193,7 @@ public class BattleSystem : MonoBehaviour
         //Status Condition
         if (effects.status != ConditionID.None)
         {
-            enemy.SetStatus(effects.status);
+            enemy.AddStatus(effects.status);
         }
 
         yield return ShowPlayerStatusChanges(player);
@@ -220,7 +220,7 @@ public class BattleSystem : MonoBehaviour
         //Status Condition
         if (effects.status != ConditionID.None)
         {
-            player.SetStatus(effects.status);
+            player.AddStatus(effects.status);
         }
 
         yield return ShowEnemyStatusChanges(enemy);

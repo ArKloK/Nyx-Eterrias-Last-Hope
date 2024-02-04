@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04cc09f0473fe7447abc5cb5c5414d53, type: 3}
-  m_Name: Move2
+  m_Name: SoakMove
   m_EditorClassIdentifier: 
-  MoveName: Move2
+  MoveName: Soak Move
   Description: 
-  Element: 3
+  Element: 2
   Category: 1
   Effects:
-    statBoosts:
-    - stat: 0
-      boost: 2
-  Target: 1
-  Power: 2
-  Accuracy: 80
-  CriticalChance: 100
+    statBoosts: []
+    status: 3
+  Target: 0
+  Power: 0
+  Accuracy: 0
+  CriticalChance: 0
