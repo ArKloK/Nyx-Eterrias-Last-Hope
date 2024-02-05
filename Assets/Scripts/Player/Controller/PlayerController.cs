@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayerEventArgs : EventArgs
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void HandleUpdate()
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -203,5 +204,20 @@ public class PlayerController : MonoBehaviour
         PlayerStats.CurrentExperiencePoints = currentExperiencePoints;
         PlayerStats.MaxExperiencePoints = maxExperiencePoints;
         PlayerStats.CurrentLevel = currentLevel;
+    }
+
+    public void setStats()
+    {
+        Debug.Log("current health points: " + PlayerStats.CurrentHealthPoints + " max health points: " + PlayerStats.MaxHealthPoints);
+        maxHealthPoints = PlayerStats.MaxHealthPoints;
+        currentHealthPoints = PlayerStats.CurrentHealthPoints;
+        TBattackPower = PlayerStats.TBAttackPower;
+        attackPower = PlayerStats.AttackPower;
+        TBattackSpeed = PlayerStats.TBAttackSpeed;
+        TBdefensePower = PlayerStats.TBDefensePower;
+        currentExperiencePoints = PlayerStats.CurrentExperiencePoints;
+        maxExperiencePoints = PlayerStats.MaxExperiencePoints;
+        currentLevel = PlayerStats.CurrentLevel;
+        healthBar.SetHealth(currentHealthPoints);
     }
 }

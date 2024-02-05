@@ -9,9 +9,24 @@ public class BattleHud : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI hpText;
+    public TextMeshProUGUI statusText;
     public HealthBar healthBar;
     private TBPlayer player;
     private TBEnemy enemy;
+    public Color psnColor;
+    public Color brnColor;
+    public Color soakColor;
+    private Dictionary<ConditionID, Color> conditionColors;
+
+    void setConditionColors()
+    {
+        conditionColors = new Dictionary<ConditionID, Color>()
+        {
+            { ConditionID.Poisoned, psnColor },
+            { ConditionID.Burning, brnColor },
+            { ConditionID.Soaked, soakColor }
+        };
+    }
 
     public void setData(TBEnemy enemy)
     {
@@ -20,6 +35,9 @@ public class BattleHud : MonoBehaviour
         levelText.text = "Lvl " + enemy.level;
         healthBar.SetMaxHealth(enemy.MaxHp);
         healthBar.SetHealth(enemy.currentHp);
+        SetEnemyStatusText();
+        setConditionColors();
+        this.enemy.OnStatusChanged += SetEnemyStatusText;
     }
 
     public void setData(TBPlayer player)
@@ -30,6 +48,9 @@ public class BattleHud : MonoBehaviour
         hpText.text = player.currentHp + "/" + player.MaxHp;
         healthBar.SetMaxHealth(player.MaxHp);
         healthBar.SetHealth(player.currentHp);
+        SetPlayerStatusText();
+        setConditionColors();
+        this.player.OnStatusChanged += SetPlayerStatusText;
     }
 
     public IEnumerator UpdatePlayerHp()
@@ -51,14 +72,37 @@ public class BattleHud : MonoBehaviour
         }
     }
 
-    // public void UpdatePlayerHp()
-    // {
-    //     hpText.text = player.currentHp + "/" + player.MaxHp;
-    //     healthBar.SetHealth(player.currentHp);
-    // }
+    void SetPlayerStatusText()
+    {
+        if (player.statuses.Count > 0)
+        {
+            statusText.text = "";
+            foreach (var status in player.statuses)
+            {
+                string colorHex = ColorUtility.ToHtmlStringRGB(conditionColors[status.ID]);
+                statusText.text += $"<color=#{colorHex}>{status.HudMessage}</color>\n";
+            }
+        }
+        else
+        {
+            statusText.text = "";
+        }
+    }
 
-    // public void UpdateEnemyHp()
-    // {
-    //     healthBar.SetHealth(enemy.currentHp);
-    // }
+    void SetEnemyStatusText()
+    {
+        if (enemy.statuses.Count > 0)
+        {
+            statusText.text = "";
+            foreach (var status in enemy.statuses)
+            {
+                string colorHex = ColorUtility.ToHtmlStringRGB(conditionColors[status.ID]);
+                statusText.text += $"<color=#{colorHex}>{status.HudMessage}</color>\n";
+            }
+        }
+        else
+        {
+            statusText.text = "";
+        }
+    }
 }

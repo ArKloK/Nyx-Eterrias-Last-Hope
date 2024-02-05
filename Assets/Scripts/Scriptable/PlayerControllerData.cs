@@ -52,7 +52,8 @@ public enum Stat
 {
     Attack,
     Defense,
-    Speed
+    Speed,
+    Accuracy,
 }
 
 public class TypeChart

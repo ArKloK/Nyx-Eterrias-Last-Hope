@@ -27,12 +27,15 @@ public class GameController : MonoBehaviour
         SSCamera.gameObject.SetActive(false);
     }
 
+    //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
     public void EndBattle(bool won)
     {
-        state = GameState.SS;
+        //TODO: Handle if the player loses the battle
         player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        player.GetComponent<PlayerController>().setStats();
         battleSystem.gameObject.SetActive(false);
         SSCamera.gameObject.SetActive(true);
+        state = GameState.SS;
     }
 
     void Update()
@@ -40,6 +43,7 @@ public class GameController : MonoBehaviour
         if (state == GameState.SS)
         {
             player.GetComponent<PlayerMovementController.PlayerMovementController>().HandleUpdate();
+            player.GetComponent<PlayerController>().HandleUpdate();
         }
         else if (state == GameState.TB)
         {

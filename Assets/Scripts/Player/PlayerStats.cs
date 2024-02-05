@@ -11,7 +11,7 @@ public static class PlayerStats
     public static int TBAttackSpeed;
     public static int TBDefensePower;
     public static int TBAttackPower;
-    public static float CurrentExperiencePoints;
-    public static float MaxExperiencePoints;
+    public static int CurrentExperiencePoints;
+    public static int MaxExperiencePoints;
     public static int CurrentLevel;
 }

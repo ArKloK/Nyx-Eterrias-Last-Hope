@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,13 @@ public class TBPlayer
     public int level;
     public int currentHp;
     public bool hpChanged;
+    public int statusTime;
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
     public List<Condition> statuses = new List<Condition>();
     public Queue<string> statusChanges = new Queue<string>();
+    public event Action OnStatusChanged;
 
     public TBPlayer(TBPlayerData playerData, int level)
     {
@@ -44,7 +47,7 @@ public class TBPlayer
         {
             { Stat.Attack, 0 },
             { Stat.Defense, 0 },
-            { Stat.Speed, 0 }
+            { Stat.Speed, 0 },
         };
     }
 
@@ -64,11 +67,15 @@ public class TBPlayer
         }
     }
 
-    public float Speed
+    public int Speed
     {
         get
         {
             return GetStat(Stat.Speed);
+        }
+        set
+        {
+            stats[Stat.Speed] = value;
         }
     }
 
@@ -121,7 +128,7 @@ public class TBPlayer
     public DamageDetails TakeDamage(TBMove move, TBEnemy attacker)
     {
         float critical = 1f;
-        if (Random.value * 100f <= move.MoveData.CriticalChance)
+        if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
         {
             Debug.Log("Enemy did Critical");
             critical = 2f;
@@ -136,7 +143,6 @@ public class TBPlayer
         //IMPROVE THIS DAMAGE FORMULA LATER
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
         int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type);
-        currentHp -= damage;
 
         UpdateHp(damage);
 
@@ -171,6 +177,7 @@ public class TBPlayer
             condition.OnEffectAppliedToPlayer?.Invoke(this);
         }
         statusChanges.Enqueue($"{playerData.Name} {condition.StartMessage}");
+        OnStatusChanged?.Invoke();
     }
     public void RemoveStatus(ConditionID conditionId)
     {
@@ -179,6 +186,7 @@ public class TBPlayer
         {
             statuses.Remove(condition);
         }
+        OnStatusChanged?.Invoke();
     }
 
     public void UpdateHp(int damage)
@@ -199,6 +207,27 @@ public class TBPlayer
             if (status != ConditionsDB.Conditions[ConditionID.Soaked])
                 status?.OnEffectAppliedToPlayer?.Invoke(this);
         }
-        Debug.Log("Move accuracy: " + moves[0].MoveData.Accuracy);
+    }
+
+    //This method will remove all the statuses that have expired
+    public void OnBeforeMove()
+    {
+        List<Condition> conditions = new List<Condition>();
+        foreach (var status in statuses)
+        {
+            //This action returns a condition that will be removed from the player's statuses
+            conditions.Add(status?.OnBeforePlayerMove?.Invoke(this));
+        }
+
+        if (conditions.Count > 0)
+        {
+            foreach (var condition in conditions)
+            {
+                if (condition != null)
+                {
+                    RemoveStatus(condition.ID);
+                }
+            }
+        }
     }
 }

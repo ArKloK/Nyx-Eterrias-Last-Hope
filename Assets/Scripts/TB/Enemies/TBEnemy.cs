@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +10,13 @@ public class TBEnemy
     public int currentHp;
     public int level;
     public bool hpChanged;
+    public int statusTime;
     public List<TBMove> moves;
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
     public List<Condition> statuses = new List<Condition>();
     public Queue<string> statusChanges = new Queue<string>();
-
+    public event Action OnStatusChanged;
 
     public TBEnemy(TBEnemyData enemyData, int level)
     {
@@ -63,6 +65,10 @@ public class TBEnemy
         get
         {
             return GetStat(Stat.Speed);
+        }
+        set
+        {
+            stats[Stat.Speed] = value;
         }
     }
 
@@ -116,7 +122,7 @@ public class TBEnemy
     public DamageDetails TakeDamage(TBMove move, TBPlayer attacker)
     {
         float critical = 1f;
-        if (Random.value * 100f <= move.MoveData.CriticalChance)
+        if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
         {
             Debug.Log("Player did Critical");
             critical = 2f;
@@ -141,7 +147,7 @@ public class TBEnemy
     //This method will be replaced with a more intelligent AI later
     public TBMove GetRandomMove()
     {
-        return moves[Random.Range(0, enemyData.Moves.Count)];
+        return moves[UnityEngine.Random.Range(0, enemyData.Moves.Count)];
     }
 
     void CalculateStats()
@@ -172,6 +178,7 @@ public class TBEnemy
             condition.OnEffectAppliedToEnemy?.Invoke(this);
         }
         statusChanges.Enqueue($"{enemyData.Name} {condition.StartMessage}");
+        OnStatusChanged?.Invoke();
     }
 
     public void RemoveStatus(ConditionID conditionId)
@@ -181,6 +188,7 @@ public class TBEnemy
         {
             statuses.Remove(condition);
         }
+        OnStatusChanged?.Invoke();
     }
 
     public void UpdateHp(int damage)
@@ -200,7 +208,27 @@ public class TBEnemy
             if (status != ConditionsDB.Conditions[ConditionID.Soaked])
                 status?.OnEffectAppliedToEnemy?.Invoke(this);
         }
-        Debug.Log("Move accuracy: " + moves[0].MoveData.Accuracy);
     }
 
+    //This method will remove all the statuses that have expired
+    public void OnBeforeMove()
+    {
+        List<Condition> conditions = new List<Condition>();
+        foreach (var status in statuses)
+        {
+            //This action returns a condition that will be removed from the player's statuses
+            conditions.Add(status?.OnBeforeEnemyMove?.Invoke(this));
+        }
+
+        if (conditions.Count > 0)
+        {
+            foreach (var condition in conditions)
+            {
+                if (condition != null)
+                {
+                    RemoveStatus(condition.ID);
+                }
+            }
+        }
+    }
 }

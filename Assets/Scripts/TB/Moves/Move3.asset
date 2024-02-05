@@ -15,6 +15,13 @@ MonoBehaviour:
   MoveName: Move3
   Description: 
   Element: 2
-  Power: 2
+  Category: 1
+  Effects:
+    statBoosts:
+    - stat: 0
+      boost: -1
+    status: 0
+  Target: 0
+  Power: 0
   Accuracy: 100
   CriticalChance: 60

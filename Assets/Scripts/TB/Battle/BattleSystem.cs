@@ -81,40 +81,40 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerMoveTurn()
     {
+        playerUnit.player.OnBeforeMove();
         state = BattleState.BUSY;
         var move = playerUnit.player.moves[currentMove];
         yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
 
-        if (move.MoveData.Category == MoveCategory.Status)
+        if (CheckIfMoveHits(move))
         {
-            yield return RunPlayerMoveEffects(move, playerUnit.player, enemyUnit.enemy);
-        }
-        else
-        {
-            var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
-            yield return enemyHud.UpdateEnemyHp();
-            yield return ShowDamageDetails(damageDetails);
-        }
-
-        if (enemyUnit.enemy.currentHp <= 0)
-        {
-            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
-            yield return new WaitForSeconds(2f);
-            EndBattle(true);
-        }
-        else
-        {
-            //Statuses like poison will affect the player after the turn
-            // playerUnit.player.OnAfterTurn();
-            // yield return ShowPlayerStatusChanges(playerUnit.player);
-            // yield return playerHud.UpdatePlayerHp();
-            if (playerUnit.player.currentHp <= 0)
+            if (move.MoveData.Category == MoveCategory.Status)
             {
-                // yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
-                // yield return new WaitForSeconds(2f);
-                // EndBattle(false);
+                yield return RunPlayerMoveEffects(move, playerUnit.player, enemyUnit.enemy);
             }
             else
+            {
+                var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
+                yield return enemyHud.UpdateEnemyHp();
+                yield return ShowDamageDetails(damageDetails);
+            }
+
+            if (enemyUnit.enemy.currentHp <= 0)
+            {
+                yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+                yield return new WaitForSeconds(2f);
+                EndBattle(true);
+            }
+        }
+        else
+        {
+            Debug.Log("Player's attack missed!");
+            yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + "'s attack missed!");
+        }
+
+        if (enemyUnit.enemy.currentHp > 0)
+        {
+            if (playerUnit.player.currentHp > 0)
             {
                 StartCoroutine(EnemyMoveTurn());
             }
@@ -123,28 +123,38 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemyMoveTurn()
     {
+        enemyUnit.enemy.OnBeforeMove();
         state = BattleState.ENEMYMOVE;
         var move = enemyUnit.enemy.GetRandomMove();
         yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + " used " + move.MoveData.MoveName + "!");
 
-        if (move.MoveData.Category == MoveCategory.Status)
+        if (CheckIfMoveHits(move))
         {
-            yield return RunEnemyMoveEffects(move, enemyUnit.enemy, playerUnit.player);
+            if (move.MoveData.Category == MoveCategory.Status)
+            {
+                yield return RunEnemyMoveEffects(move, enemyUnit.enemy, playerUnit.player);
+            }
+            else
+            {
+                var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
+                yield return playerHud.UpdatePlayerHp();
+                yield return ShowDamageDetails(damageDetails);
+            }
+
+            if (playerUnit.player.currentHp <= 0)
+            {
+                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                yield return new WaitForSeconds(2f);
+                EndBattle(false);
+            }
         }
         else
         {
-            var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
-            yield return playerHud.UpdatePlayerHp();
-            yield return ShowDamageDetails(damageDetails);
+            Debug.Log("Enemy's attack missed!");
+            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + "'s attack missed!");
         }
 
-        if (playerUnit.player.currentHp <= 0)
-        {
-            yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
-            yield return new WaitForSeconds(2f);
-            EndBattle(false);
-        }
-        else
+        if (playerUnit.player.currentHp > 0)
         {
             //Statuses like poison will affect the enemy after the turn
             enemyUnit.enemy.OnAfterTurn();
@@ -334,11 +344,21 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
     public void EndBattle(bool won)
     {
         state = BattleState.BATTLEOVER;
         playerUnit.player.ResetStatBoosts();
         enemyUnit.enemy.ResetStatBoosts();
         OnBattleEnd?.Invoke(won);
+    }
+
+    bool CheckIfMoveHits(TBMove move)
+    {
+        if (move.MoveData.Accuracy == 100)
+        {
+            return true;
+        }
+        return UnityEngine.Random.Range(1, 101) <= move.Accuracy;
     }
 }

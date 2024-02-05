@@ -18,6 +18,7 @@ MonoBehaviour:
   Category: 0
   Effects:
     statBoosts: []
+    status: 0
   Target: 0
   Power: 2
   Accuracy: 100
