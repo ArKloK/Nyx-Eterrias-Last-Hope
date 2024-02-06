@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum BattleState { START, PLAYERACTION, PLAYERMOVE, ENEMYMOVE, BUSY, BATTLEOVER }
+public enum BattleState { START, PLAYERACTION, PLAYERMOVE, ENEMYMOVE, RUNNINGTURN, BATTLEOVER }
+public enum BattleAction { FIGHT, INVENTORY }
 
 public class BattleSystem : MonoBehaviour
 {
@@ -48,22 +49,6 @@ public class BattleSystem : MonoBehaviour
         yield return dialogueBox.TypeDialogueTB("A wild " + enemyUnit.enemyData.Name + " appeared!");
 
         PlayerAction();
-        //ChooseFirstTurn();
-    }
-
-    //THIS METHOD DOES NOT WORK PROPERLY
-    void ChooseFirstTurn()
-    {
-        PlayerAction();
-        if (playerUnit.player.Speed >= enemyUnit.enemy.Speed)
-        {
-
-        }
-        else
-        {
-
-            StartCoroutine(EnemyMoveTurn());
-        }
     }
 
     void PlayerAction()
@@ -79,10 +64,64 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
     }
+
+    IEnumerator RunTurns(BattleAction playerAction)
+    {
+        state = BattleState.RUNNINGTURN;
+        if (playerAction == BattleAction.FIGHT)
+        {
+            //Check who goes first
+            bool playerGoesFirst = playerUnit.player.Speed >= enemyUnit.enemy.Speed;
+
+            if (playerGoesFirst)
+            {
+                yield return PlayerMoveTurn();
+                if (state == BattleState.BATTLEOVER)
+                {
+                    yield return RunAfterTurn();
+                    yield break;
+                }
+
+                yield return EnemyMoveTurn();
+                if (state == BattleState.BATTLEOVER)
+                {
+                    yield return RunAfterTurn();
+                    yield break;
+                }
+            }
+            else
+            {
+                yield return EnemyMoveTurn();
+                if (state == BattleState.BATTLEOVER)
+                {
+                    yield return RunAfterTurn();
+                    yield break;
+                }
+
+                yield return PlayerMoveTurn();
+                if (state == BattleState.BATTLEOVER)
+                {
+                    yield return RunAfterTurn();
+                    yield break;
+                }
+            }
+            yield return RunAfterTurn();
+        }
+        else if (playerAction == BattleAction.INVENTORY)
+        {
+            //Inventory action
+        }
+
+        if (state != BattleState.BATTLEOVER)
+        {
+            PlayerAction();
+        }
+    }
+
     IEnumerator PlayerMoveTurn()
     {
         playerUnit.player.OnBeforeMove();
-        state = BattleState.BUSY;
+        state = BattleState.RUNNINGTURN;
         var move = playerUnit.player.moves[currentMove];
         yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
 
@@ -112,13 +151,13 @@ public class BattleSystem : MonoBehaviour
             yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + "'s attack missed!");
         }
 
-        if (enemyUnit.enemy.currentHp > 0)
-        {
-            if (playerUnit.player.currentHp > 0)
-            {
-                StartCoroutine(EnemyMoveTurn());
-            }
-        }
+        // if (enemyUnit.enemy.currentHp > 0)
+        // {
+        //     if (playerUnit.player.currentHp > 0)
+        //     {
+        //         StartCoroutine(EnemyMoveTurn());
+        //     }
+        // }
     }
 
     IEnumerator EnemyMoveTurn()
@@ -153,36 +192,51 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("Enemy's attack missed!");
             yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + "'s attack missed!");
         }
+    }
 
-        if (playerUnit.player.currentHp > 0)
+    IEnumerator RunAfterTurn()
+    {
+        //This will check if the battle is over before running the after turn effects
+        if (state == BattleState.BATTLEOVER)
         {
-            //Statuses like poison will affect the enemy after the turn
-            enemyUnit.enemy.OnAfterTurn();
-            yield return ShowEnemyStatusChanges(enemyUnit.enemy);
-            yield return enemyHud.UpdateEnemyHp();
-            if (enemyUnit.enemy.currentHp <= 0)
+            if (playerUnit.player.currentHp <= 0)
+            {
+                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                yield return new WaitForSeconds(2f);
+                EndBattle(false);
+            }
+            else if (enemyUnit.enemy.currentHp <= 0)
             {
                 yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
                 EndBattle(true);
             }
-            else
+            //This will break the coroutine if the battle is over
+            yield break;
+        }
+        //Statuses like poison will affect the enemy after the turn
+        enemyUnit.enemy.OnAfterTurn();
+        yield return ShowEnemyStatusChanges(enemyUnit.enemy);
+        yield return enemyHud.UpdateEnemyHp();
+        if (enemyUnit.enemy.currentHp <= 0)
+        {
+            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+            yield return new WaitForSeconds(2f);
+            EndBattle(true);
+        }
+        else
+        {
+            playerUnit.player.OnAfterTurn();
+            yield return ShowPlayerStatusChanges(playerUnit.player);
+            yield return playerHud.UpdatePlayerHp();
+            if (playerUnit.player.currentHp <= 0)
             {
-                playerUnit.player.OnAfterTurn();
-                yield return ShowPlayerStatusChanges(playerUnit.player);
-                yield return playerHud.UpdatePlayerHp();
-                if (playerUnit.player.currentHp <= 0)
-                {
-                    yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
-                    yield return new WaitForSeconds(2f);
-                    EndBattle(false);
-                }
-                else
-                {
-                    PlayerAction();
-                }
+                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                yield return new WaitForSeconds(2f);
+                EndBattle(false);
             }
         }
+
     }
 
     IEnumerator RunPlayerMoveEffects(TBMove move, TBPlayer player, TBEnemy enemy)
@@ -340,7 +394,7 @@ public class BattleSystem : MonoBehaviour
         {
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);
-            StartCoroutine(PlayerMoveTurn());
+            StartCoroutine(RunTurns(BattleAction.FIGHT));
         }
     }
 

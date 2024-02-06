@@ -12,6 +12,8 @@ public class TBEnemy
     public bool hpChanged;
     public int statusTime;
     public List<TBMove> moves;
+    public TBMove CurrentMove { get; set; }
+
     private Dictionary<Stat, int> stats;
     private Dictionary<Stat, int> statBoosts;
     public List<Condition> statuses = new List<Condition>();

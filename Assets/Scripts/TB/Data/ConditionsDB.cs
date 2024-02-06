@@ -71,7 +71,7 @@ public class ConditionsDB
                         {
                             player.moves.ForEach(move =>
                             {
-                                player.Speed *= 2;
+                                player.Speed = PlayerStats.TBAttackSpeed;
                                 move.Accuracy = move.MoveData.Accuracy;
                             });
                             player.statusChanges.Enqueue($"{player.playerData.Name} is no longer soaked!");
@@ -90,7 +90,7 @@ public class ConditionsDB
                         {
                             enemy.moves.ForEach(move =>
                             {
-                                enemy.Speed *= 2;
+                                enemy.Speed = enemy.enemyData.AttackSpeed;
                                 move.Accuracy = move.MoveData.Accuracy;
                             });
                             enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is no longer soaked!");
@@ -107,7 +107,7 @@ public class ConditionsDB
                     //Reduce player's speed and moves accuracy
                     player.moves.ForEach(move =>
                     {
-                        player.Speed /= 2;
+                        player.Speed = PlayerStats.TBAttackSpeed / 2;
                         move.Accuracy = move.MoveData.Accuracy / 2;
                         Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
                         Debug.Log("Player speed: " + player.Speed);
@@ -121,7 +121,7 @@ public class ConditionsDB
                     //Reduce enemy speed and moves accuracy
                     enemy.moves.ForEach(move =>
                     {
-                        enemy.Speed /= 2;
+                        enemy.Speed = enemy.enemyData.AttackSpeed / 2;
                         move.Accuracy = move.MoveData.Accuracy / 2;
                         Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
                         Debug.Log("Enemy speed: " + enemy.Speed);
