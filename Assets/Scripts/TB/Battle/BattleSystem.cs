@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public enum BattleState { START, PLAYERACTION, PLAYERMOVE, ENEMYMOVE, RUNNINGTURN, BATTLEOVER }
 public enum BattleAction { FIGHT, INVENTORY }
 

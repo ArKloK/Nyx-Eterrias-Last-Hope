@@ -208,7 +208,6 @@ public class PlayerController : MonoBehaviour
 
     public void setStats()
     {
-        Debug.Log("current health points: " + PlayerStats.CurrentHealthPoints + " max health points: " + PlayerStats.MaxHealthPoints);
         maxHealthPoints = PlayerStats.MaxHealthPoints;
         currentHealthPoints = PlayerStats.CurrentHealthPoints;
         TBattackPower = PlayerStats.TBAttackPower;
