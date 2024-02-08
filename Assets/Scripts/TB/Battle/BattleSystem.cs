@@ -8,20 +8,19 @@ public enum BattleAction { FIGHT, INVENTORY }
 
 public class BattleSystem : MonoBehaviour
 {
-    public EnemyUnit enemyUnit;
-    public PlayerUnit playerUnit;
-    public BattleHud enemyHud;
-    public BattleHud playerHud;
-    public TBDialogueBox dialogueBox;
+    [SerializeField] TBCharacterUnit playerUnit;
+    [SerializeField] TBCharacterUnit enemyUnit;
+    [SerializeField] BattleHud playerHud;
+    [SerializeField] BattleHud enemyHud;
+    [SerializeField] TBDialogueBox dialogueBox;
     BattleState state;
-    //This boolean is going to be true if the player wins the battle, and false if the player loses the battle.
     public event Action<bool> OnBattleEnd;
-    private int currentAction;
-    private int currentMove;
+    int currentAction;
+    int currentMove;
 
     void OnEnable()
     {
-        StartCoroutine(SetUpBattle());
+        StartCoroutine(SetupBattle());
     }
 
     public void HandleUpdate()
@@ -32,24 +31,24 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            if (playerUnit.player.moves.Count > 0)
+            if (playerUnit.Character.Moves.Count > 0)
                 HandleMoveSelection();
         }
     }
-    public IEnumerator SetUpBattle()
+
+    IEnumerator SetupBattle()
     {
         playerUnit.setData();
-        playerHud.setData(playerUnit.player);
+        playerHud.SetData(playerUnit.Character);
         enemyUnit.setData();
-        enemyHud.setData(enemyUnit.enemy);
+        enemyHud.SetData(enemyUnit.Character);
 
-        dialogueBox.SetMoveNames(playerUnit.player.moves);
+        dialogueBox.SetMoveNames(playerUnit.Character.Moves);
 
-        yield return dialogueBox.TypeDialogueTB("A wild " + enemyUnit.enemyData.Name + " appeared!");
+        yield return dialogueBox.TypeDialogueTB($"{enemyUnit.Character.CharacterData.Name} wants to battle!");
 
         PlayerAction();
     }
-
     void PlayerAction()
     {
         state = BattleState.PLAYERACTION;
@@ -70,40 +69,24 @@ public class BattleSystem : MonoBehaviour
         if (playerAction == BattleAction.FIGHT)
         {
             //Check who goes first
-            bool playerGoesFirst = playerUnit.player.Speed >= enemyUnit.enemy.Speed;
+            bool playerGoesFirst = playerUnit.Character.Speed >= enemyUnit.Character.Speed;
+            var firstUnitToMove = playerGoesFirst ? playerUnit : enemyUnit;
+            var secondUnitToMove = playerGoesFirst ? enemyUnit : playerUnit;
 
-            if (playerGoesFirst)
+            yield return CharacterMoveTurn(firstUnitToMove, secondUnitToMove);
+            if (state == BattleState.BATTLEOVER)
             {
-                yield return PlayerMoveTurn();
-                if (state == BattleState.BATTLEOVER)
-                {
-                    yield return RunAfterTurn();
-                    yield break;
-                }
-
-                yield return EnemyMoveTurn();
-                if (state == BattleState.BATTLEOVER)
-                {
-                    yield return RunAfterTurn();
-                    yield break;
-                }
+                yield return RunAfterTurn();
+                yield break;
             }
-            else
+
+            yield return CharacterMoveTurn(secondUnitToMove, firstUnitToMove);
+            if (state == BattleState.BATTLEOVER)
             {
-                yield return EnemyMoveTurn();
-                if (state == BattleState.BATTLEOVER)
-                {
-                    yield return RunAfterTurn();
-                    yield break;
-                }
-
-                yield return PlayerMoveTurn();
-                if (state == BattleState.BATTLEOVER)
-                {
-                    yield return RunAfterTurn();
-                    yield break;
-                }
+                yield return RunAfterTurn();
+                yield break;
             }
+
             yield return RunAfterTurn();
         }
         else if (playerAction == BattleAction.INVENTORY)
@@ -117,79 +100,59 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator PlayerMoveTurn()
+    IEnumerator CharacterMoveTurn(TBCharacterUnit source, TBCharacterUnit target)
     {
-        playerUnit.player.OnBeforeMove();
+        source.Character.OnBeforeMove();
         state = BattleState.RUNNINGTURN;
-        var move = playerUnit.player.moves[currentMove];
-        yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + " used " + move.MoveData.MoveName + "!");
+        TBMove move;
+        if (source.CharacterData.IsEnemy)
+        {
+            move = source.Character.GetRandomMove();
+        }
+        else
+        {
+            move = source.Character.Moves[currentMove];
+        }
+        yield return dialogueBox.TypeDialogueTB(source.Character.CharacterData.Name + " used " + move.MoveData.MoveName + "!");
 
         if (CheckIfMoveHits(move))
         {
             if (move.MoveData.Category == MoveCategory.Status)
             {
-                yield return RunPlayerMoveEffects(move, playerUnit.player, enemyUnit.enemy);
+                yield return RunMoveEffects(move, source.Character, target.Character);
             }
             else
             {
-                var damageDetails = enemyUnit.enemy.TakeDamage(move, playerUnit.player);
-                yield return enemyHud.UpdateEnemyHp();
+                var damageDetails = target.Character.TakeDamage(move, source.Character);
+                if (target.CharacterData.IsEnemy)
+                {
+                    yield return enemyHud.UpdateHp();
+                }
+                else
+                {
+                    yield return playerHud.UpdateHp();
+                }
                 yield return ShowDamageDetails(damageDetails);
             }
 
-            if (enemyUnit.enemy.currentHp <= 0)
+            if (target.Character.CurrentHP <= 0)
             {
-                yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+                yield return dialogueBox.TypeDialogueTB(target.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
-                EndBattle(true);
+                if (target.CharacterData.IsEnemy)
+                {
+                    EndBattle(true);
+                }
+                else
+                {
+                    EndBattle(false);
+                }
             }
         }
         else
         {
             Debug.Log("Player's attack missed!");
-            yield return dialogueBox.TypeDialogueTB(playerUnit.player.playerData.Name + "'s attack missed!");
-        }
-
-        // if (enemyUnit.enemy.currentHp > 0)
-        // {
-        //     if (playerUnit.player.currentHp > 0)
-        //     {
-        //         StartCoroutine(EnemyMoveTurn());
-        //     }
-        // }
-    }
-
-    IEnumerator EnemyMoveTurn()
-    {
-        enemyUnit.enemy.OnBeforeMove();
-        state = BattleState.ENEMYMOVE;
-        var move = enemyUnit.enemy.GetRandomMove();
-        yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + " used " + move.MoveData.MoveName + "!");
-
-        if (CheckIfMoveHits(move))
-        {
-            if (move.MoveData.Category == MoveCategory.Status)
-            {
-                yield return RunEnemyMoveEffects(move, enemyUnit.enemy, playerUnit.player);
-            }
-            else
-            {
-                var damageDetails = playerUnit.player.TakeDamage(move, enemyUnit.enemy);
-                yield return playerHud.UpdatePlayerHp();
-                yield return ShowDamageDetails(damageDetails);
-            }
-
-            if (playerUnit.player.currentHp <= 0)
-            {
-                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
-                yield return new WaitForSeconds(2f);
-                EndBattle(false);
-            }
-        }
-        else
-        {
-            Debug.Log("Enemy's attack missed!");
-            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemy.enemyData.Name + "'s attack missed!");
+            yield return dialogueBox.TypeDialogueTB(source.Character.CharacterData.Name + "'s attack missed!");
         }
     }
 
@@ -198,15 +161,15 @@ public class BattleSystem : MonoBehaviour
         //This will check if the battle is over before running the after turn effects
         if (state == BattleState.BATTLEOVER)
         {
-            if (playerUnit.player.currentHp <= 0)
+            if (playerUnit.Character.CurrentHP <= 0)
             {
-                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
                 EndBattle(false);
             }
-            else if (enemyUnit.enemy.currentHp <= 0)
+            else if (enemyUnit.Character.CurrentHP <= 0)
             {
-                yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+                yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
                 EndBattle(true);
             }
@@ -214,96 +177,58 @@ public class BattleSystem : MonoBehaviour
             yield break;
         }
         //Statuses like poison will affect the enemy after the turn
-        enemyUnit.enemy.OnAfterTurn();
-        yield return ShowEnemyStatusChanges(enemyUnit.enemy);
-        yield return enemyHud.UpdateEnemyHp();
-        if (enemyUnit.enemy.currentHp <= 0)
+        enemyUnit.Character.OnAfterTurn();
+        yield return ShowStatusChanges(enemyUnit.Character);
+        yield return enemyHud.UpdateHp();
+        if (enemyUnit.Character.CurrentHP <= 0)
         {
-            yield return dialogueBox.TypeDialogueTB(enemyUnit.enemyData.Name + " fainted!");
+            yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
             yield return new WaitForSeconds(2f);
             EndBattle(true);
         }
         else
         {
-            playerUnit.player.OnAfterTurn();
-            yield return ShowPlayerStatusChanges(playerUnit.player);
-            yield return playerHud.UpdatePlayerHp();
-            if (playerUnit.player.currentHp <= 0)
+            playerUnit.Character.OnAfterTurn();
+            yield return ShowStatusChanges(playerUnit.Character);
+            yield return playerHud.UpdateHp();
+            if (playerUnit.Character.CurrentHP <= 0)
             {
-                yield return dialogueBox.TypeDialogueTB(playerUnit.playerData.Name + " fainted!");
+                yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
                 EndBattle(false);
             }
         }
-
     }
-
-    IEnumerator RunPlayerMoveEffects(TBMove move, TBPlayer player, TBEnemy enemy)
+    IEnumerator RunMoveEffects(TBMove move, TBCharacter source, TBCharacter target)
     {
         var effects = move.MoveData.Effects;
         if (effects.statBoosts != null)
         {
             if (move.MoveData.Target == MoveTarget.Self)
             {
-                player.ApplyBoosts(effects.statBoosts);
+                source.ApplyBoosts(effects.statBoosts);
             }
             else
             {
-                enemy.ApplyBoosts(effects.statBoosts);
+                target.ApplyBoosts(effects.statBoosts);
             }
         }
 
         //Status Condition
         if (effects.status != ConditionID.None)
         {
-            enemy.AddStatus(effects.status);
+            target.AddStatus(effects.status);
         }
 
-        yield return ShowPlayerStatusChanges(player);
-        yield return ShowEnemyStatusChanges(enemy);
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
     }
 
-    IEnumerator RunEnemyMoveEffects(TBMove move, TBEnemy enemy, TBPlayer player)
+    IEnumerator ShowStatusChanges(TBCharacter character)
     {
-        var effects = move.MoveData.Effects;
-
-        //Stat Boosts
-        if (effects.statBoosts != null)
+        while (character.StatusChanges.Count > 0)
         {
-            if (move.MoveData.Target == MoveTarget.Self)
-            {
-                enemy.ApplyBoosts(effects.statBoosts);
-            }
-            else
-            {
-                player.ApplyBoosts(effects.statBoosts);
-            }
-        }
-
-        //Status Condition
-        if (effects.status != ConditionID.None)
-        {
-            player.AddStatus(effects.status);
-        }
-
-        yield return ShowEnemyStatusChanges(enemy);
-        yield return ShowPlayerStatusChanges(player);
-    }
-
-    IEnumerator ShowPlayerStatusChanges(TBPlayer player)
-    {
-        while (player.statusChanges.Count > 0)
-        {
-            var message = player.statusChanges.Dequeue();
-            yield return dialogueBox.TypeDialogueTB(message);
-        }
-    }
-
-    IEnumerator ShowEnemyStatusChanges(TBEnemy enemy)
-    {
-        while (enemy.statusChanges.Count > 0)
-        {
-            var message = enemy.statusChanges.Dequeue();
+            var message = character.StatusChanges.Dequeue();
             yield return dialogueBox.TypeDialogueTB(message);
         }
     }
@@ -323,6 +248,7 @@ public class BattleSystem : MonoBehaviour
             yield return dialogueBox.TypeDialogueTB("It's not very effective!");
         }
     }
+
     private void HandleActionSelection()
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -355,12 +281,11 @@ public class BattleSystem : MonoBehaviour
             }
         }
     }
-
     private void HandleMoveSelection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (currentMove < playerUnit.player.moves.Count - 1)
+            if (currentMove < playerUnit.Character.Moves.Count - 1)
             {
                 currentMove++;
             }
@@ -374,7 +299,7 @@ public class BattleSystem : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (currentMove < playerUnit.player.moves.Count - 2)
+            if (currentMove < playerUnit.Character.Moves.Count - 2)
             {
                 currentMove += 2;
             }
@@ -387,7 +312,7 @@ public class BattleSystem : MonoBehaviour
             }
         }
 
-        dialogueBox.UpdateMoveSelection(currentMove, playerUnit.player.moves[currentMove]);
+        dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -401,8 +326,8 @@ public class BattleSystem : MonoBehaviour
     public void EndBattle(bool won)
     {
         state = BattleState.BATTLEOVER;
-        playerUnit.player.ResetStatBoosts();
-        enemyUnit.enemy.ResetStatBoosts();
+        playerUnit.Character.ResetStatBoosts();
+        enemyUnit.Character.ResetStatBoosts();
         OnBattleEnd?.Invoke(won);
     }
 

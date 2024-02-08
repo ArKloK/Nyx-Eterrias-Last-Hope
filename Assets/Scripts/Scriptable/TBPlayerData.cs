@@ -12,9 +12,9 @@ public class TBPlayerData : ScriptableObject
     public List<LearnableMove> LearnableMoves;
 }
 
-[System.Serializable]
-public class LearnableMove
-{
-    public TBMoveData Move;
-    public int Level;
-}
+// [System.Serializable]
+// public class LearnableMove
+// {
+//     public TBMoveData Move;
+//     public int Level;
+// }

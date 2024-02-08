@@ -17,16 +17,11 @@ public class ConditionsDB
                 StartMessage = "is poisoned!",
                 HudMessage = "PSN",
                 RepeatedMovementMessage = "is already poisoned and can't be poisoned again!",
-                OnEffectAppliedToEnemy = (TBEnemy enemy) =>
+                OnEffectAppliedToCharacter = (TBCharacter character) =>
                 {
-                    enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is hurt by poison!");
-                    enemy.UpdateHp(enemy.MaxHp / 8);
+                    character.StatusChanges.Enqueue($"{character.CharacterData.Name} is hurt by poison!");
+                    character.UpdateHp(character.MaxHp / 8);
                 },
-                OnEffectAppliedToPlayer = (TBPlayer player) =>
-                {
-                    player.statusChanges.Enqueue($"{player.playerData.Name} is hurt by poison!");
-                    player.UpdateHp(player.MaxHp / 8);
-                }
             }
         },
         {
@@ -39,16 +34,11 @@ public class ConditionsDB
                 HudMessage = "BRN",
                 StartMessage = "is burning!",
                 RepeatedMovementMessage = "is already burning and can't be burned again!",
-                OnEffectAppliedToEnemy = (TBEnemy enemy) =>
+                OnEffectAppliedToCharacter = (TBCharacter character) =>
                 {
-                    enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is hurt by burn!");
-                    enemy.UpdateHp(enemy.MaxHp / 16);
+                    character.StatusChanges.Enqueue($"{character.CharacterData.Name} is hurt by burn!");
+                    character.UpdateHp(character.MaxHp / 16);
                 },
-                OnEffectAppliedToPlayer = (TBPlayer player) =>
-                {
-                    player.statusChanges.Enqueue($"{player.playerData.Name} is hurt by burn!");
-                    player.UpdateHp(player.MaxHp / 16);
-                }
             }
         },
         {
@@ -61,70 +51,37 @@ public class ConditionsDB
                 HudMessage = "SOAK",
                 StartMessage = "is soaked and will have its accuracy and speed reduced by 50%!",
                 RepeatedMovementMessage = "is already soaked and can't be soaked again!",
-                OnBeforePlayerMove = (TBPlayer player) =>
+                OnBeforeCharacterMove = (TBCharacter character) =>
                 {
-                    player.statusTime--;
-                    if (player.statusTime <= 0)
+                    character.StatusTime--;
+                    if (character.StatusTime <= 0)
                     {
-                        player.statusTime = 0;
-                        if (player.statuses.Contains(ConditionsDB.Conditions[ConditionID.Soaked]))
+                        character.StatusTime = 0;
+                        if (character.Statuses.Contains(ConditionsDB.Conditions[ConditionID.Soaked]))
                         {
-                            player.moves.ForEach(move =>
+                            character.Moves.ForEach(move =>
                             {
-                                player.Speed = PlayerStats.TBAttackSpeed;
+                                character.Speed = character.CharacterData.AttackSpeed;
                                 move.Accuracy = move.MoveData.Accuracy;
                             });
-                            player.statusChanges.Enqueue($"{player.playerData.Name} is no longer soaked!");
+                            character.StatusChanges.Enqueue($"{character.CharacterData.Name} is no longer soaked!");
                             return ConditionsDB.Conditions[ConditionID.Soaked];
                         }
                     }
                     return null;
                 },
-                OnBeforeEnemyMove = (TBEnemy enemy) =>
-                {
-                    enemy.statusTime--;
-                    if (enemy.statusTime <= 0)
-                    {
-                        enemy.statusTime = 0;
-                        if (enemy.statuses.Contains(ConditionsDB.Conditions[ConditionID.Soaked]))
-                        {
-                            enemy.moves.ForEach(move =>
-                            {
-                                enemy.Speed = enemy.enemyData.AttackSpeed;
-                                move.Accuracy = move.MoveData.Accuracy;
-                            });
-                            enemy.statusChanges.Enqueue($"{enemy.enemyData.Name} is no longer soaked!");
-                            return ConditionsDB.Conditions[ConditionID.Soaked];
-                        }
-                    }
-                    return null;
-                },
-                OnEffectAppliedToPlayer = (TBPlayer player) =>
+                OnEffectAppliedToCharacter = (TBCharacter character) =>
                 {
                     //Soaked for 2-4 turns
-                    player.statusTime = UnityEngine.Random.Range(2, 5);
-                    Debug.Log("Player soaked for " + player.statusTime + " turns");
-                    //Reduce player's speed and moves accuracy
-                    player.moves.ForEach(move =>
+                    character.StatusTime = UnityEngine.Random.Range(2, 5);
+                    Debug.Log($"{character.CharacterData.Name} soaked for " + character.StatusTime + " turns");
+                    //Reduce character's speed and moves accuracy
+                    character.Moves.ForEach(move =>
                     {
-                        player.Speed = PlayerStats.TBAttackSpeed / 2;
+                        character.Speed = character.CharacterData.AttackSpeed / 2;
                         move.Accuracy = move.MoveData.Accuracy / 2;
                         Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
-                        Debug.Log("Player speed: " + player.Speed);
-                    });
-                },
-                OnEffectAppliedToEnemy = (TBEnemy enemy) =>
-                {
-                    //Soaked for 2-4 turns
-                    enemy.statusTime = UnityEngine.Random.Range(2, 5);
-                    Debug.Log("Enemy soaked for " + enemy.statusTime + " turns");
-                    //Reduce enemy speed and moves accuracy
-                    enemy.moves.ForEach(move =>
-                    {
-                        enemy.Speed = enemy.enemyData.AttackSpeed / 2;
-                        move.Accuracy = move.MoveData.Accuracy / 2;
-                        Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
-                        Debug.Log("Enemy speed: " + enemy.Speed);
+                        Debug.Log($"{character.CharacterData.Name} speed: " + character.Speed);
                     });
                 }
             }

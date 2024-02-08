@@ -15,6 +15,11 @@ MonoBehaviour:
   MoveName: Move4
   Description: 
   Element: 3
+  Category: 0
+  Effects:
+    statBoosts: []
+    status: 0
+  Target: 0
   Power: 2
-  Accuracy: 20
+  Accuracy: 100
   CriticalChance: 10

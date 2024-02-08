@@ -10,10 +10,8 @@ public class Condition
     public string RepeatedMovementMessage { get; set; }
     public string EndMessage { get; set; }
 
-    public Action<TBEnemy> OnEffectAppliedToEnemy { get; set; }
-    public Action<TBPlayer> OnEffectAppliedToPlayer { get; set; }
-
-    public Func<TBEnemy, Condition> OnBeforeEnemyMove { get; set; }
-    public Func<TBPlayer, Condition> OnBeforePlayerMove { get; set; }
+    //New events
+    public Action<TBCharacter> OnEffectAppliedToCharacter { get; set; }
+    public Func<TBCharacter, Condition> OnBeforeCharacterMove { get; set; }
 
 }
