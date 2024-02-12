@@ -24,4 +24,5 @@ MonoBehaviour:
   _attackPower: 1
   _defensePower: 1
   _attackSpeed: 1
+  _experienceAmount: 6
   _element: 1

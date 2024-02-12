@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
-    public static DialogueManager instance;
-    public GameObject player;
-    public TextMeshProUGUI dialogueText;
+    public static DialogueManager Instance;
+    [SerializeField] GameObject player;
+    [SerializeField] TextMeshProUGUI dialogueText;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive = false;
-    public float typingSpeed = 0.2f;
+    [SerializeField] float typingSpeed = 0.2f;
 
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
     }
 
     void Update()

@@ -325,6 +325,11 @@ public class BattleSystem : MonoBehaviour
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
     public void EndBattle(bool won)
     {
+        PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
+        if (won)
+        {
+            ExperienceManager.Instance.AddExperience(enemyUnit.CharacterData.ExperienceAmount);
+        }
         state = BattleState.BATTLEOVER;
         playerUnit.Character.ResetStatBoosts();
         enemyUnit.Character.ResetStatBoosts();

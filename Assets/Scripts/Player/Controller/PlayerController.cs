@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     #region Events
     public static event EventHandler<PlayerEventArgs> OnPlayerDeath;
+    public static event Action OnPlayerLevelUp;
     #endregion
 
     void Awake()
@@ -171,7 +172,10 @@ public class PlayerController : MonoBehaviour
         maxExperiencePoints += 10;
         maxHealthPoints += 10;
         currentHealthPoints = maxHealthPoints;
+        UpdateStats();//Updates the static stats when the player levels up
         healthBar.SetMaxHealth(maxHealthPoints);
+        OnPlayerLevelUp?.Invoke();
+        Debug.Log("Current HP: " + currentHealthPoints);
         Debug.Log("Player leveled up to level " + currentLevel);
     }
     #endregion

@@ -13,6 +13,10 @@ public class DialogueLine
 public class Dialogue
 {
     public List<DialogueLine> lines;
+    public Dialogue(List<DialogueLine> lines)
+    {
+        this.lines = lines;
+    }
 }
 
 public class DialogueTrigger : MonoBehaviour
@@ -20,11 +24,32 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     public GameObject dialogueBox;
 
+    void OnEnable()
+    {
+        PlayerController.OnPlayerLevelUp += TriggerLevelUpDialogue;
+    }
+
+    void OnDisable()
+    {
+        PlayerController.OnPlayerLevelUp -= TriggerLevelUpDialogue;
+    }
+
     public void TriggerDialogue()
     {
         dialogueBox.SetActive(true);
-        DialogueManager.instance.StartDialogue(dialogue);
-        this.gameObject.SetActive(false);
+        DialogueManager.Instance.StartDialogue(dialogue);
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+    }
+
+    public void TriggerLevelUpDialogue()
+    {
+        dialogueBox.SetActive(true);
+        DialogueManager.Instance.StartDialogue(new Dialogue(
+            new List<DialogueLine>
+            {
+                new DialogueLine { line = "You leveled up!" }
+            }
+        ));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -23,5 +23,5 @@ MonoBehaviour:
     status: 0
   Target: 0
   Power: 0
-  Accuracy: 100
+  Accuracy: 60
   CriticalChance: 60
