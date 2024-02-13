@@ -15,27 +15,27 @@ public class DialogueManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     void Update()
     {
         if (isDialogueActive && Input.GetKeyDown(KeyCode.Return))
         {
+            //This should avoid the script from modifying the player's movement while in TB
+            if (player != null)
+            {
+                player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+                player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
+            }
             DisplayNextLine();
         }
     }
-
     public void StartDialogue(Dialogue dialogue)
     {
         isDialogueActive = true;
         lines = new Queue<DialogueLine>();
-        //This should avoid the script from modifying the player's movement while in TB
-        if (player != null)
-        {
-            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-            player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
-        }
 
         foreach (DialogueLine line in dialogue.lines)
         {

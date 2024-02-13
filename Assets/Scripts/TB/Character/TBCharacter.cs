@@ -71,6 +71,8 @@ public class TBCharacter
         CalculateStats();
 
         _moves = new List<TBMove>();
+        if (!_characterData.IsEnemy)
+            PlayerStats.LearnableMoves = _characterData.LearnableMoves;
         foreach (LearnableMove move in _characterData.LearnableMoves)
         {
             if (move.Level <= level)
@@ -151,7 +153,6 @@ public class TBCharacter
         }
         OnStatusChanged?.Invoke();
     }
-
     public int GetStat(Stat stat)
     {
         int statValue = _stats[stat];
@@ -214,6 +215,13 @@ public class TBCharacter
 
         return damageDetails;
     }
+    // public void LearnMove(LearnableMove moveToLearn)
+    // {
+    //     if (_moves.Count >= 4)
+    //         return;
+    //     _moves.Add(new TBMove(moveToLearn.Move));
+    //     Debug.Log($"{_characterData.Name} has learned {moveToLearn.Move.MoveName}");
+    // }
     public TBMove GetRandomMove()
     {
         return _moves[UnityEngine.Random.Range(0, _moves.Count)];

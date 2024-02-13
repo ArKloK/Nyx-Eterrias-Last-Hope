@@ -14,4 +14,9 @@ public static class PlayerStats
     public static int CurrentExperiencePoints;
     public static int MaxExperiencePoints;
     public static int CurrentLevel;
+    public static List<LearnableMove> LearnableMoves;
+    public static LearnableMove GetLearnableMovesAtCurrentLevel()
+    {
+        return LearnableMoves.Find(x => x.Level == CurrentLevel);
+    }
 }

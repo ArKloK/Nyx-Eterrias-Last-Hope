@@ -44,12 +44,14 @@ public class DialogueTrigger : MonoBehaviour
     public void TriggerLevelUpDialogue()
     {
         dialogueBox.SetActive(true);
-        DialogueManager.Instance.StartDialogue(new Dialogue(
+        Dialogue newdialogue = new Dialogue(
             new List<DialogueLine>
             {
-                new DialogueLine { line = "You leveled up!" }
+                new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
+                new DialogueLine { line = "Nyx learned a move: " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName + "!" }
             }
-        ));
+        );
+        DialogueManager.Instance.StartDialogue(newdialogue);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

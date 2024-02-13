@@ -74,20 +74,17 @@ public class BattleSystem : MonoBehaviour
             var secondUnitToMove = playerGoesFirst ? enemyUnit : playerUnit;
 
             yield return CharacterMoveTurn(firstUnitToMove, secondUnitToMove);
+            //This will check if the battle is over before the second character moves
             if (state == BattleState.BATTLEOVER)
             {
-                yield return RunAfterTurn();
+                yield return RunAfterTurn(secondUnitToMove);
                 yield break;
             }
 
             yield return CharacterMoveTurn(secondUnitToMove, firstUnitToMove);
-            if (state == BattleState.BATTLEOVER)
-            {
-                yield return RunAfterTurn();
-                yield break;
-            }
 
-            yield return RunAfterTurn();
+            yield return RunAfterTurn(secondUnitToMove);
+            yield return RunAfterTurn(firstUnitToMove);
         }
         else if (playerAction == BattleAction.INVENTORY)
         {
@@ -156,49 +153,76 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    IEnumerator RunAfterTurn()
+    IEnumerator RunAfterTurn(TBCharacterUnit unit)
     {
         //This will check if the battle is over before running the after turn effects
         if (state == BattleState.BATTLEOVER)
         {
-            if (playerUnit.Character.CurrentHP <= 0)
+            if (unit.Character.CurrentHP <= 0)
             {
-                yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
+                yield return dialogueBox.TypeDialogueTB(unit.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
-                EndBattle(false);
+                EndBattle(unit.CharacterData.IsEnemy);
+                //This will break the coroutine if the battle is over
+                yield break;
             }
-            else if (enemyUnit.Character.CurrentHP <= 0)
-            {
-                yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
-                yield return new WaitForSeconds(2f);
-                EndBattle(true);
-            }
-            //This will break the coroutine if the battle is over
-            yield break;
         }
-        //Statuses like poison will affect the enemy after the turn
-        enemyUnit.Character.OnAfterTurn();
-        yield return ShowStatusChanges(enemyUnit.Character);
-        yield return enemyHud.UpdateHp();
-        if (enemyUnit.Character.CurrentHP <= 0)
+
+        //Statuses like poison will affect the unit after the turn
+        unit.Character.OnAfterTurn();
+        yield return ShowStatusChanges(unit.Character);
+        yield return (unit.CharacterData.IsEnemy ? enemyHud : playerHud).UpdateHp();
+        if (unit.Character.CurrentHP <= 0)
         {
-            yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
+            yield return dialogueBox.TypeDialogueTB(unit.CharacterData.Name + " fainted!");
             yield return new WaitForSeconds(2f);
-            EndBattle(true);
-        }
-        else
-        {
-            playerUnit.Character.OnAfterTurn();
-            yield return ShowStatusChanges(playerUnit.Character);
-            yield return playerHud.UpdateHp();
-            if (playerUnit.Character.CurrentHP <= 0)
-            {
-                yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
-                yield return new WaitForSeconds(2f);
-                EndBattle(false);
-            }
+            EndBattle(unit.CharacterData.IsEnemy);
         }
     }
+
+    // IEnumerator RunAfterTurn()
+    // {
+    //     //This will check if the battle is over before running the after turn effects
+    //     if (state == BattleState.BATTLEOVER)
+    //     {
+    //         if (playerUnit.Character.CurrentHP <= 0)
+    //         {
+    //             yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
+    //             yield return new WaitForSeconds(2f);
+    //             EndBattle(false);
+    //         }
+    //         else if (enemyUnit.Character.CurrentHP <= 0)
+    //         {
+    //             yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
+    //             yield return new WaitForSeconds(2f);
+    //             EndBattle(true);
+    //         }
+    //         //This will break the coroutine if the battle is over
+    //         yield break;
+    //     }
+    //     //Statuses like poison will affect the enemy after the turn
+    //     enemyUnit.Character.OnAfterTurn();
+    //     yield return ShowStatusChanges(enemyUnit.Character);
+    //     yield return enemyHud.UpdateHp();
+    //     if (enemyUnit.Character.CurrentHP <= 0)
+    //     {
+    //         yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
+    //         yield return new WaitForSeconds(2f);
+    //         EndBattle(true);
+    //     }
+    //     else
+    //     {
+    //         playerUnit.Character.OnAfterTurn();
+    //         yield return ShowStatusChanges(playerUnit.Character);
+    //         yield return playerHud.UpdateHp();
+    //         if (playerUnit.Character.CurrentHP <= 0)
+    //         {
+    //             yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
+    //             yield return new WaitForSeconds(2f);
+    //             EndBattle(false);
+    //         }
+    //     }
+    // }
     IEnumerator RunMoveEffects(TBMove move, TBCharacter source, TBCharacter target)
     {
         var effects = move.MoveData.Effects;
@@ -326,6 +350,7 @@ public class BattleSystem : MonoBehaviour
     public void EndBattle(bool won)
     {
         PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
+        //This will add experience to the player if he wins the battle
         if (won)
         {
             ExperienceManager.Instance.AddExperience(enemyUnit.CharacterData.ExperienceAmount);
