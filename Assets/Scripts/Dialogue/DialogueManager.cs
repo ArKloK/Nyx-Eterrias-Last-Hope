@@ -8,6 +8,7 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager Instance;
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI dialogueText;
+    [SerializeField] MoveSelectionUI moveSelectionUI;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive = false;
     [SerializeField] float typingSpeed = 0.2f;
@@ -52,6 +53,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
         DialogueLine line = lines.Dequeue();
+
         StopAllCoroutines();
         StartCoroutine(TypeLine(line));
     }
@@ -63,6 +65,14 @@ public class DialogueManager : MonoBehaviour
         {
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
+        }
+        if (dialogueLine.isMoveSelectionLine)
+        {
+            moveSelectionUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            moveSelectionUI.gameObject.SetActive(false);
         }
     }
 

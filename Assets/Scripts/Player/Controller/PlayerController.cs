@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public PlayerControllerData Data;
     public HealthBar healthBar;
     private PlayerMovementController.PlayerMovementController playerMovementController;
+    [SerializeField] TBCharacterData tBCharacterData;
 
     #region Health and Energy Variables
     private int maxHealthPoints;
@@ -66,8 +67,13 @@ public class PlayerController : MonoBehaviour
         currentExperiencePoints = 0;
         maxExperiencePoints = Data.MaxExperiencePoints;
         currentLevel = 1;
+        UpdateStats();//This is called here as well to update the static stats before the method PlayerStats.SetMoves() is called
 
         healthBar.SetMaxHealth(maxHealthPoints);
+        
+        PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
+        Debug.Log("Player learnable moves: " + PlayerStats.LearnableMoves.Count);
+        PlayerStats.SetMoves();
     }
 
     void OnEnable()

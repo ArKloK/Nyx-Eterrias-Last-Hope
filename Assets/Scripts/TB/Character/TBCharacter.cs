@@ -71,18 +71,27 @@ public class TBCharacter
         CalculateStats();
 
         _moves = new List<TBMove>();
-        if (!_characterData.IsEnemy)
-            PlayerStats.LearnableMoves = _characterData.LearnableMoves;
-        foreach (LearnableMove move in _characterData.LearnableMoves)
-        {
-            if (move.Level <= level)
-            {
-                _moves.Add(new TBMove(move.Move));
-            }
 
-            if (_moves.Count >= 4)
+        //If the character is the player, the moves will be taken from the player's stats unless the moves list in Player stats is empty
+        if (!_characterData.IsEnemy)
+        {
+            _moves = PlayerStats.Moves;
+            Debug.Log("Moves count: " + PlayerStats.Moves.Count);
+        }
+        //If the character is an enemy, it will have a set of moves        
+        else
+        {
+            foreach (LearnableMove move in _characterData.LearnableMoves)
             {
-                break;
+                if (move.Level <= level)
+                {
+                    _moves.Add(new TBMove(move.Move));
+                }
+
+                if (_moves.Count >= 4)
+                {
+                    break;
+                }
             }
         }
 
@@ -215,13 +224,13 @@ public class TBCharacter
 
         return damageDetails;
     }
-    // public void LearnMove(LearnableMove moveToLearn)
-    // {
-    //     if (_moves.Count >= 4)
-    //         return;
-    //     _moves.Add(new TBMove(moveToLearn.Move));
-    //     Debug.Log($"{_characterData.Name} has learned {moveToLearn.Move.MoveName}");
-    // }
+    public void LearnMove(LearnableMove moveToLearn)
+    {
+        if (_moves.Count >= 4)
+            return;
+        PlayerStats.Moves.Add(new TBMove(moveToLearn.Move));
+        Debug.Log($"{_characterData.Name} has learned {moveToLearn.Move.MoveName}");
+    }
     public TBMove GetRandomMove()
     {
         return _moves[UnityEngine.Random.Range(0, _moves.Count)];

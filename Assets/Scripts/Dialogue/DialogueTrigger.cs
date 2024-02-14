@@ -7,6 +7,7 @@ public class DialogueLine
 {
     [TextArea(3, 10)]
     public string line;
+    public bool isMoveSelectionLine = false;
 }
 
 [System.Serializable]
@@ -44,13 +45,30 @@ public class DialogueTrigger : MonoBehaviour
     public void TriggerLevelUpDialogue()
     {
         dialogueBox.SetActive(true);
-        Dialogue newdialogue = new Dialogue(
-            new List<DialogueLine>
-            {
-                new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
-                new DialogueLine { line = "Nyx learned a move: " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName + "!" }
-            }
-        );
+        Dialogue newdialogue;
+        if (PlayerStats.Moves.Count < 4)
+        {
+            newdialogue = new Dialogue(
+                        new List<DialogueLine>
+                            {
+                                new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
+                                new DialogueLine { line = "Nyx learned a move: " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName + "!" }
+                            }
+                    );
+        }
+        else
+        {
+            newdialogue = new Dialogue(
+                        new List<DialogueLine>
+                            {
+                                new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
+                                new DialogueLine { line = "Nyx wants to learn " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName},
+                                new DialogueLine { line = "But Nyx cannot learn more than 4 moves!"},
+                                new DialogueLine{line = "Choose a move to forget", isMoveSelectionLine = true}
+                            }
+                    );
+        }
+
         DialogueManager.Instance.StartDialogue(newdialogue);
     }
 

@@ -21,6 +21,12 @@ public class BattleSystem : MonoBehaviour
     void OnEnable()
     {
         StartCoroutine(SetupBattle());
+        PlayerController.OnPlayerLevelUp += HandleLevelUp;
+    }
+
+    void OnDisable()
+    {
+        PlayerController.OnPlayerLevelUp -= HandleLevelUp;
     }
 
     public void HandleUpdate()
@@ -359,6 +365,10 @@ public class BattleSystem : MonoBehaviour
         playerUnit.Character.ResetStatBoosts();
         enemyUnit.Character.ResetStatBoosts();
         OnBattleEnd?.Invoke(won);
+    }
+
+    public void HandleLevelUp(){
+        playerUnit.Character.LearnMove(PlayerStats.GetLearnableMovesAtCurrentLevel());
     }
 
     bool CheckIfMoveHits(TBMove move)

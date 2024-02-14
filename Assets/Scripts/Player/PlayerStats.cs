@@ -15,8 +15,25 @@ public static class PlayerStats
     public static int MaxExperiencePoints;
     public static int CurrentLevel;
     public static List<LearnableMove> LearnableMoves;
+    public static List<TBMove> Moves;
     public static LearnableMove GetLearnableMovesAtCurrentLevel()
     {
         return LearnableMoves.Find(x => x.Level == CurrentLevel);
+    }
+    public static void SetMoves()
+    {
+        Moves = new List<TBMove>();
+        Debug.Log("current level: " + CurrentLevel);
+        foreach (LearnableMove move in LearnableMoves)
+        {
+            if (move.Level <= CurrentLevel)
+            {
+                Moves.Add(new TBMove(move.Move));
+            }
+            if (Moves.Count >= 4)
+            {
+                break;
+            }
+        }
     }
 }
