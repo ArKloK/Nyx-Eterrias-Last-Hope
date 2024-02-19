@@ -76,7 +76,6 @@ public class TBCharacter
         if (!_characterData.IsEnemy)
         {
             _moves = PlayerStats.Moves;
-            Debug.Log("Moves count: " + PlayerStats.Moves.Count);
         }
         //If the character is an enemy, it will have a set of moves        
         else

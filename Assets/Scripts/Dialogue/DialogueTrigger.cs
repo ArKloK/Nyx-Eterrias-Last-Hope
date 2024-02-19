@@ -45,10 +45,10 @@ public class DialogueTrigger : MonoBehaviour
     public void TriggerLevelUpDialogue()
     {
         dialogueBox.SetActive(true);
-        Dialogue newdialogue;
+        Dialogue lvlUpDialogue;
         if (PlayerStats.Moves.Count < 4)
         {
-            newdialogue = new Dialogue(
+            lvlUpDialogue = new Dialogue(
                         new List<DialogueLine>
                             {
                                 new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
@@ -58,7 +58,7 @@ public class DialogueTrigger : MonoBehaviour
         }
         else
         {
-            newdialogue = new Dialogue(
+            lvlUpDialogue = new Dialogue(
                         new List<DialogueLine>
                             {
                                 new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
@@ -69,7 +69,7 @@ public class DialogueTrigger : MonoBehaviour
                     );
         }
 
-        DialogueManager.Instance.StartDialogue(newdialogue);
+        DialogueManager.Instance.StartDialogue(lvlUpDialogue);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -10,7 +10,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] MoveSelectionUI moveSelectionUI;
     private Queue<DialogueLine> lines;
-    private bool isDialogueActive = false;
+    private bool isDialogueActive;
+    private bool isSelectingMove;
     [SerializeField] float typingSpeed = 0.2f;
 
     // Start is called before the first frame update
@@ -22,7 +23,7 @@ public class DialogueManager : MonoBehaviour
 
     void Update()
     {
-        if (isDialogueActive && Input.GetKeyDown(KeyCode.Return))
+        if (isDialogueActive)
         {
             //This should avoid the script from modifying the player's movement while in TB
             if (player != null)
@@ -30,7 +31,14 @@ public class DialogueManager : MonoBehaviour
                 player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
             }
-            DisplayNextLine();
+            if (isSelectingMove)
+            {
+                moveSelectionUI.HandleMoveSelection();
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                DisplayNextLine();
+            }
         }
     }
     public void StartDialogue(Dialogue dialogue)
@@ -43,6 +51,14 @@ public class DialogueManager : MonoBehaviour
             lines.Enqueue(line);
         }
         DisplayNextLine();
+    }
+
+    public void EnqueueDialogue(Dialogue dialogue)
+    {
+        foreach (DialogueLine line in dialogue.lines)
+        {
+            lines.Enqueue(line);
+        }
     }
 
     public void DisplayNextLine()
@@ -66,13 +82,17 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
+
+        //This conditional is to activate the move selection UI when the player levels up and tries to learn a new move
         if (dialogueLine.isMoveSelectionLine)
         {
             moveSelectionUI.gameObject.SetActive(true);
+            isSelectingMove = true;
         }
         else
         {
             moveSelectionUI.gameObject.SetActive(false);
+            isSelectingMove = false;
         }
     }
 
@@ -84,7 +104,8 @@ public class DialogueManager : MonoBehaviour
             player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
         }
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+        moveSelectionUI.gameObject.SetActive(false);
         isDialogueActive = false;
         dialogueText.text = "";
     }

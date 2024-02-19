@@ -23,7 +23,6 @@ public static class PlayerStats
     public static void SetMoves()
     {
         Moves = new List<TBMove>();
-        Debug.Log("current level: " + CurrentLevel);
         foreach (LearnableMove move in LearnableMoves)
         {
             if (move.Level <= CurrentLevel)

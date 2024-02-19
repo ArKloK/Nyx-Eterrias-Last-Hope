@@ -72,7 +72,6 @@ public class PlayerController : MonoBehaviour
         healthBar.SetMaxHealth(maxHealthPoints);
         
         PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
-        Debug.Log("Player learnable moves: " + PlayerStats.LearnableMoves.Count);
         PlayerStats.SetMoves();
     }
 

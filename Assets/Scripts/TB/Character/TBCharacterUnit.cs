@@ -16,12 +16,10 @@ public class TBCharacterUnit : MonoBehaviour
         if (_characterData.IsEnemy)
         {
             _character = new TBCharacter(_characterData, _level);
-            Debug.Log("Enemy character created");
         }
         else
         {
             _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel);
-            Debug.Log("Player character created");
         }
     }
 }
