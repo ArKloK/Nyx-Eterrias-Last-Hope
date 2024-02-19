@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private int currentHealthPoints;
     public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
     public int MaxHealthPoints { get => maxHealthPoints; set => maxHealthPoints = value; }
+    private int maxspriritualEnergyPoints;
     private int currentSpiritualEnergyPoints;
     #endregion
 
@@ -54,7 +55,8 @@ public class PlayerController : MonoBehaviour
     {
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
-        currentSpiritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
+        maxspriritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
+        currentSpiritualEnergyPoints = maxspriritualEnergyPoints;
         attackPower = Data.AttackPower;
         TBattackPower = Data.TBAttackPower;
         TBdefensePower = Data.TBDefensePower;
@@ -134,7 +136,6 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(DisableCollider());
             playerMovementController.KnockBack(knockbackDirection);
         }
-
     }
 
     private IEnumerator LoseControl()
@@ -176,7 +177,9 @@ public class PlayerController : MonoBehaviour
         currentExperiencePoints = 0;
         maxExperiencePoints += 10;
         maxHealthPoints += 10;
+        maxspriritualEnergyPoints += 10;
         currentHealthPoints = maxHealthPoints;
+        currentSpiritualEnergyPoints = maxspriritualEnergyPoints;
         UpdateStats();//Updates the static stats when the player levels up
         healthBar.SetMaxHealth(maxHealthPoints);
         OnPlayerLevelUp?.Invoke();
@@ -206,6 +209,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerStats.MaxHealthPoints = maxHealthPoints;
         PlayerStats.CurrentHealthPoints = currentHealthPoints;
+        PlayerStats.MaxSpiritualEnergyPoints = maxspriritualEnergyPoints;
         PlayerStats.TBAttackPower = TBattackPower;
         PlayerStats.AttackPower = attackPower;
         PlayerStats.TBAttackSpeed = TBattackSpeed;

@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class InventoryItem
 {
-    public ItemData itemData;
-    public int quantity;
+    private ItemData itemData;
+    private int quantity;
+
+    public ItemData ItemData { get => itemData; set => itemData = value; }
+    public int Quantity { get => quantity; set => quantity = value; }
 
     public InventoryItem(ItemData itemData)
     {

@@ -15,3 +15,6 @@ MonoBehaviour:
   itemName: Potion
   itemSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   itemDescription: A potion that heals you
+  healthBoost: 1
+  attackBoost: 0
+  spiritualEnergyBoost: 0

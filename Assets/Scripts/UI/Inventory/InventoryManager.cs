@@ -2,15 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    InventorySlot currentSlot;
     public GameObject slotPrefab;
     public InventoryDescription inventoryDescription;
     public Transform inventorySlotsPanel;
-    public string descriptionText;
-    public List<InventorySlot> inventorySlots = new List<InventorySlot>(25);
-    
+    [SerializeField] Button useButton;
+    List<InventorySlot> inventorySlots = new List<InventorySlot>(25);
+    public static event Action<ItemData> OnItemUsed;
 
     void Awake()
     {
@@ -24,6 +26,11 @@ public class InventoryManager : MonoBehaviour
     void OnDisable()
     {
         Inventory.OnInventoryChange -= DrawInventory;
+    }
+    void Update()
+    {
+        // Disable the use button if there is no item selected
+        useButton.enabled = currentSlot != null;
     }
 
     void ResetInventory()
@@ -55,6 +62,7 @@ public class InventoryManager : MonoBehaviour
     private void HandleSlotClicked(InventorySlot slot)
     {
         inventoryDescription.SetDescription(slot.itemDescription);
+        currentSlot = slot;
     }
 
     void CreateInventorySlot()
@@ -64,5 +72,14 @@ public class InventoryManager : MonoBehaviour
         InventorySlot newInventorySlot = slot.GetComponent<InventorySlot>();
         newInventorySlot.ClearSlot();
         inventorySlots.Add(newInventorySlot);
+    }
+
+    public void UseItem()
+    {
+        if (currentSlot != null)
+        {
+            currentSlot.Item.ItemData.UseItem();
+            OnItemUsed?.Invoke(currentSlot.Item.ItemData);
+        }
     }
 }

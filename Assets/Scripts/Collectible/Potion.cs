@@ -7,7 +7,7 @@ public class Potion : MonoBehaviour, ICollectible
 {
     public static event HandleGemCollected OnPotionCollected;
     public delegate void HandleGemCollected(ItemData itemData);
-    public ItemData itemData;
+    [SerializeField] ItemData itemData;
 
     public void Collect()
     {

@@ -8,10 +8,13 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
+    InventoryItem item;
     public Image icon;
     public TextMeshProUGUI labelText;
     public TextMeshProUGUI stackSizeText;
     public string itemDescription;
+
+    public InventoryItem Item { get => item; set => item = value; }
 
     public event Action<InventorySlot> OnSlotClicked;
 
@@ -30,14 +33,16 @@ public class InventorySlot : MonoBehaviour
             return;
         }
 
+        this.item = item;
+
         icon.enabled = true;
         labelText.enabled = true;
         stackSizeText.enabled = true;
 
-        icon.sprite = item.itemData.itemSprite;
-        labelText.text = item.itemData.itemName;
-        stackSizeText.text = item.quantity.ToString();
-        itemDescription = item.itemData.itemDescription;
+        icon.sprite = item.ItemData.itemSprite;
+        labelText.text = item.ItemData.itemName;
+        stackSizeText.text = item.Quantity.ToString();
+        itemDescription = item.ItemData.itemDescription;
     }
 
     public void onPointerClick()

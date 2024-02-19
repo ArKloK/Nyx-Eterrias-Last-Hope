@@ -7,6 +7,8 @@ public static class PlayerStats
     public static Element Element;
     public static int MaxHealthPoints;
     public static int CurrentHealthPoints;
+    public static int MaxSpiritualEnergyPoints;
+    public static int CurrentSpiritualEnergyPoints;
     public static int AttackPower;
     public static int TBAttackSpeed;
     public static int TBDefensePower;
