@@ -13,6 +13,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] Button useButton;
     List<InventorySlot> inventorySlots = new List<InventorySlot>(25);
     public static event Action<ItemData> OnItemUsed;
+    public static event Action<ItemData> OnTBItemUsedUpdateHP;
 
     void Awake()
     {
@@ -30,7 +31,7 @@ public class InventoryManager : MonoBehaviour
     void Update()
     {
         // Disable the use button if there is no item selected
-        useButton.enabled = currentSlot != null;
+        useButton.gameObject.SetActive(currentSlot != null);
     }
 
     void ResetInventory()
@@ -80,6 +81,7 @@ public class InventoryManager : MonoBehaviour
         {
             currentSlot.Item.ItemData.UseItem();
             OnItemUsed?.Invoke(currentSlot.Item.ItemData);
+            OnTBItemUsedUpdateHP?.Invoke(currentSlot.Item.ItemData);
         }
     }
 }

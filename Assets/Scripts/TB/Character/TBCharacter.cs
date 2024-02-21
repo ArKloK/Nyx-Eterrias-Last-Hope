@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -203,7 +204,7 @@ public class TBCharacter
     public DamageDetails TakeDamage(TBMove move, TBCharacter attacker)
     {
         float critical = 1f;
-        if (Random.value * 100f <= move.MoveData.CriticalChance)
+        if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
         {
             Debug.Log($"{attacker._characterData.Name} did Critical!");
             critical = 2f;
@@ -241,6 +242,18 @@ public class TBCharacter
 
         _currentHP = Mathf.Clamp(_currentHP - damage, 0, MaxHp);
         _hpChanged = true;
+    }
+    public void setStats()
+    {
+        if (!_characterData.IsEnemy)
+        {
+            MaxHp = PlayerStats.MaxHealthPoints;
+            _currentHP = Mathf.Clamp(PlayerStats.CurrentHealthPoints, 0, MaxHp);
+            _stats[Stat.Attack] = Mathf.FloorToInt(PlayerStats.TBAttackPower * _level);
+            _stats[Stat.Defense] = Mathf.FloorToInt(PlayerStats.TBDefensePower * _level);
+            _stats[Stat.Speed] = Mathf.FloorToInt(PlayerStats.TBAttackSpeed * _level);
+            _hpChanged = true;
+        }
     }
     public void OnAfterTurn()
     {

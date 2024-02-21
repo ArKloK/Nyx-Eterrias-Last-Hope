@@ -42,7 +42,6 @@ public class Inventory : MonoBehaviour
             OnInventoryChange?.Invoke(inventoryItems);
         }
     }
-
     public void RemoveItem(ItemData itemData)
     {
         if (inventoryDictionary.TryGetValue(itemData, out InventoryItem item))

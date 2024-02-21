@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { START, PLAYERACTION, PLAYERMOVE, ENEMYMOVE, RUNNINGTURN, BATTLEOVER }
+public enum BattleState { PLAYERACTION, PLAYERMOVE, RUNNINGTURN, BATTLEOVER, INVENTORY }
 public enum BattleAction { FIGHT, INVENTORY }
 
 public class BattleSystem : MonoBehaviour
@@ -13,6 +13,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud playerHud;
     [SerializeField] BattleHud enemyHud;
     [SerializeField] TBDialogueBox dialogueBox;
+    [SerializeField] GameObject inventoryUI;
+    [SerializeField] Inventory inventory;
     BattleState state;
     public event Action<bool> OnBattleEnd;
     int currentAction;
@@ -22,11 +24,13 @@ public class BattleSystem : MonoBehaviour
     {
         StartCoroutine(SetupBattle());
         PlayerController.OnPlayerLevelUp += HandleLevelUp;
+        InventoryManager.OnTBItemUsedUpdateHP += UpdatePlayerHP;
     }
 
     void OnDisable()
     {
         PlayerController.OnPlayerLevelUp -= HandleLevelUp;
+        InventoryManager.OnTBItemUsedUpdateHP -= UpdatePlayerHP;
     }
 
     public void HandleUpdate()
@@ -40,6 +44,30 @@ public class BattleSystem : MonoBehaviour
             if (playerUnit.Character.Moves.Count > 0)
                 HandleMoveSelection();
         }
+        else if (state == BattleState.INVENTORY)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                inventoryUI.SetActive(false);
+                PlayerAction();
+            }
+        }
+    }
+
+    void UpdatePlayerHP(ItemData item)
+    {
+        Debug.Log("Updating player HP");
+        StartCoroutine(OnInventoryItemUsed(item));
+    }
+
+    IEnumerator OnInventoryItemUsed(ItemData item)
+    {
+        inventoryUI.SetActive(false);
+        dialogueBox.EnableActionSelector(false);
+        yield return dialogueBox.TypeDialogueTB("Nyx used " + item.itemName + "!");
+        yield return playerHud.UpdateHp();
+        yield return new WaitForSeconds(2f);
+        yield return RunTurns(BattleAction.INVENTORY);
     }
 
     IEnumerator SetupBattle()
@@ -89,12 +117,20 @@ public class BattleSystem : MonoBehaviour
 
             yield return CharacterMoveTurn(secondUnitToMove, firstUnitToMove);
 
-            yield return RunAfterTurn(secondUnitToMove);
-            yield return RunAfterTurn(firstUnitToMove);
+            yield return RunAfterTurn(enemyUnit);
+            yield return RunAfterTurn(playerUnit);
         }
         else if (playerAction == BattleAction.INVENTORY)
         {
             //Inventory action
+            yield return CharacterMoveTurn(enemyUnit, playerUnit);
+            if (state == BattleState.BATTLEOVER)
+            {
+                yield return RunAfterTurn(playerUnit);
+                yield break;
+            }
+            yield return RunAfterTurn(enemyUnit);
+            yield return RunAfterTurn(playerUnit);
         }
 
         if (state != BattleState.BATTLEOVER)
@@ -308,6 +344,7 @@ public class BattleSystem : MonoBehaviour
             else if (currentAction == 1)
             {
                 //Inventory action
+                OpenInventory();
             }
         }
     }
@@ -367,7 +404,8 @@ public class BattleSystem : MonoBehaviour
         OnBattleEnd?.Invoke(won);
     }
 
-    public void HandleLevelUp(){
+    public void HandleLevelUp()
+    {
         playerUnit.Character.LearnMove(PlayerStats.GetLearnableMovesAtCurrentLevel());
     }
 
@@ -378,5 +416,12 @@ public class BattleSystem : MonoBehaviour
             return true;
         }
         return UnityEngine.Random.Range(1, 101) <= move.Accuracy;
+    }
+
+    void OpenInventory()
+    {
+        state = BattleState.INVENTORY;
+        inventoryUI.SetActive(true);
+        inventory.LaunchInventoryChange();
     }
 }

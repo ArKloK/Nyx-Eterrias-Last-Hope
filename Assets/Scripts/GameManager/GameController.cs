@@ -10,10 +10,11 @@ public enum GameState
 
 public class GameController : MonoBehaviour
 {
-    public GameObject player;
-    public BattleSystem battleSystem;
+    [SerializeField] GameObject player;
+    [SerializeField] BattleSystem battleSystem;
+    [SerializeField] PauseMenuController pauseMenuController;
+    [SerializeField] Camera SSCamera;
     GameState state;
-    public Camera SSCamera;
 
     void Start()
     {
@@ -44,6 +45,7 @@ public class GameController : MonoBehaviour
         {
             player.GetComponent<PlayerMovementController.PlayerMovementController>().HandleUpdate();
             player.GetComponent<PlayerController>().HandleUpdate();
+            pauseMenuController.HandleUpdate();
         }
         else if (state == GameState.TB)
         {

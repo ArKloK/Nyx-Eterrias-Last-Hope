@@ -21,5 +21,15 @@ public class ItemData : ScriptableObject
         PlayerStats.AttackPower += attackBoost;
         PlayerStats.CurrentSpiritualEnergyPoints += spiritualEnergyBoost;
         FindObjectOfType<PlayerController>().setStats();
+        TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
+        Debug.Log("TBCharacterUnit: " + tBCharacterUnit);
+        foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
+        {
+            if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
+            {
+                Debug.Log("Setting stats");
+                tBCharacter.Character.setStats();
+            }
+        }
     }
 }

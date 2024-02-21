@@ -10,7 +10,7 @@ public class PauseMenuController : MonoBehaviour
     public Inventory inventory;
 
     // Update is called once per frame
-    void Update()
+    public void HandleUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
