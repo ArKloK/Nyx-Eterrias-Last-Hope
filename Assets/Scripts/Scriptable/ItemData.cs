@@ -16,10 +16,17 @@ public class ItemData : ScriptableObject
 
     public void UseItem()
     {
+        int currentHealthPoints, currentSpiritualEnergyPoints;
+        currentHealthPoints = PlayerStats.CurrentHealthPoints += healthBoost;
+        currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints += spiritualEnergyBoost;
         Debug.Log("Using " + itemName);
-        PlayerStats.CurrentHealthPoints += healthBoost;
+
+        // Clamp the health and spiritual energy points to their maximum values in case a max boost potion is used
+        PlayerStats.CurrentHealthPoints = Mathf.Clamp(currentHealthPoints, 0, PlayerStats.MaxHealthPoints);
+        PlayerStats.CurrentSpiritualEnergyPoints = Mathf.Clamp(currentSpiritualEnergyPoints, 0, PlayerStats.MaxSpiritualEnergyPoints);
+        //--------------------------------
+        
         PlayerStats.AttackPower += attackBoost;
-        PlayerStats.CurrentSpiritualEnergyPoints += spiritualEnergyBoost;
         FindObjectOfType<PlayerController>().setStats();
         TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
         Debug.Log("TBCharacterUnit: " + tBCharacterUnit);
