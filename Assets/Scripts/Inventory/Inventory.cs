@@ -29,7 +29,7 @@ public class Inventory : MonoBehaviour
         if (inventoryDictionary.TryGetValue(itemData, out InventoryItem item))
         {
             item.AddQuantity();
-            Debug.Log($"{itemData.itemName} total stack is now {item.Quantity}");
+            Debug.Log($"{itemData.ItemName} total stack is now {item.Quantity}");
             OnInventoryChange?.Invoke(inventoryItems);
         }
         // If the item is not in the inventory, add it
@@ -38,7 +38,7 @@ public class Inventory : MonoBehaviour
             InventoryItem newInventoryItem = new InventoryItem(itemData);
             inventoryItems.Add(newInventoryItem);
             inventoryDictionary.Add(itemData, newInventoryItem);
-            Debug.Log($"Added {itemData.itemName} to inventory for the first time.");
+            Debug.Log($"Added {itemData.ItemName} to inventory for the first time.");
             OnInventoryChange?.Invoke(inventoryItems);
         }
     }
@@ -52,7 +52,7 @@ public class Inventory : MonoBehaviour
                 inventoryItems.Remove(item);
                 inventoryDictionary.Remove(itemData);
             }
-            Debug.Log($"Removed a unit of {itemData.itemName}");
+            Debug.Log($"Removed a unit of {itemData.ItemName}");
             OnInventoryChange?.Invoke(inventoryItems);
         }
     }

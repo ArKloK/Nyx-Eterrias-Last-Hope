@@ -5,14 +5,20 @@ using UnityEngine;
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    public string itemName;
-    public Sprite itemSprite;
-    public string itemDescription;
+    [SerializeField] string itemName;
+    [SerializeField] Sprite itemSprite;
+    [SerializeField] string itemDescription;
 
     [Header("Stats Boost")]
-    public int healthBoost;
-    public int attackBoost;
-    public int spiritualEnergyBoost;
+    [SerializeField] int healthBoost;
+    [SerializeField] int attackBoost;
+    [SerializeField] int spiritualEnergyBoost;
+    [SerializeField] ConditionID conditionID;
+
+    public string ItemName { get => itemName; set => itemName = value; }
+    public ConditionID ConditionID { get => conditionID; set => conditionID = value; }
+    public Sprite ItemSprite { get => itemSprite; set => itemSprite = value; }
+    public string ItemDescription { get => itemDescription; set => itemDescription = value; }
 
     public void UseItem()
     {

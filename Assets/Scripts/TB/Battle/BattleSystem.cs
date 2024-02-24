@@ -64,9 +64,16 @@ public class BattleSystem : MonoBehaviour
     {
         inventoryUI.SetActive(false);
         dialogueBox.EnableActionSelector(false);
-        yield return dialogueBox.TypeDialogueTB("Nyx used " + item.itemName + "!");
-        yield return playerHud.UpdateHp();
-        yield return new WaitForSeconds(2f);
+        yield return dialogueBox.TypeDialogueTB("Nyx used " + item.ItemName + "!");
+        if (item.ConditionID != ConditionID.None)
+        {
+            playerUnit.Character.RemoveStatus(item.ConditionID);
+            yield return dialogueBox.TypeDialogueTB("Nyx has been cured from " + item.ConditionID + "!");
+        }
+        else
+        {
+            yield return playerHud.UpdateHp();
+        }
         yield return RunTurns(BattleAction.INVENTORY);
     }
 
