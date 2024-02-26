@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         battleSystem.OnBattleEnd += EndBattle;
+        DialogueManager.OnStartTBCombat += StartBattle;
     }
     public void StartBattle()
     {
