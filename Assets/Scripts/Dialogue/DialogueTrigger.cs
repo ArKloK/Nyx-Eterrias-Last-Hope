@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class DialogueLine
     [TextArea(3, 10)]
     public string line;
     public bool isMoveSelectionLine = false;
+    public bool isTBBattleLine = false;
 }
 
 [System.Serializable]
@@ -22,8 +24,8 @@ public class Dialogue
 
 public class DialogueTrigger : MonoBehaviour
 {
-    public Dialogue dialogue;
-    public GameObject dialogueBox;
+    public static event Action<Dialogue> OnTriggerDialogue;
+    [SerializeField] Dialogue dialogue;
 
     void OnEnable()
     {
@@ -37,14 +39,12 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        dialogueBox.SetActive(true);
-        DialogueManager.Instance.StartDialogue(dialogue);
+        OnTriggerDialogue?.Invoke(dialogue);
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
     }
 
     public void TriggerLevelUpDialogue()
     {
-        dialogueBox.SetActive(true);
         Dialogue lvlUpDialogue;
         if (PlayerStats.Moves.Count < 4)
         {
@@ -68,8 +68,7 @@ public class DialogueTrigger : MonoBehaviour
                             }
                     );
         }
-
-        DialogueManager.Instance.StartDialogue(lvlUpDialogue);
+        OnTriggerDialogue?.Invoke(lvlUpDialogue);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

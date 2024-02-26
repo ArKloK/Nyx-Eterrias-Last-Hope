@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,14 +6,16 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static event Action OnStartTBCombat;
     public static DialogueManager Instance;
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] MoveSelectionUI moveSelectionUI;
+    [SerializeField] float typingSpeed = 0.2f;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive;
     private bool isSelectingMove;
-    [SerializeField] float typingSpeed = 0.2f;
+    private bool isTBBattleLine;
 
     // Start is called before the first frame update
     void Awake()
@@ -38,6 +41,11 @@ public class DialogueManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 DisplayNextLine();
+            }
+            if (isTBBattleLine && Input.GetKeyDown(KeyCode.Return))
+            {
+                isTBBattleLine = false;
+                OnStartTBCombat?.Invoke();
             }
         }
     }
@@ -94,8 +102,12 @@ public class DialogueManager : MonoBehaviour
             moveSelectionUI.gameObject.SetActive(false);
             isSelectingMove = false;
         }
-    }
 
+        if (dialogueLine.isTBBattleLine)
+        {
+            isTBBattleLine = true;
+        }
+    }
     public void EndDialogue()
     {
         //This should avoid the script from modifying the player's movement while in TB
