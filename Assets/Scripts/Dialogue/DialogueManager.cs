@@ -24,6 +24,12 @@ public class DialogueManager : MonoBehaviour
             Instance = this;
     }
 
+    void OnEnable()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
     void Update()
     {
         if (isDialogueActive)

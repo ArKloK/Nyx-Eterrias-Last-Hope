@@ -43,6 +43,17 @@ public class DialogueTrigger : MonoBehaviour
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
     }
 
+    // public void TriggerDialogue()
+    // {
+    //     if (dialogueBox == null)
+    //     {
+    //         dialogueBox = DialogueBoxActivator.Instance.InvokeGetDialogueBox();
+    //     }
+    //     dialogueBox.SetActive(true);
+    //     DialogueManager.Instance.StartDialogue(dialogue);
+    //     gameObject.GetComponent<BoxCollider2D>().enabled = false;
+    // }
+
     public void TriggerLevelUpDialogue()
     {
         Dialogue lvlUpDialogue;
