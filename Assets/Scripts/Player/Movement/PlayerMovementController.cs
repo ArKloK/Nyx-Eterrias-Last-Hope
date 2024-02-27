@@ -286,7 +286,7 @@ namespace PlayerMovementController
         }
         private bool IsWalled()
         {
-            return Physics2D.OverlapCircle(WallCheck.position, 0.2f, Data.WallLayer);
+            return Physics2D.OverlapCircle(WallCheck.position, Data.WallCheckRadius, Data.WallLayer);
         }
         private void HandleWallSlide()
         {

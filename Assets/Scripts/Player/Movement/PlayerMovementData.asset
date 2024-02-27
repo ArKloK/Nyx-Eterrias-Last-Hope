@@ -24,7 +24,7 @@ MonoBehaviour:
   MaxSpeed: 60
   Acceleration: 1000
   GroundingForce: -1.5
-  GrounderDistance: 1.5
+  GrounderDistance: 1.8
   JumpPower: 120
   MaxFallSpeed: 90
   FallAcceleration: 200
@@ -35,6 +35,7 @@ MonoBehaviour:
   WallSlidingSpeed: 54.6
   WallJumpingTime: 0.2
   WallJumpingDuration: 0.1
+  WallCheckRadius: 7.15
   WallJumpingPower: {x: 14, y: 100}
   DashingPower: 80
   DashingTime: 0.2

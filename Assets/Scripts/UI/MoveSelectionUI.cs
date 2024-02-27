@@ -7,6 +7,7 @@ public class MoveSelectionUI : MonoBehaviour
 {
     [SerializeField] List<TextMeshProUGUI> moveTexts;
     [SerializeField] Color highlightedColor;
+    private bool isVerticalInputPressed = false;
     int currentSelection = 0;
     void OnEnable()
     {
@@ -24,16 +25,32 @@ public class MoveSelectionUI : MonoBehaviour
 
     public void HandleMoveSelection()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        // if (Input.GetKeyDown(KeyCode.DownArrow))
+        if(Input.GetAxis("Vertical") < 0 && !isVerticalInputPressed)
         {
             ++currentSelection;
+            isVerticalInputPressed = true;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        //else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if(Input.GetAxis("Vertical") > 0 && !isVerticalInputPressed)
         {
             --currentSelection;
+            isVerticalInputPressed = true;
+        }
+        else if(Input.GetAxis("Vertical") == 0)
+        {
+            isVerticalInputPressed = false;
         }
 
-        currentSelection = Mathf.Clamp(currentSelection, 0, 4);
+        // currentSelection = Mathf.Clamp(currentSelection, 0, 4);
+        if (currentSelection < 0)
+        {
+            currentSelection = 4;
+        }
+        else if (currentSelection > 4)
+        {
+            currentSelection = 0;
+        }
         UpdateMoveSelection(currentSelection);
         if (Input.GetKeyDown(KeyCode.Return))
         {

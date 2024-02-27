@@ -6169,7 +6169,6 @@ MonoBehaviour:
     - line: And this one is the second
       isMoveSelectionLine: 0
       isTBBattleLine: 1
-  dialogueBox: {fileID: 537843047}
 --- !u!61 &1314806213
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6177,7 +6176,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314806211}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

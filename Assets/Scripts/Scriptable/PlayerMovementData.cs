@@ -31,7 +31,7 @@ namespace PlayerMovementController
         [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
         public float GroundingForce = -1.5f;
 
-        [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 2.7f)]
+        [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 9f)]
         public float GrounderDistance = 2.7f;
 
         [Header("JUMP")]
@@ -64,6 +64,8 @@ namespace PlayerMovementController
         public float WallJumpingTime = 0.2f;
         [Tooltip("The duration of the wall jump")]
         public float WallJumpingDuration = 0.4f;
+        [Tooltip("The radius of the wall check")]
+        public float WallCheckRadius = 0.2f;
         [Tooltip("The power of the wall jump")]
         public Vector2 WallJumpingPower = new Vector2(8f, 16f);
 

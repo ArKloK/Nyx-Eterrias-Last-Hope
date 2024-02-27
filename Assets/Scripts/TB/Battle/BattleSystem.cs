@@ -324,14 +324,16 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleActionSelection()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetAxis("Vertical") < 0)
+        //if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             if (currentAction < 1)
             {
                 currentAction++;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetAxis("Vertical") > 0)
+        //else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (currentAction > 0)
             {
@@ -355,36 +357,55 @@ public class BattleSystem : MonoBehaviour
             }
         }
     }
+
+    private bool isHorizontalInputPressed = false;
+
     private void HandleMoveSelection()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetAxis("Horizontal") > 0)
+        //if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (currentMove < playerUnit.Character.Moves.Count - 1)
+            if (currentMove < playerUnit.Character.Moves.Count - 1 && !isHorizontalInputPressed)
             {
+                Debug.Log("Pressed right arrow!");
                 currentMove++;
+                isHorizontalInputPressed = true;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetAxis("Horizontal") < 0)
+        //else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (currentMove > 0)
+            if (currentMove > 0 && !isHorizontalInputPressed)
             {
+                Debug.Log("Pressed left arrow!");
                 currentMove--;
+                isHorizontalInputPressed = true;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetAxis("Vertical") < 0)
+        //else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             if (currentMove < playerUnit.Character.Moves.Count - 2)
             {
+                Debug.Log("Pressed down arrow!");
                 currentMove += 2;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetAxis("Vertical") > 0)
+        //else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (currentMove > 1)
             {
+                Debug.Log("Pressed up arrow!");
                 currentMove -= 2;
             }
         }
+        else if (Input.GetAxis("Horizontal") == 0)
+        {
+            isHorizontalInputPressed = false;
+        }
+
+        Debug.Log("Current move: " + currentMove);
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
