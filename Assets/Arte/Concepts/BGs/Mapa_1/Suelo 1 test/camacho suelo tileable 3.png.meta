@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 29c88711acea1fd46b34a90f1c9c23b3
+guid: de7c1b25e1ba9ad4f92772d14309c836
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 0
   alignment: 0
@@ -108,7 +108,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: camacho suelo tileable 3_0
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 101
+        width: 1815
+        height: 1741
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3cf087f5bafa8c4a9c3537c17d2a478
+      internalID: 1547430281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -119,7 +140,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      camacho suelo tileable 3_0: 1547430281
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -31,8 +31,8 @@ namespace PlayerMovementController
         [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
         public float GroundingForce = -1.5f;
 
-        [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 9f)]
-        public float GrounderDistance = 2.7f;
+        [Tooltip("The detection distance for grounding and ceiling detection")]
+        public float GrounderDistance = 0.1f;
 
         [Header("JUMP")]
         [Tooltip("The immediate velocity applied when jumping")]

@@ -6,7 +6,7 @@ using UnityEngine.PlayerLoop;
 
 namespace PlayerMovementController
 {
-    [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
+    //[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private PlayerMovementData Data;
