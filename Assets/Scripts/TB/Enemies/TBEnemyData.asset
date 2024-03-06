@@ -15,9 +15,9 @@ MonoBehaviour:
   _name: Enemy1
   _sprite: {fileID: 0}
   _learnableMoves:
-  - Move: {fileID: 11400000, guid: 0352a9c8c39e89448899039fa8a480bc, type: 2}
+  - MoveData: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
     Level: 1
-  - Move: {fileID: 11400000, guid: 9af6b0e96bf5f674a84a0135eabd88fc, type: 2}
+  - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
     Level: 1
   _isEnemy: 1
   _maxHealthPoints: 1

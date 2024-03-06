@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public static class PlayerStats
+public class PlayerStats
 {
     public static Element Element;
     public static int MaxHealthPoints;
@@ -22,6 +23,7 @@ public static class PlayerStats
     {
         return LearnableMoves.Find(x => x.Level == CurrentLevel);
     }
+
     public static void SetMoves()
     {
         Moves = new List<TBMove>();
@@ -29,7 +31,7 @@ public static class PlayerStats
         {
             if (move.Level <= CurrentLevel)
             {
-                Moves.Add(new TBMove(move.Move));
+                Moves.Add(new TBMove(move.MoveData));
             }
             if (Moves.Count >= 4)
             {
@@ -37,4 +39,98 @@ public static class PlayerStats
             }
         }
     }
+
+    #region Save/Load Methods
+
+    //This method returns the moves that the player can learn at any level
+    public static List<TBMove> GetMovesLearnedAtLevel(int level)
+    {
+        List<TBMove> moves = LearnableMoves.Where(x => x.Level == level).Select(move => new TBMove(move.MoveData)).ToList();
+        return moves;
+    }
+
+    //This method returns the indexes of the moves that the player can learn at a specific level
+    public static int[] GetMovesIndexesLearnedAtLevel(int level)
+    {
+        List<TBMove> moves = GetMovesLearnedAtLevel(level);
+        int[] indexes = new int[4];
+        for (int i = 0; i < 4; i++)
+        {
+            if (i < moves.Count)
+            {
+                indexes[i] = LearnableMoves.IndexOf(LearnableMoves.Find(x => x.MoveData == moves[i].MoveData));
+            }
+            else
+            {
+                indexes[i] = -1;
+            }
+        }
+        return indexes;
+    }
+
+    //This method is used to get the indexes of the current moves inside the LearnableMoves list to save them
+    public static int[] GetMovesIndexesInLearnableMoves()
+    {
+        int[] indexes = new int[4];
+        int counter = 0;
+        foreach (LearnableMove learnableMove in LearnableMoves)
+        {
+            if (Moves.Find(x => x.MoveData == learnableMove.MoveData) != null)
+            {
+                int i = LearnableMoves.IndexOf(learnableMove);
+                indexes[counter++] = i;
+            }
+        }
+        Debug.Log("Indexes: " + indexes[0] + " " + indexes[1] + " " + indexes[2] + " " + indexes[3]);
+        return indexes;
+    }
+
+    //This method is used to load the moves from the saved indexes
+    public static void SetMovesFromLearnableMovesIndex(int[] indexes)
+    {
+        Moves = new List<TBMove>();
+        for (int i = 0; i < 4; i++)
+        {
+            if (indexes[i] != -1)
+            {
+                Moves.Add(new TBMove(LearnableMoves[indexes[i]].MoveData));
+            }
+        }
+    }
+
+    public static void StaticLoadData(GameData gameData)
+    {
+        Element = (Element)gameData.element;
+        MaxHealthPoints = gameData.maxHealthPoints;
+        CurrentHealthPoints = gameData.currentHealthPoints;
+        MaxSpiritualEnergyPoints = gameData.maxSpiritualEnergyPoints;
+        CurrentSpiritualEnergyPoints = gameData.currentSpiritualEnergyPoints;
+        AttackPower = gameData.attackPower;
+        TBAttackSpeed = gameData.tBAttackSpeed;
+        TBDefensePower = gameData.tBDefensePower;
+        TBAttackPower = gameData.tBAttackPower;
+        CurrentExperiencePoints = gameData.currentExperiencePoints;
+        MaxExperiencePoints = gameData.maxExperiencePoints;
+        CurrentLevel = gameData.currentLevel;
+        SetMovesFromLearnableMovesIndex(gameData.moves);
+    }
+
+    public static void StaticSaveData(ref GameData gameData)
+    {
+        gameData.element = (int)Element;
+        gameData.maxHealthPoints = MaxHealthPoints;
+        gameData.currentHealthPoints = CurrentHealthPoints;
+        gameData.maxSpiritualEnergyPoints = MaxSpiritualEnergyPoints;
+        gameData.currentSpiritualEnergyPoints = CurrentSpiritualEnergyPoints;
+        gameData.attackPower = AttackPower;
+        gameData.tBAttackSpeed = TBAttackSpeed;
+        gameData.tBDefensePower = TBDefensePower;
+        gameData.tBAttackPower = TBAttackPower;
+        gameData.currentExperiencePoints = CurrentExperiencePoints;
+        gameData.maxExperiencePoints = MaxExperiencePoints;
+        gameData.currentLevel = CurrentLevel;
+        gameData.moves = GetMovesIndexesInLearnableMoves();
+    }
+    #endregion
+
 }

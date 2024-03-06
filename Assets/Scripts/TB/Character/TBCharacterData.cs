@@ -32,6 +32,6 @@ public class TBCharacterData : ScriptableObject
 [System.Serializable]
 public class LearnableMove
 {
-    public TBMoveData Move;
+    public TBMoveData MoveData;
     public int Level;
 }

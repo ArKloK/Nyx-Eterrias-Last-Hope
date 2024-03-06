@@ -13,7 +13,7 @@ public class PlayerEventArgs : EventArgs
     }
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataPersistence
 {
     [Header("Script References")]
     public PlayerControllerData Data;
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private int currentHealthPoints;
     public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
     public int MaxHealthPoints { get => maxHealthPoints; set => maxHealthPoints = value; }
-    private int maxspriritualEnergyPoints;
+    private int maxSpriritualEnergyPoints;
     private int currentSpiritualEnergyPoints;
     #endregion
 
@@ -55,25 +55,24 @@ public class PlayerController : MonoBehaviour
     {
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
-        maxspriritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
-        currentSpiritualEnergyPoints = maxspriritualEnergyPoints;
+        maxSpriritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
+        currentSpiritualEnergyPoints = maxSpriritualEnergyPoints;
         attackPower = Data.AttackPower;
         TBattackPower = Data.TBAttackPower;
         TBdefensePower = Data.TBDefensePower;
         TBattackSpeed = Data.TBAttackSpeed;
+        currentExperiencePoints = 0;
+        maxExperiencePoints = Data.MaxExperiencePoints;
+        currentLevel = 1;
+        PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
+        healthBar.SetMaxHealth(maxHealthPoints);
     }
     void Start()
     {
         playerMovementController = GetComponent<PlayerMovementController.PlayerMovementController>();
 
-        currentExperiencePoints = 0;
-        maxExperiencePoints = Data.MaxExperiencePoints;
-        currentLevel = 1;
         UpdateStats();//This is called here as well to update the static stats before the method PlayerStats.SetMoves() is called
 
-        healthBar.SetMaxHealth(maxHealthPoints);
-        
-        PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
         PlayerStats.SetMoves();
     }
 
@@ -95,7 +94,6 @@ public class PlayerController : MonoBehaviour
             TakeDamage(1);
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
-
         UpdateStats();
     }
 
@@ -177,9 +175,9 @@ public class PlayerController : MonoBehaviour
         currentExperiencePoints = 0;
         maxExperiencePoints += 10;
         maxHealthPoints += 10;
-        maxspriritualEnergyPoints += 10;
+        maxSpriritualEnergyPoints += 10;
         currentHealthPoints = maxHealthPoints;
-        currentSpiritualEnergyPoints = maxspriritualEnergyPoints;
+        currentSpiritualEnergyPoints = maxSpriritualEnergyPoints;
         UpdateStats();//Updates the static stats when the player levels up
         healthBar.SetMaxHealth(maxHealthPoints);
         OnPlayerLevelUp?.Invoke();
@@ -209,7 +207,8 @@ public class PlayerController : MonoBehaviour
     {
         PlayerStats.MaxHealthPoints = maxHealthPoints;
         PlayerStats.CurrentHealthPoints = currentHealthPoints;
-        PlayerStats.MaxSpiritualEnergyPoints = maxspriritualEnergyPoints;
+        PlayerStats.MaxSpiritualEnergyPoints = maxSpriritualEnergyPoints;
+        PlayerStats.CurrentSpiritualEnergyPoints = currentSpiritualEnergyPoints;
         PlayerStats.TBAttackPower = TBattackPower;
         PlayerStats.AttackPower = attackPower;
         PlayerStats.TBAttackSpeed = TBattackSpeed;
@@ -230,6 +229,19 @@ public class PlayerController : MonoBehaviour
         currentExperiencePoints = PlayerStats.CurrentExperiencePoints;
         maxExperiencePoints = PlayerStats.MaxExperiencePoints;
         currentLevel = PlayerStats.CurrentLevel;
+        maxSpriritualEnergyPoints = PlayerStats.MaxSpiritualEnergyPoints;
+        currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints;
         healthBar.SetHealth(currentHealthPoints);
+    }
+
+    public void LoadData(GameData gameData)
+    {
+        PlayerStats.StaticLoadData(gameData);
+        setStats();
+    }
+
+    public void SaveData(ref GameData gameData)
+    {
+        PlayerStats.StaticSaveData(ref gameData);
     }
 }

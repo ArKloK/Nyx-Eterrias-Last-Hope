@@ -85,7 +85,7 @@ public class TBCharacter
             {
                 if (move.Level <= level)
                 {
-                    _moves.Add(new TBMove(move.Move));
+                    _moves.Add(new TBMove(move.MoveData));
                 }
 
                 if (_moves.Count >= 4)
@@ -228,8 +228,8 @@ public class TBCharacter
     {
         if (_moves.Count >= 4)
             return;
-        PlayerStats.Moves.Add(new TBMove(moveToLearn.Move));
-        Debug.Log($"{_characterData.Name} has learned {moveToLearn.Move.MoveName}");
+        PlayerStats.Moves.Add(new TBMove(moveToLearn.MoveData));
+        Debug.Log($"{_characterData.Name} has learned {moveToLearn.MoveData.MoveName}");
     }
     public TBMove GetRandomMove()
     {

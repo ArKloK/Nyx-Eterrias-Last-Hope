@@ -7,7 +7,7 @@ public class PlayerControllerData : ScriptableObject
 {
     [Header("PLAYER ELEMENT")]
     [Tooltip("The element of the player")]
-    public Element PlayerElement;
+    public Element Element;
 
     [Header("HEALTH AND ENERGY")]
     [Tooltip("The maximum health for the player at level 1, this will increase as the player levels up")]

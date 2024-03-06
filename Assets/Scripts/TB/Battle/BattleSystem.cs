@@ -405,8 +405,6 @@ public class BattleSystem : MonoBehaviour
             isHorizontalInputPressed = false;
         }
 
-        Debug.Log("Current move: " + currentMove);
-
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
         if (Input.GetKeyDown(KeyCode.Return))

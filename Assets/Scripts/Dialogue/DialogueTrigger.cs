@@ -52,7 +52,7 @@ public class DialogueTrigger : MonoBehaviour
                         new List<DialogueLine>
                             {
                                 new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
-                                new DialogueLine { line = "Nyx learned a move: " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName + "!" }
+                                new DialogueLine { line = "Nyx learned a move: " + PlayerStats.GetLearnableMovesAtCurrentLevel().MoveData.MoveName + "!" }
                             }
                     );
         }
@@ -62,7 +62,7 @@ public class DialogueTrigger : MonoBehaviour
                         new List<DialogueLine>
                             {
                                 new DialogueLine { line = $"You leveled up to level {PlayerStats.CurrentLevel}!" },
-                                new DialogueLine { line = "Nyx wants to learn " + PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName},
+                                new DialogueLine { line = "Nyx wants to learn " + PlayerStats.GetLearnableMovesAtCurrentLevel().MoveData.MoveName},
                                 new DialogueLine { line = "But Nyx cannot learn more than 4 moves!"},
                                 new DialogueLine{line = "Choose a move to forget", isMoveSelectionLine = true}
                             }

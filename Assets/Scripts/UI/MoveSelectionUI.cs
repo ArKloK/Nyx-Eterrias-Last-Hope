@@ -20,7 +20,7 @@ public class MoveSelectionUI : MonoBehaviour
         {
             moveTexts[i].text = PlayerStats.Moves[i].MoveData.MoveName;
         }
-        moveTexts[PlayerStats.Moves.Count].text = PlayerStats.GetLearnableMovesAtCurrentLevel().Move.MoveName;
+        moveTexts[PlayerStats.Moves.Count].text = PlayerStats.GetLearnableMovesAtCurrentLevel().MoveData.MoveName;
     }
 
     public void HandleMoveSelection()
@@ -75,7 +75,7 @@ public class MoveSelectionUI : MonoBehaviour
                         new DialogueLine { line = "And Nyx learned " + moveTexts[4].text + "!" }
                     }
                 );
-                PlayerStats.Moves[currentSelection] = new TBMove(PlayerStats.GetLearnableMovesAtCurrentLevel().Move);
+                PlayerStats.Moves[currentSelection] = new TBMove(PlayerStats.GetLearnableMovesAtCurrentLevel().MoveData);
             }
             DialogueManager.Instance.EnqueueDialogue(learningMoveDialogue);
         }
