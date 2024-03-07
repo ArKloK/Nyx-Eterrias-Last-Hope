@@ -79,9 +79,35 @@ public class InventoryManager : MonoBehaviour
     {
         if (currentSlot != null)
         {
-            currentSlot.Item.ItemData.UseItem();
+            ConsumeItem();
             OnItemUsed?.Invoke(currentSlot.Item.ItemData);
             OnTBItemUsedUpdateHP?.Invoke(currentSlot.Item.ItemData);
+        }
+    }
+
+    public void ConsumeItem()
+    {
+        int currentHealthPoints, currentSpiritualEnergyPoints;
+        currentHealthPoints = PlayerStats.CurrentHealthPoints += currentSlot.Item.ItemData.HealthBoost;
+        currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints += currentSlot.Item.ItemData.SpiritualEnergyBoost;
+        Debug.Log("Using " + currentSlot.Item.ItemData.ItemName);
+
+        // Clamp the health and spiritual energy points to their maximum values in case a max boost potion is used
+        PlayerStats.CurrentHealthPoints = Mathf.Clamp(currentHealthPoints, 0, PlayerStats.MaxHealthPoints);
+        PlayerStats.CurrentSpiritualEnergyPoints = Mathf.Clamp(currentSpiritualEnergyPoints, 0, PlayerStats.MaxSpiritualEnergyPoints);
+        //--------------------------------
+
+        PlayerStats.AttackPower += currentSlot.Item.ItemData.AttackBoost;
+        FindObjectOfType<PlayerController>().setStats();
+        TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
+        Debug.Log("TBCharacterUnit: " + tBCharacterUnit);
+        foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
+        {
+            if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
+            {
+                Debug.Log("Setting stats");
+                tBCharacter.Character.setStats();
+            }
         }
     }
 }

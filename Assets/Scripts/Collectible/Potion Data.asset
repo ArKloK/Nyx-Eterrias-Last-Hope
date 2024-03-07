@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f96f0c18fc72624e93c1e077c76e8a7, type: 3}
   m_Name: Potion Data
   m_EditorClassIdentifier: 
-  itemName: Potion
-  itemSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  itemDescription: A potion that heals you
-  healthBoost: 1
-  attackBoost: 0
-  spiritualEnergyBoost: 0
+  ItemName: Potion
+  ConditionID: 0
+  ItemSprite: {fileID: 21300000, guid: e6bce553d5830b24d904f12b81701429, type: 3}
+  ItemDescription: A poison that heals you
+  HealthBoost: 1
+  AttackBoost: 0
+  SpiritualEnergyBoost: 0

@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         setStats();
     }
 
-    public void SaveData(ref GameData gameData)
+    public void SaveData(GameData gameData)
     {
         PlayerStats.StaticSaveData(ref gameData);
     }

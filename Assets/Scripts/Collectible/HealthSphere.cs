@@ -10,7 +10,6 @@ public class HealthSphere : MonoBehaviour, ICollectible
     public void Collect()
     {
         OnHealthSphereCollected?.Invoke();
-        Debug.Log("HealthSphere collected from HealthSphere.cs");
         Destroy(gameObject);
     }
 }

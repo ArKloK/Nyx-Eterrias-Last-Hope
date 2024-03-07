@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu][System.Serializable]
 public class PlayerControllerData : ScriptableObject
 {
     [Header("PLAYER ELEMENT")]

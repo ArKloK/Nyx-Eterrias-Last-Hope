@@ -8,6 +8,7 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] PlayerControllerData playerControllerData;
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
+    [SerializeField] private bool useEncryption;
     public static DataPersistenceManager Instance { get; private set; }
     private GameData gameData;
     private FileDataHandler fileDataHandler;
@@ -25,9 +26,17 @@ public class DataPersistenceManager : MonoBehaviour
     //THIS METHOD IS ONLY FOR TESTING PURPOSES, THE FINAL GAME WILL HAVE A MENU TO START A NEW GAME OR LOAD A SAVED GAME
     private void Start()
     {
-        fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
         dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadGame();
+    }
+
+    void Update()
+    {
+        // if (Input.GetKeyDown(KeyCode.L))
+        // {
+        //     LoadGame();
+        // }
     }
 
     public void NewGame()
@@ -37,7 +46,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void LoadGame()
     {
-        gameData = fileDataHandler.LoadData();
+        gameData = fileDataHandler.LoadData(playerControllerData);
 
         if (gameData == null)
         {
@@ -55,7 +64,7 @@ public class DataPersistenceManager : MonoBehaviour
     {
         foreach (IDataPersistence dataPersistenceObject in dataPersistenceObjects)
         {
-            dataPersistenceObject.SaveData(ref gameData);
+            dataPersistenceObject.SaveData(gameData);
         }
 
         fileDataHandler.SaveData(gameData);
@@ -69,7 +78,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private List<IDataPersistence> FindAllDataPersistenceObjects()
     {
-        IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
+        IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>(true).OfType<IDataPersistence>();
 
         return new List<IDataPersistence>(dataPersistenceObjects);
     }

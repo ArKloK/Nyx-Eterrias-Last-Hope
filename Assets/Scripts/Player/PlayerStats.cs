@@ -81,7 +81,6 @@ public class PlayerStats
                 indexes[counter++] = i;
             }
         }
-        Debug.Log("Indexes: " + indexes[0] + " " + indexes[1] + " " + indexes[2] + " " + indexes[3]);
         return indexes;
     }
 
