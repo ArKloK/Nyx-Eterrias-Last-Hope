@@ -45,6 +45,10 @@ public class PlayerStats
     //This method returns the moves that the player can learn at any level
     public static List<TBMove> GetMovesLearnedAtLevel(int level)
     {
+        if(LearnableMoves == null)
+        {
+            LearnableMoves = new List<LearnableMove>();
+        }
         List<TBMove> moves = LearnableMoves.Where(x => x.Level == level).Select(move => new TBMove(move.MoveData)).ToList();
         return moves;
     }
@@ -54,6 +58,10 @@ public class PlayerStats
     {
         List<TBMove> moves = GetMovesLearnedAtLevel(level);
         int[] indexes = new int[4];
+        if(moves.Count == 0)
+        {
+            return indexes;
+        }
         for (int i = 0; i < 4; i++)
         {
             if (i < moves.Count)
@@ -114,7 +122,7 @@ public class PlayerStats
         SetMovesFromLearnableMovesIndex(gameData.moves);
     }
 
-    public static void StaticSaveData(ref GameData gameData)
+    public static void StaticSaveData(GameData gameData)
     {
         gameData.element = (int)Element;
         gameData.maxHealthPoints = MaxHealthPoints;

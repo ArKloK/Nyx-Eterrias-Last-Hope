@@ -367,7 +367,6 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentMove < playerUnit.Character.Moves.Count - 1 && !isHorizontalInputPressed)
             {
-                Debug.Log("Pressed right arrow!");
                 currentMove++;
                 isHorizontalInputPressed = true;
             }
@@ -377,7 +376,6 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentMove > 0 && !isHorizontalInputPressed)
             {
-                Debug.Log("Pressed left arrow!");
                 currentMove--;
                 isHorizontalInputPressed = true;
             }
@@ -387,7 +385,6 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentMove < playerUnit.Character.Moves.Count - 2)
             {
-                Debug.Log("Pressed down arrow!");
                 currentMove += 2;
             }
         }
@@ -396,7 +393,6 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentMove > 1)
             {
-                Debug.Log("Pressed up arrow!");
                 currentMove -= 2;
             }
         }

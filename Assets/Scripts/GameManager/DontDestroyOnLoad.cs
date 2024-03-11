@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class DontDestroyOnLoad : MonoBehaviour
+public class DontDestroyOnLoadScript : MonoBehaviour
 {
-    private static Dictionary<string, DontDestroyOnLoad> instances = new Dictionary<string, DontDestroyOnLoad>();
+    private static Dictionary<string, DontDestroyOnLoadScript> instances = new Dictionary<string, DontDestroyOnLoadScript>();
 
     private void Awake()
     {
+        if(SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            Destroy(gameObject);
+            return;
+        }
         if (!instances.ContainsKey(gameObject.name))
         {
             instances[gameObject.name] = this;
@@ -17,5 +23,14 @@ public class DontDestroyOnLoad : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public static void DestroyAll()
+    {
+        foreach (var instance in instances.Values)
+        {
+            Destroy(instance.gameObject);
+        }
+        instances.Clear();
     }
 }

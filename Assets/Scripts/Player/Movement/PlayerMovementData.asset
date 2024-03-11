@@ -37,7 +37,7 @@ MonoBehaviour:
   WallJumpingDuration: 0.1
   WallCheckRadius: 7.15
   WallJumpingPower: {x: 30, y: 100}
-  DashingPower: 80
+  DashingPower: 200
   DashingTime: 0.2
   DashingCooldown: 0.5
   KnockBackPower: {x: 50, y: 50}

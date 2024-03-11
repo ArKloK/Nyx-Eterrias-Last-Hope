@@ -46,6 +46,11 @@ public class PauseMenuController : MonoBehaviour
         inventory.LaunchInventoryChange();
     }
 
+    public void SaveGame()
+    {
+        DataPersistenceManager.Instance.SaveGame();
+    }
+
     public void Quit()
     {
         Application.Quit();

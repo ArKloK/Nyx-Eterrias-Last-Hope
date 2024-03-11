@@ -236,12 +236,14 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData gameData)
     {
+        transform.position = gameData.playerPosition;
         PlayerStats.StaticLoadData(gameData);
         setStats();
     }
 
     public void SaveData(GameData gameData)
     {
-        PlayerStats.StaticSaveData(ref gameData);
+        gameData.playerPosition = transform.position;
+        PlayerStats.StaticSaveData(gameData);
     }
 }

@@ -6,6 +6,11 @@ using System;
 public class Collectible : MonoBehaviour, ICollectible, IDataPersistence
 {
     [SerializeField] private string id;
+    [ContextMenu("Generate GUID")]
+    private void GenerateGUID()
+    {
+        id = Guid.NewGuid().ToString();
+    }
     public static event HandleCollectibleCollected OnCollectibleCollected;
     public delegate void HandleCollectibleCollected(ItemData itemData);
     [SerializeField] ItemData itemData;

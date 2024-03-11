@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
+    private bool isInitialized;
+    public Vector3 playerPosition;
     public int element;
     public int maxHealthPoints;
     public int currentHealthPoints;
@@ -21,10 +23,20 @@ public class GameData
     public SerializableDictionary<string, bool> collectibles;
     public List<InventoryItemSerializable> inventoryItems;
 
+    public bool IsEmpty { get => isInitialized; set => isInitialized = value; }
+
     //The values defined in this constructor will be the default values for the game
     public GameData(PlayerControllerData playerControllerData)
     {
-        //if (playerControllerData == null) return;
+        if(GameObject.Find("FirstRespawnPoint") != null)
+        {
+            playerPosition = GameObject.Find("FirstRespawnPoint").transform.position;
+        }
+        else
+        {
+            playerPosition = new Vector3(0, 0, 0);
+        }
+        isInitialized = true;
         element = (int)playerControllerData.Element;
         maxHealthPoints = playerControllerData.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
@@ -40,6 +52,14 @@ public class GameData
         collectibles = new SerializableDictionary<string, bool>();
         inventoryItems = new List<InventoryItemSerializable>();
         moves = PlayerStats.GetMovesIndexesLearnedAtLevel(currentLevel);
+        if(moves.Length == 0)
+        {
+            moves = new int[4];
+            moves[0] = 0;
+            moves[1] = 1;
+            moves[2] = 2;
+            moves[3] = 3;
+        }
     }
     
     public override string ToString()

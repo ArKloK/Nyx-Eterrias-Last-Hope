@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -8,7 +10,7 @@ public enum GameState
     TB,
 }
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IDataPersistence
 {
     [SerializeField] GameObject player;
     [SerializeField] BattleSystem battleSystem;
@@ -44,9 +46,18 @@ public class GameController : MonoBehaviour
     {
         if (state == GameState.SS)
         {
+            // if (player == null)
+            // {
+            //     player = GameObject.FindGameObjectWithTag("Player");
+            // }
             player.GetComponent<PlayerMovementController.PlayerMovementController>().HandleUpdate();
             player.GetComponent<PlayerController>().HandleUpdate();
             pauseMenuController.HandleUpdate();
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                DataPersistenceManager.Instance.SaveGame();
+                SceneManager.LoadSceneAsync("Main Menu");
+            }
         }
         else if (state == GameState.TB)
         {
@@ -56,9 +67,23 @@ public class GameController : MonoBehaviour
 
     void FixedUpdate()
     {
+        // if (player == null)
+        // {
+        //     player = GameObject.FindGameObjectWithTag("Player");
+        // }
         if (state == GameState.SS)
         {
             player.GetComponent<PlayerMovementController.PlayerMovementController>().HandleFixedUpdate();
         }
+    }
+
+    public void LoadData(GameData gameData)
+    {
+        //SceneManager.LoadSceneAsync(gameData.currentSceneIndex);
+    }
+
+    public void SaveData(GameData gameData)
+    {
+        PlayerPrefs.SetInt("currentSceneIndex", SceneManager.GetActiveScene().buildIndex);
     }
 }
