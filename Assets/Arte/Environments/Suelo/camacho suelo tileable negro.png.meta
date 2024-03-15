@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 75821aaf555d9a34ab863493f17c3de4
+guid: 79cf079d066730c4c956e27f57a321bc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -53,7 +53,7 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: 0
+  spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -108,44 +108,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: camacho_idle_test_baseform_0
-      rect:
-        serializedVersion: 2
-        x: 1857
-        y: 1059
-        width: 1410
-        height: 1700
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 134fa644951e5d343acd63573f445425
-      internalID: -1947024392
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    outline:
-    - - {x: -2480.5, y: -1754}
-      - {x: -2480.5, y: 1754}
-      - {x: 2480.5, y: 1754}
-      - {x: 2480.5, y: -1754}
+    sprites: []
+    outline: []
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      camacho_idle_test_baseform_0: -1947024392
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

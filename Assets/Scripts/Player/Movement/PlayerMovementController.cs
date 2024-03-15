@@ -14,15 +14,14 @@ namespace PlayerMovementController
         private BoxCollider2D _col;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
+        private Camera mainCamera;
         private bool _cachedQueryStartInColliders;
 
         #region Checkers
-
         private bool _isFacingRight;
         bool groundHit;
         bool ceilingHit;
         public bool canMove = true;
-
         #endregion
 
         #region Abilities unlocked
@@ -30,7 +29,6 @@ namespace PlayerMovementController
         #endregion
 
         #region Interface and Events
-
         public Vector2 FrameInput => _frameInput.Move;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
@@ -45,6 +43,11 @@ namespace PlayerMovementController
             _isFacingRight = true;
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+        }
+
+        private void Start()
+        {
+            mainCamera = Camera.main;
         }
 
         public void HandleUpdate()
@@ -114,8 +117,35 @@ namespace PlayerMovementController
             HandleWallJump();
             HandleDirection();
             HandleGravity();
+            HandleMovementInCameraBounds();
 
             ApplyMovement();
+        }
+
+        private void HandleMovementInCameraBounds()
+        {
+            Vector3 playerScreenPosition = mainCamera.WorldToScreenPoint(transform.position);
+
+            float screenEdgeBuffer = 3f;
+
+            // Obtiene los límites de la pantalla con un margen adicional
+            float minX = 0 + screenEdgeBuffer;
+            float maxX = Screen.width - screenEdgeBuffer;
+            float minY = 0 + screenEdgeBuffer;
+            float maxY = Screen.height - screenEdgeBuffer;
+
+            // Limita la posición del jugador dentro de los límites de la pantalla con el margen adicional
+            playerScreenPosition.x = Mathf.Clamp(playerScreenPosition.x, minX, maxX);
+            playerScreenPosition.y = Mathf.Clamp(playerScreenPosition.y, minY, maxY);
+
+            // Convierte la posición de la pantalla nuevamente a la posición en el mundo
+            Vector3 clampedPlayerPosition = mainCamera.ScreenToWorldPoint(playerScreenPosition);
+
+            // Mantén la misma altura del jugador
+            clampedPlayerPosition.z = transform.position.z;
+
+            // Aplica la nueva posición al jugador
+            transform.position = clampedPlayerPosition;
         }
 
         #region Collisions
@@ -215,7 +245,6 @@ namespace PlayerMovementController
         {
             if (!isWallJumping && !_isDashing && canMove)
             {
-
                 if (_frameInput.Move.x != 0)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
@@ -226,6 +255,7 @@ namespace PlayerMovementController
                 {
                     _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
+
             }
 
         }
