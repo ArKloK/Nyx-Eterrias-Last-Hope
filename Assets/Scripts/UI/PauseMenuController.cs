@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour
 {
@@ -50,9 +51,8 @@ public class PauseMenuController : MonoBehaviour
     {
         DataPersistenceManager.Instance.SaveGame();
     }
-
-    public void Quit()
+    public void BackToMainMenu()
     {
-        Application.Quit();
+        SceneManager.LoadSceneAsync("Main Menu");
     }
 }

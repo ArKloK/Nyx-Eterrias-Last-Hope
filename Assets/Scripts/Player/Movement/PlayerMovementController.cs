@@ -117,7 +117,7 @@ namespace PlayerMovementController
             HandleWallJump();
             HandleDirection();
             HandleGravity();
-            HandleMovementInCameraBounds();
+            //HandleMovementInCameraBounds();
 
             ApplyMovement();
         }
@@ -126,7 +126,7 @@ namespace PlayerMovementController
         {
             Vector3 playerScreenPosition = mainCamera.WorldToScreenPoint(transform.position);
 
-            float screenEdgeBuffer = 3f;
+            float screenEdgeBuffer = 80f;
 
             // Obtiene los límites de la pantalla con un margen adicional
             float minX = 0 + screenEdgeBuffer;

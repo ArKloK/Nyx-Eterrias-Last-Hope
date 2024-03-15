@@ -36,6 +36,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadSceneAsync(PlayerPrefs.GetInt("currentSceneIndex", 1));
     }
 
+    public void OnQuitGameButtonClicked()
+    {
+        Application.Quit();
+    }
+
     private void DisableMenuButtons()
     {
         newGameButton.interactable = false;

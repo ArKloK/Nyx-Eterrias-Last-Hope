@@ -129,12 +129,6 @@ public class DataPersistenceManager : MonoBehaviour
         fileDataHandler.SaveData(gameData);
     }
 
-    //THIS METHOD IS ONLY FOR TESTING PURPOSES, THE FINAL GAME WILL HAVE A MENU TO SAVE THE GAME
-    // void OnDestroy()
-    // {
-    //     SaveGame();
-    // }
-
     private List<IDataPersistence> FindAllDataPersistenceObjects()
     {
         IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>(true).OfType<IDataPersistence>();
@@ -144,6 +138,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     public bool HasGameData()
     {
+        if (gameData == null) return false;
         return !gameData.IsEmpty;
     }
 }
