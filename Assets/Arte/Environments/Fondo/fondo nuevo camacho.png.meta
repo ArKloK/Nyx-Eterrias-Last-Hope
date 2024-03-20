@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 79cf079d066730c4c956e27f57a321bc
+guid: 663f40caa40dad64fa15a2ea3bb6b2b9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,22 +110,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: camacho suelo tileable negro_0
+      name: fondo nuevo camacho_0
       rect:
         serializedVersion: 2
-        x: 47
-        y: 148
-        width: 1811
-        height: 1616
+        x: 0
+        y: 655
+        width: 1920
+        height: 425
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 69700fcd7290074418da422280c0e574
-      internalID: -69629924
+      spriteID: 867e63fcd04411e44a8c597a5e832273
+      internalID: -2055776764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fondo nuevo camacho_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1920
+        height: 267
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a83fa0541274f54faec5a30cca265d1
+      internalID: 2094499041
       vertices: []
       indices: 
       edges: []
@@ -141,7 +162,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      camacho suelo tileable negro_0: -69629924
+      fondo nuevo camacho_0: -2055776764
+      fondo nuevo camacho_1: 2094499041
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
