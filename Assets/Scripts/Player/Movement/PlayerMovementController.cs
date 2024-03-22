@@ -24,6 +24,14 @@ namespace PlayerMovementController
         public bool canMove = true;
         #endregion
 
+        #region Animation
+        Animator animator;
+        private string currentState;
+        //Animation States
+        const string PLAYER_IDLE = "Idle";
+        const string PLAYER_RUN = "Run";
+        #endregion
+
         #region Abilities unlocked
         public bool doubleJumpUnlocked;
         #endregion
@@ -48,6 +56,7 @@ namespace PlayerMovementController
         private void Start()
         {
             mainCamera = Camera.main;
+            animator = GetComponent<Animator>();
         }
 
         public void HandleUpdate()
@@ -248,6 +257,7 @@ namespace PlayerMovementController
                 if (_frameInput.Move.x != 0)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
+                    ChangeAnimationState(PLAYER_RUN);
                     //_frameVelocity = new Vector2(_frameInput.Move.x * Data.MaxSpeed, _frameVelocity.y);
                     Turn();
                 }
@@ -255,9 +265,7 @@ namespace PlayerMovementController
                 {
                     _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
-
             }
-
         }
 
         #endregion
@@ -390,6 +398,14 @@ namespace PlayerMovementController
         public void KnockBack(Vector2 direction)
         {
             _frameVelocity = new Vector2(-Data.KnockBackPower.x * direction.x, Data.KnockBackPower.y);
+        }
+
+        void ChangeAnimationState(string newState)
+        {
+            if (currentState == newState) return;
+
+            animator.Play(newState);
+            currentState = newState;
         }
         #endregion
 
