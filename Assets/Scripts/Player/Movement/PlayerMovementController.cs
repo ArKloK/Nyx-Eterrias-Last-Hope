@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
 
 namespace PlayerMovementController
@@ -65,18 +66,44 @@ namespace PlayerMovementController
             GatherInput();
         }
 
+        #region Input System
+        public void Move(InputAction.CallbackContext context)
+        {
+            Debug.Log("Move");
+            _frameInput.Move = context.ReadValue<Vector2>();
+        }
+        public void Jump(InputAction.CallbackContext context)
+        {
+            Debug.Log("Jump");
+            if (context.started)
+            {
+                _frameInput.JumpDown = true;
+            }
+            else if (context.canceled)
+            {
+                _frameInput.JumpDown = false;
+                _frameInput.JumpHeld = false;
+            }
+            else if (context.performed)
+            {
+                _frameInput.JumpHeld = true;
+            }
+        }
+        public void Dash(InputAction.CallbackContext context)
+        {
+            Debug.Log("Dash");
+            if (context.started && _canDash)
+            {
+                StartCoroutine(ExecuteDash());
+            }
+        }
+        #endregion
+
         private void GatherInput()
         {
             //If you're dashing or is hitted by an enemy, you can't move
             if (_isDashing || !canMove) return;
 
-            _frameInput = new FrameInput
-            {
-                JumpDown = Input.GetButtonDown("Jump"),
-                JumpHeld = Input.GetButton("Jump"),
-                Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
-
-            };
             #region Movement And Jump Input
             if (Data.SnapInput)
             {
@@ -106,12 +133,6 @@ namespace PlayerMovementController
             if (_frameInput.JumpDown && wallJumpingCounter > 0)
             {
                 isWallJumping = true;
-            }
-            #endregion
-            #region Dash Input
-            if (Input.GetButtonDown("Dash") && _canDash)
-            {
-                StartCoroutine(ExecuteDash());
             }
             #endregion
         }
