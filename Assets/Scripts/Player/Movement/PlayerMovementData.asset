@@ -19,7 +19,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   SnapInput: 1
-  VerticalDeadZoneThreshold: 0.3
+  VerticalDeadZoneThreshold: 0.1
   HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 60
   Acceleration: 1000
@@ -30,7 +30,7 @@ MonoBehaviour:
   FallAcceleration: 200
   JumpEndEarlyGravityModifier: 3
   CoyoteTime: 0.15
-  JumpBuffer: 0.2
+  JumpBuffer: 0.1
   DoubleJumpHeight: 160
   WallSlidingSpeed: 54.6
   WallJumpingTime: 0.2

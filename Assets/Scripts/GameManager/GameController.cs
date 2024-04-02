@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public enum GameState
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour, IDataPersistence
         battleSystem.gameObject.SetActive(false);
         SSCamera.gameObject.SetActive(true);
         state = GameState.SS;
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void Update()

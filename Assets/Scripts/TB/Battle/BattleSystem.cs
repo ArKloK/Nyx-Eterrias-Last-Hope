@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public enum BattleState { PLAYERACTION, PLAYERMOVE, RUNNINGTURN, BATTLEOVER, INVENTORY }
 public enum BattleAction { FIGHT, INVENTORY }
@@ -15,6 +17,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] TBDialogueBox dialogueBox;
     [SerializeField] GameObject inventoryUI;
     [SerializeField] Inventory inventory;
+    [SerializeField] GameObject playerActionFirst;
+    [SerializeField] GameObject playerMoveFirst;
     BattleState state;
     public event Action<bool> OnBattleEnd;
     int currentAction;
@@ -95,6 +99,7 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERACTION;
         StartCoroutine(dialogueBox.TypeDialogueTB("Choose an action."));
         dialogueBox.EnableActionSelector(true);
+        EventSystem.current.SetSelectedGameObject(playerActionFirst);
     }
     void PlayerMove()
     {
@@ -102,6 +107,7 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableActionSelector(false);
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
+        EventSystem.current.SetSelectedGameObject(playerMoveFirst);
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -362,19 +368,21 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleMoveSelection()
     {
-        if (Input.GetAxis("Horizontal") > 0)
+        if (Input.GetAxis("Horizontal") == 1f && !isHorizontalInputPressed)
         //if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (currentMove < playerUnit.Character.Moves.Count - 1 && !isHorizontalInputPressed)
+            Debug.Log("Right arrow pressed" + Input.GetAxis("Horizontal"));
+            if (currentMove < playerUnit.Character.Moves.Count - 1)
             {
                 currentMove++;
                 isHorizontalInputPressed = true;
             }
         }
-        else if (Input.GetAxis("Horizontal") < 0)
+        else if (Input.GetAxis("Horizontal") == -1f && !isHorizontalInputPressed)
         //else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (currentMove > 0 && !isHorizontalInputPressed)
+            Debug.Log("Left arrow pressed" + Input.GetAxis("Horizontal"));
+            if (currentMove > 0)
             {
                 currentMove--;
                 isHorizontalInputPressed = true;
@@ -396,7 +404,7 @@ public class BattleSystem : MonoBehaviour
                 currentMove -= 2;
             }
         }
-        else if (Input.GetAxis("Horizontal") == 0)
+        else if (Input.GetAxis("Horizontal") > -1f && Input.GetAxis("Horizontal") < 1f)
         {
             isHorizontalInputPressed = false;
         }
@@ -409,6 +417,11 @@ public class BattleSystem : MonoBehaviour
             dialogueBox.EnableDialogueText(true);
             StartCoroutine(RunTurns(BattleAction.FIGHT));
         }
+    }
+
+    public void ButtonPressed()
+    {
+        Debug.Log("Button pressed");
     }
 
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
@@ -445,5 +458,17 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.INVENTORY;
         inventoryUI.SetActive(true);
         inventory.LaunchInventoryChange();
+    }
+
+    public void ClosePlayerMove(InputAction.CallbackContext context)
+    {
+        Debug.Log("Close player move");
+        if (context.performed)
+        {
+            
+            dialogueBox.EnableMoveSelector(false);
+            dialogueBox.EnableDialogueText(true);
+            StartCoroutine(RunTurns(BattleAction.FIGHT));
+        }
     }
 }
