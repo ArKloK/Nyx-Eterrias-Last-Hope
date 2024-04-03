@@ -349,7 +349,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.UpdateActionSelection(currentAction);
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
         {
             if (currentAction == 0)
             {
@@ -411,7 +411,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
         {
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);

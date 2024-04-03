@@ -5,29 +5,34 @@ using UnityEngine;
 
 public class TBDialogueBox : MonoBehaviour
 {
-    public TextMeshProUGUI dialogueText;
-    public float typingSpeed;
-    public Color highlightedColor;
-    public GameObject actionSelector;
-    public GameObject moveSelector;
-    public GameObject moveDetails;
+    [SerializeField] TextMeshProUGUI dialogueText;
+    [SerializeField] float typingSpeed;
+    [SerializeField] Color highlightedColor;
+    [SerializeField] GameObject actionSelector;
+    [SerializeField] GameObject moveSelector;
+    [SerializeField] GameObject moveDetails;
 
-    public List<TextMeshProUGUI> actionTexts;
-    public List<TextMeshProUGUI> moveTexts;
+    [SerializeField] List<TextMeshProUGUI> actionTexts;
+    [SerializeField] List<TextMeshProUGUI> moveTexts;
 
-    public TextMeshProUGUI powerText;
-    public TextMeshProUGUI typeText;
-    public TextMeshProUGUI accuracyText;
+    [SerializeField] TextMeshProUGUI powerText;
+    [SerializeField] TextMeshProUGUI typeText;
+    [SerializeField] TextMeshProUGUI accuracyText;
+    private bool isDialogueLineFinished;
+
+    public bool IsDialogueLineFinished { get => isDialogueLineFinished; set => isDialogueLineFinished = value; }
 
     public IEnumerator TypeDialogueTB(string dialogue)
     {
+        isDialogueLineFinished = false;
         dialogueText.text = "";
         foreach (char c in dialogue.ToCharArray())
         {
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
+        isDialogueLineFinished = true;
     }
 
     public void EnableDialogueText(bool enabled)
