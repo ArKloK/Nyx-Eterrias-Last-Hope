@@ -11,6 +11,7 @@ namespace PlayerMovementController
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private PlayerMovementData Data;
+        [SerializeField] private ParticleSystem dust;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -23,6 +24,7 @@ namespace PlayerMovementController
         bool groundHit;
         bool ceilingHit;
         public bool canMove = true;
+        public bool isDialogueActive;
         #endregion
 
         #region Animation
@@ -92,7 +94,7 @@ namespace PlayerMovementController
         public void Dash(InputAction.CallbackContext context)
         {
             Debug.Log("Dash");
-            if (context.started && _canDash)
+            if (context.started && _canDash && canMove)
             {
                 StartCoroutine(ExecuteDash());
             }
@@ -141,15 +143,23 @@ namespace PlayerMovementController
         {
             CheckCollisions();
 
-            HandleJump();
-            HandleDoubleJump();
-            HandleWallSlide();
-            HandleWallJump();
-            HandleDirection();
+            if (canMove)
+            {
+                HandleJump();
+                HandleDoubleJump();
+                HandleWallSlide();
+                HandleWallJump();
+                HandleDirection();
+            }
+            else if(!canMove && isDialogueActive) //If the player can´t move, just apply gravity and stop the player
+            {
+                _frameVelocity = new Vector2(0, _frameVelocity.y);
+            }
             HandleGravity();
-            //HandleMovementInCameraBounds();
 
             ApplyMovement();
+
+            //HandleMovementInCameraBounds();
         }
 
         private void HandleMovementInCameraBounds()
@@ -246,6 +256,7 @@ namespace PlayerMovementController
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = Data.JumpPower;
+            dust.Play();
             Jumped?.Invoke();
         }
 
@@ -413,11 +424,13 @@ namespace PlayerMovementController
                 scale.x *= -1;
                 transform.localScale = scale;
                 _isFacingRight = !_isFacingRight;
+                if (_grounded) dust.Play();
             }
         }
 
         public void KnockBack(Vector2 direction)
         {
+            Debug.Log("KnockBack direction: " + direction);
             _frameVelocity = new Vector2(-Data.KnockBackPower.x * direction.x, Data.KnockBackPower.y);
         }
 

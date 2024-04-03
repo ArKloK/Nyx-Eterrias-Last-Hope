@@ -16,6 +16,7 @@ public class DialogueManager : MonoBehaviour
     private bool isDialogueActive;
     private bool isSelectingMove;
     private bool isTBBattleLine;
+    private bool isDialogueLineFinished;
 
     // Start is called before the first frame update
     void Awake()
@@ -37,18 +38,19 @@ public class DialogueManager : MonoBehaviour
             //This should avoid the script from modifying the player's movement while in TB
             if (player != null)
             {
-                player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+                //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
+                player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = true;
             }
             if (isSelectingMove)
             {
                 moveSelectionUI.HandleMoveSelection();
             }
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) && isDialogueLineFinished)
             {
                 DisplayNextLine();
             }
-            if (isTBBattleLine && Input.GetKeyDown(KeyCode.Return))
+            if (isTBBattleLine && Input.GetKeyDown(KeyCode.Return) && isDialogueLineFinished)
             {
                 isTBBattleLine = false;
                 OnStartTBCombat?.Invoke();
@@ -91,6 +93,7 @@ public class DialogueManager : MonoBehaviour
     IEnumerator TypeLine(DialogueLine dialogueLine)
     {
         dialogueText.text = "";
+        isDialogueLineFinished = false;
         foreach (char c in dialogueLine.line.ToCharArray())
         {
             dialogueText.text += c;
@@ -113,14 +116,17 @@ public class DialogueManager : MonoBehaviour
         {
             isTBBattleLine = true;
         }
+        isDialogueLineFinished = true;
     }
     public void EndDialogue()
     {
         //This should avoid the script from modifying the player's movement while in TB
         if (player != null)
         {
-            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+            //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
+            player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = false;
+
         }
         gameObject.SetActive(false);
         moveSelectionUI.gameObject.SetActive(false);

@@ -5,8 +5,12 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     public float speed = 1f;
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
     public Vector2 movement;
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     // Update is called once per frame
     void Update()
