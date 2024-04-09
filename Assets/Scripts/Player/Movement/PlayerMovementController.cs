@@ -35,6 +35,8 @@ namespace PlayerMovementController
         const string PLAYER_IDLE = "Idle";
         const string PLAYER_RUN = "Run";
         const string PLAYER_JUMP = "Jump";
+        const string PLAYER_FALL = "Fall";
+        const string PLAYER_DASH = "Dash";
         #endregion
 
         #region Abilities unlocked
@@ -74,21 +76,7 @@ namespace PlayerMovementController
         {
             CheckCollisions();
 
-            if (groundHit)
-            {
-                if (_frameInput.Move.x != 0)
-                {
-                    newAnimationState = PLAYER_RUN;
-                }
-                else
-                {
-                    newAnimationState = PLAYER_IDLE;
-                }
-            }
-            else
-            {
-                newAnimationState = PLAYER_JUMP;
-            }
+            CheckAnimations();
 
             if (canMove)
             {
@@ -132,7 +120,7 @@ namespace PlayerMovementController
             }
             else
             {
-                if(context.started && !_doubleJumpUsed)
+                if (context.started && !_doubleJumpUsed)
                 {
                     _doubleJumpToConsume = true;
                 }
@@ -447,6 +435,38 @@ namespace PlayerMovementController
             animator.Play(newState);
             currentState = newState;
             //Debug.Log("Current State: " + currentState);
+        }
+        void CheckAnimations()
+        {
+            if (_isDashing)
+            {
+                newAnimationState = PLAYER_DASH;
+            }
+            else
+            {
+                if (groundHit)
+                {
+                    if (_frameInput.Move.x != 0)
+                    {
+                        newAnimationState = PLAYER_RUN;
+                    }
+                    else
+                    {
+                        newAnimationState = PLAYER_IDLE;
+                    }
+                }
+                else
+                {
+                    if (_rb.velocity.y < 0)
+                    {
+                        newAnimationState = PLAYER_FALL;
+                    }
+                    else if (_rb.velocity.y > 0)
+                    {
+                        newAnimationState = PLAYER_JUMP;
+                    }
+                }
+            }
         }
         private void HandleMovementInCameraBounds()
         {

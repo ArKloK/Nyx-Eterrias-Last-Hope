@@ -5,10 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour
 {
+    private PlayerMovementController.PlayerMovementController playerMovementController;
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
     public GameObject inventoryUI;
     public Inventory inventory;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        playerMovementController = FindObjectOfType<PlayerMovementController.PlayerMovementController>();
+    }
 
     // Update is called once per frame
     public void HandleUpdate()
@@ -29,24 +36,23 @@ public class PauseMenuController : MonoBehaviour
 
     public void Pause()
     {
-        Time.timeScale = 0f;
+        playerMovementController.canMove = false;
+        //Time.timeScale = 0f;
         isPaused = true;
         pauseMenuUI.SetActive(true);
     }
-
     public void Resume()
     {
-        Time.timeScale = 1f;
+        playerMovementController.canMove = true;
+        //Time.timeScale = 1f;
         isPaused = false;
         pauseMenuUI.SetActive(false);
     }
-
     public void OpenInventory()
     {
         inventoryUI.SetActive(true);
         inventory.LaunchInventoryChange();
     }
-
     public void SaveGame()
     {
         DataPersistenceManager.Instance.SaveGame();
