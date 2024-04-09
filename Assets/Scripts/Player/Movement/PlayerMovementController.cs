@@ -69,15 +69,13 @@ namespace PlayerMovementController
             _time += Time.deltaTime;
             GatherInput();
             ChangeAnimationState(newAnimationState);
-            Debug.Log("Jumps Remaining " + jumpsRemaining);
         }
         public void HandleFixedUpdate()
         {
             CheckCollisions();
 
-            if (_grounded)
+            if (groundHit)
             {
-                jumpsRemaining = maxJumps;
                 if (_frameInput.Move.x != 0)
                 {
                     newAnimationState = PLAYER_RUN;
@@ -91,10 +89,11 @@ namespace PlayerMovementController
             {
                 newAnimationState = PLAYER_JUMP;
             }
+
             if (canMove)
             {
-                //HandleJump();
-                //HandleDoubleJump();
+                HandleJump();
+                HandleDoubleJump();
                 HandleWallSlide();
                 HandleWallJump();
                 HandleDirection();
@@ -119,19 +118,30 @@ namespace PlayerMovementController
         }
         public void Jump(InputAction.CallbackContext context)
         {
-            if (jumpsRemaining > 0)
+            Debug.Log("Jump");
+            if (groundHit)
             {
-                if (context.performed)
+                if (context.started)
+                {
+                    _frameInput.JumpDown = true;
+                }
+                else if (context.performed)
                 {
                     _frameInput.JumpHeld = true;
                 }
-                else if (context.canceled && !_grounded)
+            }
+            else
+            {
+                if(context.started && !_doubleJumpUsed)
                 {
-                    _frameInput.JumpHeld = false;
+                    _doubleJumpToConsume = true;
                 }
-                _timeJumpWasPressed = _time;
-                HandleJump();
-                jumpsRemaining--;
+            }
+
+            if (context.canceled)
+            {
+                _frameInput.JumpDown = false;
+                _frameInput.JumpHeld = false;
             }
         }
         public void Dash(InputAction.CallbackContext context)
@@ -155,25 +165,25 @@ namespace PlayerMovementController
                 _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < Data.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
             }
 
-            // if (_frameInput.JumpDown && _grounded)
-            // {
-            //     Debug.Log("Jump");
-            //     _jumpToConsume = true;
-            //     _timeJumpWasPressed = _time;
-            // }
+            if (_frameInput.JumpDown)
+            {
+                Debug.Log("Jump");
+                _jumpToConsume = true;
+                _timeJumpWasPressed = _time;
+            }
             #endregion
             #region Double Jump Input
-            // if (_grounded) _doubleJumpUsed = false;
+            if (_grounded) _doubleJumpUsed = false;
 
-            // if (_frameInput.JumpDown && doubleJumpUnlocked && !_jumpToConsume)
-            // {
-            //     if (!_grounded && !_doubleJumpUsed)
-            //     {
-            //         Debug.Log("Double Jump");
-            //         _doubleJumpToConsume = true;
-            //         _jumpToConsume = false;
-            //     }
-            // }
+            if (_frameInput.JumpDown && doubleJumpUnlocked && !_jumpToConsume)
+            {
+                if (!_grounded && !_doubleJumpUsed)
+                {
+                    Debug.Log("Double Jump");
+                    _doubleJumpToConsume = true;
+                    _jumpToConsume = false;
+                }
+            }
             #endregion
             #region Wall Jump Input
 
@@ -224,8 +234,6 @@ namespace PlayerMovementController
 
 
         #region Jumping
-        private int maxJumps = 2;
-        private int jumpsRemaining;
         private bool _jumpToConsume;
         private bool _bufferedJumpUsable;
         private bool _endedJumpEarly;
@@ -239,11 +247,11 @@ namespace PlayerMovementController
         {
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
 
-            if (/*!_jumpToConsume &&*/ !HasBufferedJump) return;
+            if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (/*_grounded ||*/ CanUseCoyote || jumpsRemaining > 0) ExecuteJump();
+            if (_grounded || CanUseCoyote) ExecuteJump();
 
-            //_jumpToConsume = false;
+            _jumpToConsume = false;
         }
 
         private void ExecuteJump()
@@ -438,7 +446,7 @@ namespace PlayerMovementController
 
             animator.Play(newState);
             currentState = newState;
-            Debug.Log("Current State: " + currentState);
+            //Debug.Log("Current State: " + currentState);
         }
         private void HandleMovementInCameraBounds()
         {

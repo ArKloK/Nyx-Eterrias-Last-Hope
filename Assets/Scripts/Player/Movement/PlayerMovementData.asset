@@ -18,7 +18,7 @@ MonoBehaviour:
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
-  SnapInput: 1
+  SnapInput: 0
   VerticalDeadZoneThreshold: 0.1
   HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 60
