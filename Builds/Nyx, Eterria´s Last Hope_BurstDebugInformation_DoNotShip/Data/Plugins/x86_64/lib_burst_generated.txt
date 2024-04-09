@@ -11,6 +11,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Unity.2D.IK.Runtime;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
+--assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.VisualScripting.Flow;
 --assembly-defines=NaughtyAttributes.Test;
 --assembly-defines=Unity.RenderPipelines.Core.ShaderLibrary;
@@ -39,6 +40,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
 --assembly-defines=Newtonsoft.Json;
+--assembly-defines=DOTween;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
 --assembly-defines=Mono.Security;
@@ -116,6 +118,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Unity.2D.IK.Runtime;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
+--assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.VisualScripting.Flow;
 --assembly-defines=NaughtyAttributes.Test;
 --assembly-defines=Unity.RenderPipelines.Core.ShaderLibrary;
@@ -144,6 +147,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
 --assembly-defines=Newtonsoft.Json;
+--assembly-defines=DOTween;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
 --assembly-defines=Mono.Security;
@@ -223,6 +227,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Unity.2D.IK.Runtime;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
+--assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.VisualScripting.Flow;
 --assembly-defines=NaughtyAttributes.Test;
 --assembly-defines=Unity.RenderPipelines.Core.ShaderLibrary;
@@ -251,6 +256,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
 --assembly-defines=Newtonsoft.Json;
+--assembly-defines=DOTween;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
 --assembly-defines=Mono.Security;
@@ -298,6 +304,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Unity.2D.IK.Runtime;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
+--assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.VisualScripting.Flow;
 --assembly-defines=NaughtyAttributes.Test;
 --assembly-defines=Unity.RenderPipelines.Core.ShaderLibrary;
@@ -326,6 +333,7 @@ Library: E:\JuegosUnity\Nyx-Eterrias-Last-Hope\Temp\BurstOutput\Data\Plugins\x86
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
 --assembly-defines=Newtonsoft.Json;
+--assembly-defines=DOTween;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
 --assembly-defines=Mono.Security;

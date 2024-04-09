@@ -30,9 +30,11 @@ namespace PlayerMovementController
         #region Animation
         Animator animator;
         private string currentState;
+        private string newAnimationState;
         //Animation States
         const string PLAYER_IDLE = "Idle";
         const string PLAYER_RUN = "Run";
+        const string PLAYER_JUMP = "Jump";
         #endregion
 
         #region Abilities unlocked
@@ -66,34 +68,74 @@ namespace PlayerMovementController
         {
             _time += Time.deltaTime;
             GatherInput();
+            ChangeAnimationState(newAnimationState);
+            Debug.Log("Jumps Remaining " + jumpsRemaining);
+        }
+        public void HandleFixedUpdate()
+        {
+            CheckCollisions();
+
+            if (_grounded)
+            {
+                jumpsRemaining = maxJumps;
+                if (_frameInput.Move.x != 0)
+                {
+                    newAnimationState = PLAYER_RUN;
+                }
+                else
+                {
+                    newAnimationState = PLAYER_IDLE;
+                }
+            }
+            else
+            {
+                newAnimationState = PLAYER_JUMP;
+            }
+            if (canMove)
+            {
+                //HandleJump();
+                //HandleDoubleJump();
+                HandleWallSlide();
+                HandleWallJump();
+                HandleDirection();
+            }
+            else if (!canMove && isDialogueActive) //If the player can´t move, just apply gravity and stop the player
+            {
+                _frameVelocity = new Vector2(0, _frameVelocity.y);
+            }
+
+            HandleGravity();
+
+            ApplyMovement();
+
+
+            //HandleMovementInCameraBounds();
         }
 
         #region Input System
         public void Move(InputAction.CallbackContext context)
         {
-            Debug.Log("Move");
-            _frameInput.Move = context.ReadValue<Vector2>();
+            _frameInput.Move.x = context.ReadValue<Vector2>().x;
         }
         public void Jump(InputAction.CallbackContext context)
         {
-            Debug.Log("Jump");
-            if (context.started)
+            if (jumpsRemaining > 0)
             {
-                _frameInput.JumpDown = true;
-            }
-            else if (context.canceled)
-            {
-                _frameInput.JumpDown = false;
-                _frameInput.JumpHeld = false;
-            }
-            else if (context.performed)
-            {
-                _frameInput.JumpHeld = true;
+                if (context.performed)
+                {
+                    _frameInput.JumpHeld = true;
+                }
+                else if (context.canceled && !_grounded)
+                {
+                    _frameInput.JumpHeld = false;
+                }
+                _timeJumpWasPressed = _time;
+                HandleJump();
+                jumpsRemaining--;
             }
         }
         public void Dash(InputAction.CallbackContext context)
         {
-            Debug.Log("Dash");
             if (context.started && _canDash && canMove)
             {
                 StartCoroutine(ExecuteDash());
@@ -113,22 +155,25 @@ namespace PlayerMovementController
                 _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < Data.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
             }
 
-            if (_frameInput.JumpDown)
-            {
-                _jumpToConsume = true;
-                _timeJumpWasPressed = _time;
-            }
+            // if (_frameInput.JumpDown && _grounded)
+            // {
+            //     Debug.Log("Jump");
+            //     _jumpToConsume = true;
+            //     _timeJumpWasPressed = _time;
+            // }
             #endregion
             #region Double Jump Input
-            if (_grounded) _doubleJumpUsed = false;
+            // if (_grounded) _doubleJumpUsed = false;
 
-            if (_frameInput.JumpDown && doubleJumpUnlocked)
-            {
-                if (!_grounded && !_doubleJumpUsed)
-                {
-                    _doubleJumpToConsume = true;
-                }
-            }
+            // if (_frameInput.JumpDown && doubleJumpUnlocked && !_jumpToConsume)
+            // {
+            //     if (!_grounded && !_doubleJumpUsed)
+            //     {
+            //         Debug.Log("Double Jump");
+            //         _doubleJumpToConsume = true;
+            //         _jumpToConsume = false;
+            //     }
+            // }
             #endregion
             #region Wall Jump Input
 
@@ -137,55 +182,6 @@ namespace PlayerMovementController
                 isWallJumping = true;
             }
             #endregion
-        }
-
-        public void HandleFixedUpdate()
-        {
-            CheckCollisions();
-
-            if (canMove)
-            {
-                HandleJump();
-                HandleDoubleJump();
-                HandleWallSlide();
-                HandleWallJump();
-                HandleDirection();
-            }
-            else if(!canMove && isDialogueActive) //If the player can´t move, just apply gravity and stop the player
-            {
-                _frameVelocity = new Vector2(0, _frameVelocity.y);
-            }
-            HandleGravity();
-
-            ApplyMovement();
-
-            //HandleMovementInCameraBounds();
-        }
-
-        private void HandleMovementInCameraBounds()
-        {
-            Vector3 playerScreenPosition = mainCamera.WorldToScreenPoint(transform.position);
-
-            float screenEdgeBuffer = 80f;
-
-            // Obtiene los límites de la pantalla con un margen adicional
-            float minX = 0 + screenEdgeBuffer;
-            float maxX = Screen.width - screenEdgeBuffer;
-            float minY = 0 + screenEdgeBuffer;
-            float maxY = Screen.height - screenEdgeBuffer;
-
-            // Limita la posición del jugador dentro de los límites de la pantalla con el margen adicional
-            playerScreenPosition.x = Mathf.Clamp(playerScreenPosition.x, minX, maxX);
-            playerScreenPosition.y = Mathf.Clamp(playerScreenPosition.y, minY, maxY);
-
-            // Convierte la posición de la pantalla nuevamente a la posición en el mundo
-            Vector3 clampedPlayerPosition = mainCamera.ScreenToWorldPoint(playerScreenPosition);
-
-            // Mantén la misma altura del jugador
-            clampedPlayerPosition.z = transform.position.z;
-
-            // Aplica la nueva posición al jugador
-            transform.position = clampedPlayerPosition;
         }
 
         #region Collisions
@@ -228,7 +224,8 @@ namespace PlayerMovementController
 
 
         #region Jumping
-
+        private int maxJumps = 2;
+        private int jumpsRemaining;
         private bool _jumpToConsume;
         private bool _bufferedJumpUsable;
         private bool _endedJumpEarly;
@@ -242,11 +239,11 @@ namespace PlayerMovementController
         {
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
 
-            if (!_jumpToConsume && !HasBufferedJump) return;
+            if (/*!_jumpToConsume &&*/ !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            if (/*_grounded ||*/ CanUseCoyote || jumpsRemaining > 0) ExecuteJump();
 
-            _jumpToConsume = false;
+            //_jumpToConsume = false;
         }
 
         private void ExecuteJump()
@@ -256,6 +253,7 @@ namespace PlayerMovementController
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = Data.JumpPower;
+            //newAnimationState = PLAYER_JUMP;
             dust.Play();
             Jumped?.Invoke();
         }
@@ -289,7 +287,6 @@ namespace PlayerMovementController
                 if (_frameInput.Move.x != 0)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
-                    ChangeAnimationState(PLAYER_RUN);
                     //_frameVelocity = new Vector2(_frameInput.Move.x * Data.MaxSpeed, _frameVelocity.y);
                     Turn();
                 }
@@ -298,6 +295,7 @@ namespace PlayerMovementController
                     _frameVelocity = new Vector2(0, _frameVelocity.y);
                 }
             }
+
         }
 
         #endregion
@@ -440,6 +438,32 @@ namespace PlayerMovementController
 
             animator.Play(newState);
             currentState = newState;
+            Debug.Log("Current State: " + currentState);
+        }
+        private void HandleMovementInCameraBounds()
+        {
+            Vector3 playerScreenPosition = mainCamera.WorldToScreenPoint(transform.position);
+
+            float screenEdgeBuffer = 80f;
+
+            // Obtiene los límites de la pantalla con un margen adicional
+            float minX = 0 + screenEdgeBuffer;
+            float maxX = Screen.width - screenEdgeBuffer;
+            float minY = 0 + screenEdgeBuffer;
+            float maxY = Screen.height - screenEdgeBuffer;
+
+            // Limita la posición del jugador dentro de los límites de la pantalla con el margen adicional
+            playerScreenPosition.x = Mathf.Clamp(playerScreenPosition.x, minX, maxX);
+            playerScreenPosition.y = Mathf.Clamp(playerScreenPosition.y, minY, maxY);
+
+            // Convierte la posición de la pantalla nuevamente a la posición en el mundo
+            Vector3 clampedPlayerPosition = mainCamera.ScreenToWorldPoint(playerScreenPosition);
+
+            // Mantén la misma altura del jugador
+            clampedPlayerPosition.z = transform.position.z;
+
+            // Aplica la nueva posición al jugador
+            transform.position = clampedPlayerPosition;
         }
         #endregion
 
