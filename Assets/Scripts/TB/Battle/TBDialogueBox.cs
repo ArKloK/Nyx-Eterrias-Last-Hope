@@ -6,7 +6,7 @@ using UnityEngine;
 public class TBDialogueBox : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI dialogueText;
-    [SerializeField] float typingSpeed;
+    float typingSpeed;
     [SerializeField] Color highlightedColor;
     [SerializeField] GameObject actionSelector;
     [SerializeField] GameObject moveSelector;
@@ -21,6 +21,30 @@ public class TBDialogueBox : MonoBehaviour
     private bool isDialogueLineFinished;
 
     public bool IsDialogueLineFinished { get => isDialogueLineFinished; set => isDialogueLineFinished = value; }
+
+    void Update()
+    {
+        if (PlayerPrefs.HasKey("TextVelocity"))
+        {
+            int dbTextVelocity = PlayerPrefs.GetInt("TextVelocity");
+            if (dbTextVelocity == 0)
+            {
+                typingSpeed = 0.1f;
+            }
+            else if (dbTextVelocity == 1)
+            {
+                typingSpeed = 0.05f;
+            }
+            else if (dbTextVelocity == 2)
+            {
+                typingSpeed = 0.01f;
+            }
+        }
+        else
+        {
+            typingSpeed = 0.05f;
+        }
+    }
 
     public IEnumerator TypeDialogueTB(string dialogue)
     {

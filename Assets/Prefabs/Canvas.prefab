@@ -2838,6 +2838,7 @@ MonoBehaviour:
   brightnessSlider: {fileID: 426852313223686584}
   musicSlider: {fileID: 4378208625967712559}
   sfxSlider: {fileID: 4483566298861627505}
+  textVelocityDropdown: {fileID: 306236279667940607}
 --- !u!1 &6474854692208371569
 GameObject:
   m_ObjectHideFlags: 0
@@ -3247,6 +3248,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1375814617801833643}
     m_Modifications:
+    - target: {fileID: 723439505079646160, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Slow
+      objectReference: {fileID: 0}
+    - target: {fileID: 723439505079646160, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: Fast
+      objectReference: {fileID: 0}
     - target: {fileID: 2714568896970617961, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3468,6 +3477,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+--- !u!114 &306236279667940607 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 723439505079646160, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+  m_PrefabInstance: {fileID: 1023957739336919855}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &426852313223686584 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 853906883586556567, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}

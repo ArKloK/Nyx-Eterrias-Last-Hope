@@ -448,7 +448,8 @@ namespace PlayerMovementController
                 {
                     if (_frameInput.Move.x != 0)
                     {
-                        newAnimationState = PLAYER_RUN;
+                        if (!isDialogueActive)//If the player is in a dialogue, always play the idle animation
+                            newAnimationState = PLAYER_RUN;
                     }
                     else
                     {

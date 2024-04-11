@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class PauseMenuController : MonoBehaviour
 {
     private PlayerMovementController.PlayerMovementController playerMovementController;
+    public static bool canPause = true;
     [SerializeField] static bool isPaused = false;
     [SerializeField] GameObject pauseMenuUI;
     [SerializeField] GameObject inventoryUI;
@@ -18,21 +20,29 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] Slider brightnessSlider;
     [SerializeField] Slider musicSlider;
     [SerializeField] Slider sfxSlider;
-
+    [SerializeField] TMP_Dropdown textVelocityDropdown;
 
     // Start is called before the first frame update
     void Start()
     {
         LoadVolume();
         LoadDarkOverlay();
+        LoadTextVelocity();
         playerMovementController = FindObjectOfType<PlayerMovementController.PlayerMovementController>();
+    }
+
+    void OnEnable()
+    {
+        LoadVolume();
+        LoadDarkOverlay();
+        LoadTextVelocity();
     }
 
     // Update is called once per frame
     public void HandleUpdate()
     {
         ChangeDarkOverlay();
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && canPause)
         {
             if (inventoryUI.activeSelf)
             {
@@ -73,6 +83,8 @@ public class PauseMenuController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync("Main Menu");
     }
+
+    #region Music and SFX Volume
     public void UpdateMusicVolume(float volume)
     {
         audioMixer.SetFloat("MusicVolume", volume);
@@ -94,13 +106,16 @@ public class PauseMenuController : MonoBehaviour
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+            UpdateMusicVolume(musicSlider.value);
         }
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
             sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+            UpdateSFXVolume(sfxSlider.value);
         }
-
     }
+    #endregion
+    #region Dark Overlay
     private void ChangeDarkOverlay()
     {
         var tempColor = darkOverlay.color;
@@ -118,4 +133,22 @@ public class PauseMenuController : MonoBehaviour
     {
         PlayerPrefs.SetFloat("DarkOverlay", brightnessSlider.value);
     }
+    #endregion
+    #region Text Velocity
+    public void LoadTextVelocity()
+    {
+        if (PlayerPrefs.HasKey("TextVelocity"))
+        {
+            textVelocityDropdown.value = PlayerPrefs.GetInt("TextVelocity");
+        }
+    }
+    public void SaveTextVelocity()
+    {
+        PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
+    }
+    public void OnTextVelocityDropdownValueChanged()
+    {
+        PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
+    }
+    #endregion
 }

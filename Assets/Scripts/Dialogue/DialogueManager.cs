@@ -11,7 +11,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] MoveSelectionUI moveSelectionUI;
-    [SerializeField] float typingSpeed = 0.2f;
+    float typingSpeed;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive;
     private bool isSelectingMove;
@@ -30,9 +30,28 @@ public class DialogueManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
     }
-
     void Update()
     {
+        if (PlayerPrefs.HasKey("TextVelocity"))
+        {
+            int dbTextVelocity = PlayerPrefs.GetInt("TextVelocity");
+            if (dbTextVelocity == 0)
+            {
+                typingSpeed = 0.1f;
+            }
+            else if (dbTextVelocity == 1)
+            {
+                typingSpeed = 0.05f;
+            }
+            else if (dbTextVelocity == 2)
+            {
+                typingSpeed = 0.01f;
+            }
+        }
+        else
+        {
+            typingSpeed = 0.05f;
+        }
         if (isDialogueActive)
         {
             //This should avoid the script from modifying the player's movement while in TB
@@ -128,6 +147,7 @@ public class DialogueManager : MonoBehaviour
             player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = false;
 
         }
+        PauseMenuController.canPause = true;
         gameObject.SetActive(false);
         moveSelectionUI.gameObject.SetActive(false);
         isDialogueActive = false;

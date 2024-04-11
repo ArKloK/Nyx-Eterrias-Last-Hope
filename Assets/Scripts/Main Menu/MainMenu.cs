@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] Image darkOverlay;
+    [SerializeField] TMP_Dropdown textVelocityDropdown;
 
     [Header("Sliders")]
     [SerializeField] Slider brightnessSlider;
@@ -22,8 +23,9 @@ public class MainMenu : MonoBehaviour
     {
         LoadVolume();
         LoadDarkOverlay();
+        LoadTextVelocity();
         DontDestroyOnLoadScript.DestroyAll();
-        if(DataPersistenceManager.Instance.HasGameData())
+        if (DataPersistenceManager.Instance.HasGameData())
         {
             loadGameButton.gameObject.SetActive(true);
         }
@@ -32,10 +34,17 @@ public class MainMenu : MonoBehaviour
             loadGameButton.gameObject.SetActive(false);
         }
     }
+    void OnEnable()
+    {
+        LoadVolume();
+        LoadDarkOverlay();
+        LoadTextVelocity();
+    }
     void Update()
     {
         ChangeDarkOverlay();
     }
+    #region Buttons
     public void OnNewGameButtonClicked()
     {
         DisableMenuButtons();
@@ -51,6 +60,13 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+    private void DisableMenuButtons()
+    {
+        newGameButton.interactable = false;
+        loadGameButton.interactable = false;
+    }
+    #endregion
+    #region Music and SFX Volume
     public void UpdateMusicVolume(float volume)
     {
         audioMixer.SetFloat("MusicVolume", volume);
@@ -69,16 +85,20 @@ public class MainMenu : MonoBehaviour
     }
     public void LoadVolume()
     {
-        if(PlayerPrefs.HasKey("MusicVolume"))
+        if (PlayerPrefs.HasKey("MusicVolume"))
         {
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+            UpdateMusicVolume(musicSlider.value);
         }
-        if(PlayerPrefs.HasKey("SFXVolume"))
+        if (PlayerPrefs.HasKey("SFXVolume"))
         {
             sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+            UpdateSFXVolume(sfxSlider.value);
         }
-    
+
     }
+    #endregion
+    #region Dark Overlay
     private void ChangeDarkOverlay()
     {
         var tempColor = darkOverlay.color;
@@ -87,7 +107,7 @@ public class MainMenu : MonoBehaviour
     }
     public void LoadDarkOverlay()
     {
-        if(PlayerPrefs.HasKey("DarkOverlay"))
+        if (PlayerPrefs.HasKey("DarkOverlay"))
         {
             brightnessSlider.value = PlayerPrefs.GetFloat("DarkOverlay");
         }
@@ -96,9 +116,23 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetFloat("DarkOverlay", brightnessSlider.value);
     }
-    private void DisableMenuButtons()
+    #endregion
+    #region Text Velocitys
+    public void LoadTextVelocity()
     {
-        newGameButton.interactable = false;
-        loadGameButton.interactable = false;
+        if (PlayerPrefs.HasKey("TextVelocity"))
+        {
+            textVelocityDropdown.value = PlayerPrefs.GetInt("TextVelocity");
+        }
     }
+    public void SaveTextVelocity()
+    {
+        PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
+    }
+    public void OnTextVelocityDropdownValueChanged()
+    {
+        PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
+    }
+    #endregion
+
 }
