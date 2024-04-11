@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -1947024392, guid: 75821aaf555d9a34ab863493f17c3de4, type: 3}
+  m_Sprite: {fileID: 1850544327, guid: 4335190935ef99148bf20413472fc6cc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -129,7 +129,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 14.10168, y: 17}
+    oldSize: {x: 13.277292, y: 16.06}
     newSize: {x: 14.10168, y: 17}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -180,7 +180,8 @@ MonoBehaviour:
   Data: {fileID: 11400000, guid: e5de614e7e5b2b5448b7fd1529298d07, type: 2}
   dust: {fileID: 837865072897108145}
   canMove: 1
-  doubleJumpUnlocked: 1
+  isDialogueActive: 0
+  doubleJumpUnlocked: 0
   WallCheck: {fileID: 294546429876216497}
 --- !u!114 &9141882173360281611
 MonoBehaviour:
@@ -272,10 +273,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 151732ff-9e3e-4197-8951-2e14416af042
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: ac1a3913-be83-420a-880e-9bc32b473a7a
-    m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: d7a6a752-22af-4006-b5c9-e1706e78ae96
