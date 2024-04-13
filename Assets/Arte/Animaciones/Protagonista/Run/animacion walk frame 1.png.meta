@@ -113,12 +113,12 @@ TextureImporter:
       name: animacion walk frame 1_0
       rect:
         serializedVersion: 2
-        x: 224
-        y: 415
-        width: 1460
-        height: 1233
+        x: 49
+        y: 192
+        width: 1754
+        height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

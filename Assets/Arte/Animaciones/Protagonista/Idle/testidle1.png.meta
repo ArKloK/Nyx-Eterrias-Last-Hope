@@ -113,12 +113,12 @@ TextureImporter:
       name: testidle1_0
       rect:
         serializedVersion: 2
-        x: 660
+        x: 390
         y: 264
-        width: 1327
+        width: 1754
         height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: testidle1_4
       rect:
         serializedVersion: 2
-        x: 2473
+        x: 2204
         y: 264
-        width: 1327
+        width: 1754
         height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: testidle1_5
       rect:
         serializedVersion: 2
-        x: 4207
+        x: 3936
         y: 264
-        width: 1327
+        width: 1754
         height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

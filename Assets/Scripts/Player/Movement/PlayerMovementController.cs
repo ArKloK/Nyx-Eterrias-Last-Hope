@@ -12,6 +12,7 @@ namespace PlayerMovementController
     {
         [SerializeField] private PlayerMovementData Data;
         [SerializeField] private ParticleSystem dust;
+        [SerializeField] private TrailRenderer trailRenderer;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -25,6 +26,7 @@ namespace PlayerMovementController
         bool ceilingHit;
         public bool canMove = true;
         public bool isDialogueActive;
+        private bool _isAttacking;
         #endregion
 
         #region Animation
@@ -37,6 +39,7 @@ namespace PlayerMovementController
         const string PLAYER_JUMP = "Jump";
         const string PLAYER_FALL = "Fall";
         const string PLAYER_DASH = "Dash";
+        const string PLAYER_ATTACK = "Attack";
         #endregion
 
         #region Abilities unlocked
@@ -180,6 +183,19 @@ namespace PlayerMovementController
                 isWallJumping = true;
             }
             #endregion
+            #region Attack Input
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                StartCoroutine(ExecuteAttack());
+            } 
+            #endregion
+        }
+        private IEnumerator ExecuteAttack()
+        {
+            _isAttacking = true;
+            Debug.Log("Attacking");
+            yield return new WaitForSeconds(0.5f);
+            _isAttacking = false;
         }
 
         #region Collisions
@@ -382,7 +398,9 @@ namespace PlayerMovementController
             float originalGravity = _rb.gravityScale;
             _rb.gravityScale = 0f;
             _frameVelocity = new Vector2(transform.localScale.x * Data.DashingPower, 0f);
+            trailRenderer.emitting = true;
             yield return new WaitForSeconds(Data.DashingTime);
+            trailRenderer.emitting = false;
             _rb.gravityScale = originalGravity;
             _isDashing = false;
             yield return new WaitForSeconds(Data.DashingCooldown);
@@ -438,7 +456,11 @@ namespace PlayerMovementController
         }
         void CheckAnimations()
         {
-            if (_isDashing)
+            if (_isAttacking)
+            {
+                newAnimationState = PLAYER_ATTACK;
+            }
+            else if (_isDashing)
             {
                 newAnimationState = PLAYER_DASH;
             }

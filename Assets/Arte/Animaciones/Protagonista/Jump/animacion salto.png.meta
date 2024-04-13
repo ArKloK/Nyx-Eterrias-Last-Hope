@@ -113,12 +113,12 @@ TextureImporter:
       name: animacion salto_1
       rect:
         serializedVersion: 2
-        x: 2625
-        y: 79
-        width: 949
-        height: 1841
+        x: 2235
+        y: 63
+        width: 1754
+        height: 1829
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: animacion salto_2
       rect:
         serializedVersion: 2
-        x: 4219
+        x: 3971
         y: 270
-        width: 1213
-        height: 1536
+        width: 1754
+        height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: animacion salto_3
       rect:
         serializedVersion: 2
-        x: 577
-        y: 337
-        width: 1398
-        height: 1392
+        x: 318
+        y: 191
+        width: 1754
+        height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

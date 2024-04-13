@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 27a68e68232cb27429374b87162f948b
+guid: ee19f479f3f5520469073790fdf65c2b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,22 +110,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: animacion walk frame 3_0
+      name: ataque ff_0
       rect:
         serializedVersion: 2
-        x: 86
-        y: 201
-        width: 1754
-        height: 1606
+        x: 860
+        y: 531
+        width: 901
+        height: 562
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 53084ecec0d2c6e429d9662953b721b8
-      internalID: -1622501830
+      spriteID: 2e1843f714646994199a2d9b9e2bb35d
+      internalID: -402872065
       vertices: []
       indices: 
       edges: []
@@ -134,14 +134,14 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      animacion walk frame 3_0: -1622501830
+      ataque ff_0: -402872065
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
