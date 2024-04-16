@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59931804bccaf7e4db876ea62e1d488e
+guid: 8f6670289145d4949babe73c2dd47859
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,22 +110,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Personaje ataque 1_0
+      name: animacion cuerpo 2_2
       rect:
         serializedVersion: 2
         x: 80
         y: 244
-        width: 1754
+        width: 1707
         height: 1606
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b1c912b807db8e47b3122d655e00f68
-      internalID: 1689378478
+      spriteID: 6d853d63b781b2f478ef3788c61a4e07
+      internalID: 2086788930
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Personaje ataque 1_0: 1689378478
+      animacion cuerpo 2_0: 1364958695
+      animacion cuerpo 2_1: 1004114722
+      animacion cuerpo 2_2: 2086788930
+      animacion cuerpo 2_3: 495716895
+      animacion cuerpo 2_4: 1334371408
+      animacion cuerpo 2_5: 1634864449
+      animacion cuerpo 2_6: -1190736879
+      animacion cuerpo 2_7: -1205601778
+      animacion cuerpo 2_8: 707672396
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

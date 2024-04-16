@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59931804bccaf7e4db876ea62e1d488e
+guid: 0d172d6ca61d2f74c8091fd7f339effb
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Personaje ataque 1_0
+      name: ani ataque 1_1
       rect:
         serializedVersion: 2
-        x: 80
-        y: 244
-        width: 1754
-        height: 1606
+        x: 508
+        y: 356
+        width: 1388
+        height: 572
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b1c912b807db8e47b3122d655e00f68
-      internalID: 1689378478
+      spriteID: 34fa33b6da4cdec4f8f6e01604285807
+      internalID: -329773015
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Personaje ataque 1_0: 1689378478
+      ani ataque 1_0: 1782474850
+      ani ataque 1_1: -329773015
+      ani ataque 1_2: -1746119819
+      ani ataque 1_3: -299634509
+      ani ataque 1_4: -1326038102
+      ani ataque 1_5: -10263323
+      ani ataque 1_6: 1002409042
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
