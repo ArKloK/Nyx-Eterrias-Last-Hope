@@ -18,6 +18,12 @@ public class PlayerControllerData : ScriptableObject
     [Header("ATTACK")]
     [Tooltip("The amount of damage the player does")]
     public int AttackPower;
+    [Tooltip("The speed of the player's attack")]
+    public float AttackSpeed;
+    [Tooltip("The radius of the player's attack")]
+    public float AttackRadius;
+    [Tooltip("The layer mask for the enemies")]
+    public LayerMask EnemyMask;
 
     [Header("LEVEL STATS")]
     [Tooltip("The maximum experience the player needs to level up, this will increase as the player levels up")]

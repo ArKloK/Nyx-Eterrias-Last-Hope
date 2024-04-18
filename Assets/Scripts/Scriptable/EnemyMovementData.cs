@@ -8,4 +8,6 @@ public class EnemyMovementData : ScriptableObject
     public float MaxFallSpeed;
     public float FallAcceleration;
     public LayerMask EnemyLayer;
+    public LayerMask GroundLayer;
+    public float KnockBackForce;
 }

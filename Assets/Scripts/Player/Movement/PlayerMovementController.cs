@@ -13,6 +13,7 @@ namespace PlayerMovementController
         [SerializeField] private PlayerMovementData Data;
         [SerializeField] private ParticleSystem dust;
         [SerializeField] private TrailRenderer trailRenderer;
+        private PlayerController playerController;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -27,6 +28,7 @@ namespace PlayerMovementController
         public bool canMove = true;
         public bool isDialogueActive;
         private bool _isAttacking;
+        public bool IsAttacking { get => _isAttacking; set => _isAttacking = value; }
         #endregion
 
         #region Animation
@@ -67,6 +69,7 @@ namespace PlayerMovementController
         {
             mainCamera = Camera.main;
             animator = GetComponent<Animator>();
+            playerController = GetComponent<PlayerController>();
         }
 
         public void HandleUpdate()
@@ -97,7 +100,6 @@ namespace PlayerMovementController
             HandleGravity();
 
             ApplyMovement();
-
 
             //HandleMovementInCameraBounds();
         }
@@ -184,16 +186,28 @@ namespace PlayerMovementController
             }
             #endregion
             #region Attack Input
-            if (Input.GetKeyDown(KeyCode.F))
+            if (attackCooldownTimer <= 0)
             {
-                StartCoroutine(ExecuteAttack());
-            } 
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    StartCoroutine(ExecuteAttack());
+                    attackCooldownTimer = attackCooldown;
+                }
+            }
+            else
+            {
+                attackCooldownTimer -= Time.deltaTime;
+            }
+
             #endregion
         }
+        private float attackCooldownTimer = 0;
+        public float attackCooldown = 0.5f;
         private IEnumerator ExecuteAttack()
         {
             _isAttacking = true;
             Debug.Log("Attacking");
+            playerController.Attack();
             yield return new WaitForSeconds(0.5f);
             _isAttacking = false;
         }

@@ -32,6 +32,10 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     #region Attack Variables
     private int attackPower;
+    private float attackSpeed;
+    private float attackRadius;
+    [SerializeField] Transform attackOrigin;
+    private LayerMask enemyMask;
     #endregion
 
     #region TBCombat Variables
@@ -64,12 +68,18 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentExperiencePoints = 0;
         maxExperiencePoints = Data.MaxExperiencePoints;
         currentLevel = 1;
+
         PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
         healthBar.SetMaxHealth(maxHealthPoints);
     }
     void Start()
     {
         playerMovementController = GetComponent<PlayerMovementController.PlayerMovementController>();
+
+        attackPower = Data.AttackPower;
+        attackSpeed = Data.AttackSpeed;
+        attackRadius = Data.AttackRadius;
+        enemyMask = Data.EnemyMask;
 
         UpdateStats();//This is called here as well to update the static stats before the method PlayerStats.SetMoves() is called
 
@@ -97,14 +107,17 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         UpdateStats();
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    public void Attack()
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackOrigin.position, attackRadius, enemyMask);
+        foreach (Collider2D enemy in hitEnemies)
         {
-            EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            EnemyAI enemyMovement = enemy.GetComponent<EnemyAI>();
             if (enemyController != null)
             {
-                enemyController.TakeDamage(Data.AttackPower);
+                enemyController.TakeDamage(attackPower);
+                //enemyMovement.KnockBack(transform.position);
                 Debug.Log("Enemy took damage, current health: " + enemyController.currentHealthPoints);
             }
         }
@@ -195,6 +208,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         // #else
         //         Application.Quit();
         // #endif
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(attackOrigin.position, attackRadius);
     }
 
     internal void setmaxHealthPoints()
