@@ -144,6 +144,15 @@ namespace PlayerMovementController
                 StartCoroutine(ExecuteDash());
             }
         }
+        public void Attack(InputAction.CallbackContext context)
+        {
+            Debug.Log("Attack");
+            if (context.started && canMove && !_isDashing && attackCooldownTimer <= 0)
+            {
+                StartCoroutine(ExecuteAttack());
+                attackCooldownTimer = attackCooldown;
+            }
+        }
         #endregion
 
         private void GatherInput()
@@ -186,18 +195,8 @@ namespace PlayerMovementController
             }
             #endregion
             #region Attack Input
-            if (attackCooldownTimer <= 0)
-            {
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    StartCoroutine(ExecuteAttack());
-                    attackCooldownTimer = attackCooldown;
-                }
-            }
-            else
-            {
-                attackCooldownTimer -= Time.deltaTime;
-            }
+
+            if (attackCooldownTimer > 0) attackCooldownTimer -= Time.deltaTime;
 
             #endregion
         }
