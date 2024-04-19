@@ -34,7 +34,7 @@ public class EnemyAI : MonoBehaviour
         _col = GetComponent<BoxCollider2D>();
         currentTarget = firstPatrolPoint;
 
-        InvokeRepeating("UpdatePath", 0f, 0.2f);
+        InvokeRepeating("UpdatePath", 0f, 0.2f); //Invoke the UpdatePath method every 0.2 seconds
     }
 
     void Update()
@@ -45,7 +45,6 @@ public class EnemyAI : MonoBehaviour
     void FixedUpdate()
     {
         CheckGrounded();
-        Debug.Log(_grounded);
         if (!_grounded)
         {
             Fall();
@@ -57,7 +56,6 @@ public class EnemyAI : MonoBehaviour
     {
         canMove = false;
         Vector2 direction = new Vector2((transform.position - sender.transform.position).normalized.x, 1f);
-        Debug.Log("Direction x " + direction.x + " y " + direction.y);
         rb.AddForce(direction * Data.KnockBackForce, ForceMode2D.Impulse);
         StartCoroutine(LoseControl());
     }
@@ -77,7 +75,6 @@ public class EnemyAI : MonoBehaviour
             Vector2 aux = new Vector2();
             aux.y = Mathf.MoveTowards(rb.velocity.y, -Data.MaxFallSpeed, Data.FallAcceleration * Time.fixedDeltaTime);
             rb.velocity = aux;
-            Debug.Log("Falling");
         }
     }
 
@@ -86,6 +83,7 @@ public class EnemyAI : MonoBehaviour
         _grounded = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0f, Vector2.down, 0.1f, Data.GroundLayer);
     }
 
+    //Switches the target between the player and the patrol points
     void CheckTarget()
     {
         if (Vector2.Distance(Playertarget.position, transform.position) < distanceToFollowPlayer)
@@ -94,7 +92,6 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            Debug.Log("Patrolling");
             if (currentTarget == null || currentTarget == Playertarget)
             {
                 currentTarget = firstPatrolPoint;
@@ -131,6 +128,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    //Makes the enemy move towards the next waypoint
     void ApplyMovement()
     {
         if (path == null || !canMove) return;

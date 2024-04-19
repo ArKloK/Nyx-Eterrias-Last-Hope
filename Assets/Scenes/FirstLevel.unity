@@ -390,7 +390,7 @@ GameObject:
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &157068661
 Transform:
   m_ObjectHideFlags: 0
@@ -8973,7 +8973,7 @@ GameObject:
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1222941326
 Transform:
   m_ObjectHideFlags: 0
@@ -9617,10 +9617,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     lines:
-    - line: This is the first line of dialogue
+    - line: You are about to start a combat
       isMoveSelectionLine: 0
       isTBBattleLine: 0
-    - line: And this one is the second
+    - line: The combat will start
       isMoveSelectionLine: 0
       isTBBattleLine: 1
 --- !u!61 &1314806213
@@ -9630,7 +9630,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314806211}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -9677,7 +9677,7 @@ Transform:
   m_GameObject: {fileID: 1314806211}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 124.2, y: -39.1, z: 3.0151029}
+  m_LocalPosition: {x: 279.5, y: -39.1, z: 3.0151029}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9942,7 +9942,7 @@ Transform:
   m_GameObject: {fileID: 1368683995}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -76.6, y: -114.4, z: 0.19680347}
+  m_LocalPosition: {x: -267.3, y: -114.4, z: 0.19680347}
   m_LocalScale: {x: 6.37, y: 6.37, z: 6.37}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10062,7 +10062,7 @@ Transform:
   m_GameObject: {fileID: 1395474710}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5530825, y: 0, z: 0}
+  m_LocalPosition: {x: 5.1722918, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10495,7 +10495,7 @@ Transform:
   m_GameObject: {fileID: 1502764848}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.630787, y: 0, z: 0}
+  m_LocalPosition: {x: 32, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10878,7 +10878,7 @@ Transform:
   m_GameObject: {fileID: 1549771309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.0788848, y: 0, z: 0}
+  m_LocalPosition: {x: 21.198095, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11618,7 +11618,7 @@ Transform:
   m_GameObject: {fileID: 1723439516}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5530844, y: 0, z: 0}
+  m_LocalPosition: {x: -16.433876, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12452,7 +12452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1937611903
 Transform:
   m_ObjectHideFlags: 0
@@ -12585,7 +12585,7 @@ Transform:
   m_GameObject: {fileID: 1969042280}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.106165, y: 0, z: 0}
+  m_LocalPosition: {x: -27.236956, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12942,7 +12942,7 @@ Transform:
   m_GameObject: {fileID: 2056492514}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -71.6, y: -252, z: 0}
+  m_LocalPosition: {x: 327.2, y: -39.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13115,7 +13115,7 @@ Transform:
   m_GameObject: {fileID: 2109188391}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6652284, y: 0, z: 0}
+  m_LocalPosition: {x: 13.534439, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13238,11 +13238,11 @@ PrefabInstance:
       objectReference: {fileID: 599093897}
     - target: {fileID: 3293345407297424393, guid: d9e1c16b8eac16b47aa84aafbfb67d21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -64.8
+      value: -121.4
       objectReference: {fileID: 0}
     - target: {fileID: 3293345407297424393, guid: d9e1c16b8eac16b47aa84aafbfb67d21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.815407
+      value: -7.8454094
       objectReference: {fileID: 0}
     - target: {fileID: 3293345407297424393, guid: d9e1c16b8eac16b47aa84aafbfb67d21, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13413,11 +13413,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2397676027214751516, guid: e9bf9a2cf835f2a4ba17d12caa77c4ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -64.8
+      value: -78.126915
       objectReference: {fileID: 0}
     - target: {fileID: 2397676027214751516, guid: e9bf9a2cf835f2a4ba17d12caa77c4ee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.815407
+      value: -7.8582296
       objectReference: {fileID: 0}
     - target: {fileID: 2397676027214751516, guid: e9bf9a2cf835f2a4ba17d12caa77c4ee, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13466,11 +13466,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4204290685412497858, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -64.8
+      value: -121.4
       objectReference: {fileID: 0}
     - target: {fileID: 4204290685412497858, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -40.67
+      value: -43.7
       objectReference: {fileID: 0}
     - target: {fileID: 4204290685412497858, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
       propertyPath: m_LocalPosition.z
