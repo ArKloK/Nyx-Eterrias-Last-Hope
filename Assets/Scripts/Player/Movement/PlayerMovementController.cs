@@ -313,7 +313,7 @@ namespace PlayerMovementController
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * Data.MaxSpeed, Data.Acceleration * Time.fixedDeltaTime);
                     //_frameVelocity = new Vector2(_frameInput.Move.x * Data.MaxSpeed, _frameVelocity.y);
-                    Turn();
+                    Flip();
                 }
                 else
                 {
@@ -364,7 +364,7 @@ namespace PlayerMovementController
             if (transform.localScale.x != wallJumpingDirection)
             {
                 turnOnWallJump = true;
-                Turn();
+                Flip();
                 turnOnWallJump = false;
             }
 
@@ -441,9 +441,9 @@ namespace PlayerMovementController
         #endregion
 
         #region Auxiliar Methods
-        private void Turn()
+        private void Flip()
         {
-            if (canMove && (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump))
+            if (canMove && (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump) && !_isAttacking)
             {
                 Vector3 scale = transform.localScale;
                 scale.x *= -1;

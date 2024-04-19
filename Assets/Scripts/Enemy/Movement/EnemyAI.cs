@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using System;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class EnemyAI : MonoBehaviour
     private BoxCollider2D _col;
     private bool _grounded;
     private Transform currentTarget;
+    private bool canMove = true;
 
     [SerializeField] Transform Playertarget;
     [SerializeField] Transform firstPatrolPoint;
@@ -37,6 +39,55 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        if (canMove) CheckTarget();
+    }
+
+    void FixedUpdate()
+    {
+        CheckGrounded();
+        Debug.Log(_grounded);
+        if (!_grounded)
+        {
+            Fall();
+        }
+        ApplyMovement();
+    }
+
+    public void KnockBack(GameObject sender)
+    {
+        canMove = false;
+        Vector2 direction = new Vector2((transform.position - sender.transform.position).normalized.x, 1f);
+        Debug.Log("Direction x " + direction.x + " y " + direction.y);
+        rb.AddForce(direction * Data.KnockBackForce, ForceMode2D.Impulse);
+        StartCoroutine(LoseControl());
+    }
+
+    IEnumerator LoseControl()
+    {
+        yield return new WaitForSeconds(Data.KnockBackTime);
+        rb.velocity = Vector2.zero;
+        canMove = true;
+    }
+
+    public void Fall()
+    {
+        if (!_grounded && canMove)
+        {
+            rb.AddForce(Vector2.down * Data.FallAcceleration, ForceMode2D.Force);
+            Vector2 aux = new Vector2();
+            aux.y = Mathf.MoveTowards(rb.velocity.y, -Data.MaxFallSpeed, Data.FallAcceleration * Time.fixedDeltaTime);
+            rb.velocity = aux;
+            Debug.Log("Falling");
+        }
+    }
+
+    void CheckGrounded()
+    {
+        _grounded = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0f, Vector2.down, 0.1f, Data.GroundLayer);
+    }
+
+    void CheckTarget()
+    {
         if (Vector2.Distance(Playertarget.position, transform.position) < distanceToFollowPlayer)
         {
             currentTarget = Playertarget;
@@ -63,15 +114,26 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void OnPathComplete(Path p)
     {
-        CheckGrounded();
-        Debug.Log(_grounded);
-        if (!_grounded)
+        if (!p.error)
         {
-            Fall();
+            path = p;
+            currentWaypoint = 0;
         }
-        if (path == null) return;
+    }
+
+    void UpdatePath()
+    {
+        if (seeker.IsDone() && canMove)
+        {
+            seeker.StartPath(rb.position, currentTarget.position, OnPathComplete);
+        }
+    }
+
+    void ApplyMovement()
+    {
+        if (path == null || !canMove) return;
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
@@ -93,46 +155,6 @@ public class EnemyAI : MonoBehaviour
         if (distance < nextWaypointDistance)
         {
             currentWaypoint++;
-        }
-    }
-
-    public void KnockBack(Vector2 direction)
-    {
-        rb.velocity = Vector2.zero;
-        rb.AddForce(direction * Data.KnockBackForce, ForceMode2D.Impulse);
-    }
-
-    public void Fall()
-    {
-        if (!_grounded)
-        {
-            rb.AddForce(Vector2.down * Data.FallAcceleration, ForceMode2D.Force);
-            Vector2 aux = new Vector2();
-            aux.y = Mathf.MoveTowards(rb.velocity.y, -Data.MaxFallSpeed, Data.FallAcceleration * Time.fixedDeltaTime);
-            rb.velocity = aux;
-            Debug.Log("Falling");
-        }
-    }
-
-    void CheckGrounded()
-    {
-        _grounded = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0f, Vector2.down, 0.1f, Data.GroundLayer);
-    }
-
-    void OnPathComplete(Path p)
-    {
-        if (!p.error)
-        {
-            path = p;
-            currentWaypoint = 0;
-        }
-    }
-
-    void UpdatePath()
-    {
-        if (seeker.IsDone())
-        {
-            seeker.StartPath(rb.position, currentTarget.position, OnPathComplete);
         }
     }
 }

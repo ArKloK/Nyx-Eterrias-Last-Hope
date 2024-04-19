@@ -9,5 +9,6 @@ public class EnemyMovementData : ScriptableObject
     public float FallAcceleration;
     public LayerMask EnemyLayer;
     public LayerMask GroundLayer;
-    public float KnockBackForce;
+    public Vector2 KnockBackForce;
+    public float KnockBackTime;
 }

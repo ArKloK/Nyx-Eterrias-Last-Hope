@@ -113,11 +113,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         foreach (Collider2D enemy in hitEnemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            EnemyAI enemyMovement = enemy.GetComponent<EnemyAI>();
+            EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
             if (enemyController != null)
             {
                 enemyController.TakeDamage(attackPower);
-                //enemyMovement.KnockBack(transform.position);
+                if(enemyController.currentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
                 Debug.Log("Enemy took damage, current health: " + enemyController.currentHealthPoints);
             }
         }

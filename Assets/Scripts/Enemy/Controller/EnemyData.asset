@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6017bebc46100674b9b0eded91dee2d2, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: 
-  MaxHealthPoints: 2
+  MaxHealthPoints: 6
   ExperiencePoints: 2
   AttackPower: 1
