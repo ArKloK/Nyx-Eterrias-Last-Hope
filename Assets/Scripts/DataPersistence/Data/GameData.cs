@@ -47,7 +47,7 @@ public class GameData
         tBDefensePower = playerControllerData.TBDefensePower;
         tBAttackPower = playerControllerData.TBAttackPower;
         currentExperiencePoints = 0;
-        maxExperiencePoints = playerControllerData.MaxExperiencePoints;
+        maxExperiencePoints = playerControllerData.BaseMaxExperiencePoints;
         currentLevel = 1;
         collectibles = new SerializableDictionary<string, bool>();
         inventoryItems = new List<InventoryItemSerializable>();

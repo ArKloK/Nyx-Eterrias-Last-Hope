@@ -4,8 +4,10 @@
 #
 /[Ll]ibrary/
 /[Tt]emp/
-/[Bb]uilds/
 /[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Vv]env/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 

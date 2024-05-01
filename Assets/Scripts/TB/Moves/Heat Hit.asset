@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04cc09f0473fe7447abc5cb5c5414d53, type: 3}
-  m_Name: SoakMove
+  m_Name: Heat Hit
   m_EditorClassIdentifier: 
-  MoveName: Soak Move
+  MoveName: Heat Hit
   Description: 
-  Element: 2
-  Category: 1
+  Element: 1
+  Category: 0
   Effects:
     statBoosts: []
-    status: 3
+    status: 0
   Target: 0
   Power: 0
-  Accuracy: 100
+  Accuracy: 0
   CriticalChance: 0

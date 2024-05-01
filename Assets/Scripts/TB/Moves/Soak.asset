@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04cc09f0473fe7447abc5cb5c5414d53, type: 3}
-  m_Name: FireMove
+  m_Name: Soak
   m_EditorClassIdentifier: 
-  MoveName: FireMove
+  MoveName: Soak
   Description: 
-  Element: 1
+  Element: 2
   Category: 1
   Effects:
     statBoosts: []
-    status: 2
+    status: 3
   Target: 0
-  Power: 2
-  Accuracy: 80
-  CriticalChance: 100
+  Power: 0
+  Accuracy: 100
+  CriticalChance: 0

@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
     private bool _grounded;
     private Transform currentTarget;
     private bool canMove = true;
+    private bool runAway = false;
 
     [SerializeField] Transform Playertarget;
     [SerializeField] Transform firstPatrolPoint;
@@ -23,9 +24,11 @@ public class EnemyAI : MonoBehaviour
 
     Path path;
     int currentWaypoint = 0;
-    bool reachedEndOfPath = false;
+    //bool reachedEndOfPath = false;
 
     Seeker seeker;
+
+    public float Speed { get => speed; set => speed = value; }
 
     void Start()
     {
@@ -135,16 +138,18 @@ public class EnemyAI : MonoBehaviour
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
-            reachedEndOfPath = true;
+            //reachedEndOfPath = true;
             return;
         }
         else
         {
-            reachedEndOfPath = false;
+            //reachedEndOfPath = false;
         }
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         Vector2 force = direction * speed * Time.deltaTime;
+
+        if (runAway && currentTarget == Playertarget) force *= -1;
 
         rb.AddForce(force);
 

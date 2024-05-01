@@ -27,7 +27,7 @@ public class PlayerControllerData : ScriptableObject
 
     [Header("LEVEL STATS")]
     [Tooltip("The maximum experience the player needs to level up, this will increase as the player levels up")]
-    public int MaxExperiencePoints;
+    public int BaseMaxExperiencePoints;
 
     [Header("KNOCKBACK DATA")]
     [Tooltip("The amount of time the player can't move after being hit")]

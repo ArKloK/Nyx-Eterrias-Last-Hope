@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         TBdefensePower = Data.TBDefensePower;
         TBattackSpeed = Data.TBAttackSpeed;
         currentExperiencePoints = 0;
-        maxExperiencePoints = Data.MaxExperiencePoints;
+        maxExperiencePoints = Data.BaseMaxExperiencePoints;
         currentLevel = 1;
 
         PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;

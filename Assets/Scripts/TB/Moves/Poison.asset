@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04cc09f0473fe7447abc5cb5c5414d53, type: 3}
-  m_Name: PoisonMove
+  m_Name: Poison
   m_EditorClassIdentifier: 
-  MoveName: Poison Move
+  MoveName: Poison
   Description: 
   Element: 3
   Category: 1

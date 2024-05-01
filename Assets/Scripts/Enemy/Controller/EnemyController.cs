@@ -7,7 +7,9 @@ public class EnemyController : MonoBehaviour
     public EnemyData Data;
 
     [HideInInspector]
-    public int currentHealthPoints;
+    private int currentHealthPoints;
+
+    public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
 
     void Awake()
     {
