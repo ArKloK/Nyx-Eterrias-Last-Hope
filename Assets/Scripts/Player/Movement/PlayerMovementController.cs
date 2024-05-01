@@ -71,7 +71,17 @@ namespace PlayerMovementController
             animator = GetComponent<Animator>();
             playerController = GetComponent<PlayerController>();
         }
-
+        void OnEnable()
+        {
+            PauseMenuController.OnPause += HandlePause;
+            PauseMenuController.OnResume += HandleResume;
+        }
+        void OnDisable()
+        {
+            PauseMenuController.OnPause -= HandlePause;
+            PauseMenuController.OnResume -= HandleResume;
+        }
+  
         public void HandleUpdate()
         {
             _time += Time.deltaTime;
@@ -107,7 +117,8 @@ namespace PlayerMovementController
         #region Input System
         public void Move(InputAction.CallbackContext context)
         {
-            _frameInput.Move.x = context.ReadValue<Vector2>().x;
+            if (canMove)
+                _frameInput.Move.x = context.ReadValue<Vector2>().x;
         }
         public void Jump(InputAction.CallbackContext context)
         {
@@ -528,6 +539,14 @@ namespace PlayerMovementController
 
             // Aplica la nueva posición al jugador
             transform.position = clampedPlayerPosition;
+        }
+        private void HandlePause()
+        {
+            canMove = false;
+        }
+        private void HandleResume()
+        {
+            canMove = true;
         }
         #endregion
 

@@ -9710,6 +9710,7 @@ GameObject:
   - component: {fileID: 1368684000}
   - component: {fileID: 1368684007}
   - component: {fileID: 1368684005}
+  - component: {fileID: 1368684008}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
@@ -9842,7 +9843,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 9eed4cea331eccf4280e15b1e99073aa, type: 2}
-  currentHealthPoints: 0
 --- !u!114 &1368684005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9914,9 +9914,57 @@ MonoBehaviour:
   Playertarget: {fileID: 599093897}
   firstPatrolPoint: {fileID: 1222941326}
   secondPatrolPoint: {fileID: 157068661}
-  speed: 1400
+  standardSpeed: 1400
   nextWaypointDistance: 3
   distanceToFollowPlayer: 100
+--- !u!114 &1368684008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368683995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22263d2ef76d56546951c41ebc84bf57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLowHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  playerMediumHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  playerHighHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enemyLowHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enemyMediumHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enemyHighHealth:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1395474710
 GameObject:
   m_ObjectHideFlags: 0
@@ -10003,7 +10051,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 9eed4cea331eccf4280e15b1e99073aa, type: 2}
-  currentHealthPoints: 0
 --- !u!61 &1399005864
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11641,7 +11688,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 9eed4cea331eccf4280e15b1e99073aa, type: 2}
-  currentHealthPoints: 0
 --- !u!61 &1732698922
 BoxCollider2D:
   m_ObjectHideFlags: 0

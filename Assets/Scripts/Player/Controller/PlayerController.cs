@@ -117,8 +117,8 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             if (enemyController != null)
             {
                 enemyController.TakeDamage(attackPower);
-                if(enemyController.currentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
-                Debug.Log("Enemy took damage, current health: " + enemyController.currentHealthPoints);
+                if(enemyController.CurrentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
+                Debug.Log("Enemy took damage, current health: " + enemyController.CurrentHealthPoints);
             }
         }
     }

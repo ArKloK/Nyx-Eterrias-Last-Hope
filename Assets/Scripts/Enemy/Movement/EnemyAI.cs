@@ -13,12 +13,13 @@ public class EnemyAI : MonoBehaviour
     private Transform currentTarget;
     private bool canMove = true;
     private bool runAway = false;
+    private float speed;
 
     [SerializeField] Transform Playertarget;
     [SerializeField] Transform firstPatrolPoint;
     [SerializeField] Transform secondPatrolPoint;
 
-    [SerializeField] float speed;
+    [SerializeField] float standardSpeed;
     [SerializeField] float nextWaypointDistance;
     [SerializeField] float distanceToFollowPlayer;
 
@@ -28,7 +29,8 @@ public class EnemyAI : MonoBehaviour
 
     Seeker seeker;
 
-    public float Speed { get => speed; set => speed = value; }
+    public float Speed { get => standardSpeed; set => standardSpeed = value; }
+    public bool CanMove { get => canMove; set => canMove = value; }
 
     void Start()
     {
@@ -38,6 +40,11 @@ public class EnemyAI : MonoBehaviour
         currentTarget = firstPatrolPoint;
 
         InvokeRepeating("UpdatePath", 0f, 0.2f); //Invoke the UpdatePath method every 0.2 seconds
+    }
+    void OnEnable()
+    {
+        PauseMenuController.OnPause += HandlePause;
+        PauseMenuController.OnResume += HandleResume;
     }
 
     void Update()
@@ -147,7 +154,14 @@ public class EnemyAI : MonoBehaviour
         }
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
-        Vector2 force = direction * speed * Time.deltaTime;
+        speed = GetComponent<FuzzyLogic>().SetEnemySpeed();
+        Debug.Log("Speed: " + speed);
+        
+        Vector2 force;
+        if (currentTarget == Playertarget)
+            force = direction * speed * Time.deltaTime;
+        else
+            force = direction * standardSpeed * Time.deltaTime;
 
         if (runAway && currentTarget == Playertarget) force *= -1;
 
@@ -159,5 +173,13 @@ public class EnemyAI : MonoBehaviour
         {
             currentWaypoint++;
         }
+    }
+    public void HandlePause()
+    {
+        canMove = false;
+    }
+    public void HandleResume()
+    {
+        canMove = true;
     }
 }

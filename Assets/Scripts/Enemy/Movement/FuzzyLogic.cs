@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class FuzzyLogic : MonoBehaviour
 {
-    public AnimationCurve playerLowHealth;
-    public AnimationCurve playerMediumHealth;
-    public AnimationCurve playerHighHealth;
-    public AnimationCurve enemyLowHealth;
-    public AnimationCurve enemyMediumHealth;
-    public AnimationCurve enemyHighHealth;
+    [SerializeField] AnimationCurve playerLowHealth;
+    [SerializeField] AnimationCurve playerMediumHealth;
+    [SerializeField] AnimationCurve playerHighHealth;
+    [SerializeField] AnimationCurve enemyLowHealth;
+    [SerializeField] AnimationCurve enemyMediumHealth;
+    [SerializeField] AnimationCurve enemyHighHealth;
     private float[,] rules = new float[3, 3];
     private float LOW, MEDIUM, HIGH;
+
+    void OnEnable()
+    {
+        PlayerController.OnPlayerLevelUp += setCurvesValues;
+    }
+
+    void OnDisable()
+    {
+        PlayerController.OnPlayerLevelUp -= setCurvesValues;
+    }
+
+    void Start()
+    {
+        LOW = 1400; MEDIUM = 2000; HIGH = 3000;
+        SetRules();
+        setCurvesValues();
+    }
 
     void setCurvesValues()
     {
@@ -23,30 +40,25 @@ public class FuzzyLogic : MonoBehaviour
         enemyMediumHealth = new AnimationCurve();
         enemyHighHealth = new AnimationCurve();
 
+        int playerMaxHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealthPoints;
+        Debug.Log("Player Max Health: " + playerMaxHealth);
         //Set the keys for the player health curves
         playerLowHealth.AddKey(0, 1);
-        playerLowHealth.AddKey(PlayerStats.MaxHealthPoints/2, 0);
+        playerLowHealth.AddKey(playerMaxHealth / 2, 0);
         playerMediumHealth.AddKey(0, 0);
-        playerMediumHealth.AddKey(PlayerStats.MaxHealthPoints/2, 1);
-        playerMediumHealth.AddKey(PlayerStats.MaxHealthPoints, 0);
-        playerHighHealth.AddKey(PlayerStats.MaxHealthPoints/2, 0);
-        playerHighHealth.AddKey(PlayerStats.MaxHealthPoints, 1);
+        playerMediumHealth.AddKey(playerMaxHealth / 2, 1);
+        playerMediumHealth.AddKey(playerMaxHealth, 0);
+        playerHighHealth.AddKey(playerMaxHealth / 2, 0);
+        playerHighHealth.AddKey(playerMaxHealth, 1);
 
         //Set the keys for the enemy health curves
         enemyLowHealth.AddKey(0, 1);
-        enemyLowHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints/2, 0);
+        enemyLowHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints / 2, 0);
         enemyMediumHealth.AddKey(0, 0);
-        enemyMediumHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints/2, 1);
+        enemyMediumHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints / 2, 1);
         enemyMediumHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints, 0);
-        enemyHighHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints/2, 0);
+        enemyHighHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints / 2, 0);
         enemyHighHealth.AddKey(GetComponent<EnemyController>().Data.MaxHealthPoints, 1);
-    }
-
-    void Start()
-    {
-        LOW = 1400; MEDIUM = 2000; HIGH = 3000;
-        SetRules();
-        setCurvesValues();
     }
 
     void SetRules()
@@ -74,6 +86,7 @@ public class FuzzyLogic : MonoBehaviour
             result[2] = playerHighHealth.Evaluate(playerHealth);
         }
 
+        Debug.Log("Player Health: " + result[0] + " " + result[1] + " " + result[2]);
         return result;
     }
 
@@ -89,10 +102,11 @@ public class FuzzyLogic : MonoBehaviour
             result[2] = enemyHighHealth.Evaluate(enemyHealth);
         }
 
+        Debug.Log("Enemy Health: " + result[0] + " " + result[1] + " " + result[2]);
         return result;
     }
 
-    private void setZombieSpeed()
+    public float SetEnemySpeed()
     {
         float[] enemyHealthEvaluation = EvaluateEnemyHealth();
         float[] playerHealthEvaluation = EvaluatePlayerHealth();
@@ -115,7 +129,6 @@ public class FuzzyLogic : MonoBehaviour
             }
         }
 
-        Debug.Log(num / den);
-        GetComponent<EnemyAI>().Speed = num / den;
+        return num / den;
     }
 }

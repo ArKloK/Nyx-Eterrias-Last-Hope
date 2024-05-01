@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,8 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] Slider musicSlider;
     [SerializeField] Slider sfxSlider;
     [SerializeField] TMP_Dropdown textVelocityDropdown;
+    public static event Action OnPause;
+    public static event Action OnResume;
 
     // Start is called before the first frame update
     void Start()
@@ -58,14 +61,14 @@ public class PauseMenuController : MonoBehaviour
 
     public void Pause()
     {
-        playerMovementController.canMove = false;
+        OnPause?.Invoke();
         //Time.timeScale = 0f;
         isPaused = true;
         pauseMenuUI.SetActive(true);
     }
     public void Resume()
     {
-        playerMovementController.canMove = true;
+        OnResume?.Invoke();
         //Time.timeScale = 1f;
         isPaused = false;
         pauseMenuUI.SetActive(false);
