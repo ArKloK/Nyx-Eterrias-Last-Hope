@@ -50,6 +50,14 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (canMove) CheckTarget();
+        if(GetComponent<EnemyController>().CurrentHealthPoints <= GetComponent<EnemyController>().Data.MaxHealthPoints / 2)
+        {
+            runAway = true;
+        }
+        else
+        {
+            runAway = false;
+        }
     }
 
     void FixedUpdate()

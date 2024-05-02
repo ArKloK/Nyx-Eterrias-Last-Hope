@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class FuzzyLogic : MonoBehaviour
 {
-    [SerializeField] AnimationCurve playerLowHealth;
-    [SerializeField] AnimationCurve playerMediumHealth;
-    [SerializeField] AnimationCurve playerHighHealth;
-    [SerializeField] AnimationCurve enemyLowHealth;
-    [SerializeField] AnimationCurve enemyMediumHealth;
-    [SerializeField] AnimationCurve enemyHighHealth;
+    AnimationCurve playerLowHealth;
+    AnimationCurve playerMediumHealth;
+    AnimationCurve playerHighHealth;
+    AnimationCurve enemyLowHealth;
+    AnimationCurve enemyMediumHealth;
+    AnimationCurve enemyHighHealth;
     private float[,] rules = new float[3, 3];
     private float LOW, MEDIUM, HIGH;
 
