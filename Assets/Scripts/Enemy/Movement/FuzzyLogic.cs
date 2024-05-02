@@ -25,7 +25,7 @@ public class FuzzyLogic : MonoBehaviour
 
     void Start()
     {
-        LOW = 1400; MEDIUM = 2000; HIGH = 3000;
+        LOW = 1000; MEDIUM = 1700; HIGH = 3000;
         SetRules();
         setCurvesValues();
     }
@@ -119,8 +119,8 @@ public class FuzzyLogic : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             //Debug.Log(Mathf.Min(healthEvaluation[x], ammoEvaluation[y]));
-            num += rules[x, y] * Mathf.Min(playerHealthEvaluation[x], enemyHealthEvaluation[y]);
-            den += Mathf.Min(playerHealthEvaluation[x], enemyHealthEvaluation[y]);
+            num += rules[x, y] * Mathf.Min(enemyHealthEvaluation[x], playerHealthEvaluation[y]);
+            den += Mathf.Min(enemyHealthEvaluation[x], playerHealthEvaluation[y]);
             y++;
             if (y % 3 == 0)
             {
