@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private int currentHealthPoints;
     public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
     public int MaxHealthPoints { get => maxHealthPoints; set => maxHealthPoints = value; }
+    public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
+
     private int maxSpriritualEnergyPoints;
     private int currentSpiritualEnergyPoints;
     #endregion

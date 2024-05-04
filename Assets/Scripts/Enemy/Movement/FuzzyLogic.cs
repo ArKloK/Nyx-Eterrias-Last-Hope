@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FuzzyLogic : MonoBehaviour
 {
-    AnimationCurve playerLowHealth;
-    AnimationCurve playerMediumHealth;
-    AnimationCurve playerHighHealth;
+    AnimationCurve playerLowLevel;
+    AnimationCurve playerMediumLevel;
+    AnimationCurve playerHighLevel;
     AnimationCurve enemyLowHealth;
     AnimationCurve enemyMediumHealth;
     AnimationCurve enemyHighHealth;
@@ -33,23 +33,23 @@ public class FuzzyLogic : MonoBehaviour
     void setCurvesValues()
     {
         //Set all the curves keys to 0
-        playerLowHealth = new AnimationCurve();
-        playerMediumHealth = new AnimationCurve();
-        playerHighHealth = new AnimationCurve();
+        playerLowLevel = new AnimationCurve();
+        playerMediumLevel = new AnimationCurve();
+        playerHighLevel = new AnimationCurve();
         enemyLowHealth = new AnimationCurve();
         enemyMediumHealth = new AnimationCurve();
         enemyHighHealth = new AnimationCurve();
 
-        int playerMaxHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealthPoints;
-        Debug.Log("Player Max Health: " + playerMaxHealth);
+        int playerMaxLevel = 15;
+        Debug.Log("Player Max Health: " + playerMaxLevel);
         //Set the keys for the player health curves
-        playerLowHealth.AddKey(0, 1);
-        playerLowHealth.AddKey(playerMaxHealth / 2, 0);
-        playerMediumHealth.AddKey(0, 0);
-        playerMediumHealth.AddKey(playerMaxHealth / 2, 1);
-        playerMediumHealth.AddKey(playerMaxHealth, 0);
-        playerHighHealth.AddKey(playerMaxHealth / 2, 0);
-        playerHighHealth.AddKey(playerMaxHealth, 1);
+        playerLowLevel.AddKey(0, 1);
+        playerLowLevel.AddKey(playerMaxLevel / 2, 0);
+        playerMediumLevel.AddKey(0, 0);
+        playerMediumLevel.AddKey(playerMaxLevel / 2, 1);
+        playerMediumLevel.AddKey(playerMaxLevel, 0);
+        playerHighLevel.AddKey(playerMaxLevel / 2, 0);
+        playerHighLevel.AddKey(playerMaxLevel, 1);
 
         //Set the keys for the enemy health curves
         enemyLowHealth.AddKey(0, 1);
@@ -74,16 +74,16 @@ public class FuzzyLogic : MonoBehaviour
         rules[2, 2] = HIGH;
     }
 
-    private float[] EvaluatePlayerHealth()
+    private float[] EvaluatePlayerLevel()
     {
         PlayerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         float[] result = new float[3];
         if (playerController != null)
         {
-            int playerHealth = playerController.CurrentHealthPoints;
-            result[0] = playerLowHealth.Evaluate(playerHealth);
-            result[1] = playerMediumHealth.Evaluate(playerHealth);
-            result[2] = playerHighHealth.Evaluate(playerHealth);
+            int playerLevel = playerController.CurrentLevel;
+            result[0] = playerLowLevel.Evaluate(playerLevel);
+            result[1] = playerMediumLevel.Evaluate(playerLevel);
+            result[2] = playerHighLevel.Evaluate(playerLevel);
         }
 
         Debug.Log("Player Health: " + result[0] + " " + result[1] + " " + result[2]);
@@ -109,7 +109,7 @@ public class FuzzyLogic : MonoBehaviour
     public float SetEnemySpeed()
     {
         float[] enemyHealthEvaluation = EvaluateEnemyHealth();
-        float[] playerHealthEvaluation = EvaluatePlayerHealth();
+        float[] playerLevelEvaluation = EvaluatePlayerLevel();
 
 
         int x = 0, y = 0;
@@ -119,8 +119,8 @@ public class FuzzyLogic : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             //Debug.Log(Mathf.Min(healthEvaluation[x], ammoEvaluation[y]));
-            num += rules[x, y] * Mathf.Min(enemyHealthEvaluation[x], playerHealthEvaluation[y]);
-            den += Mathf.Min(enemyHealthEvaluation[x], playerHealthEvaluation[y]);
+            num += rules[x, y] * Mathf.Min(enemyHealthEvaluation[x], playerLevelEvaluation[y]);
+            den += Mathf.Min(enemyHealthEvaluation[x], playerLevelEvaluation[y]);
             y++;
             if (y % 3 == 0)
             {
