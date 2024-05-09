@@ -218,7 +218,7 @@ public class TBCharacter
         };
         //IMPROVE THIS DAMAGE FORMULA LATER
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
-        int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type);
+        int damage = Mathf.FloorToInt((move.MoveData.Power * (attacker.Attack / Defense) * critical * type) * 0.1f);
 
         UpdateHp(damage);
 

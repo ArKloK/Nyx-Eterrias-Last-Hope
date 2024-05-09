@@ -19,10 +19,14 @@ MonoBehaviour:
     Level: 1
   - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
     Level: 1
+  - MoveData: {fileID: 11400000, guid: e6a3fa09bd34e4c4cbdce8a1a33bb775, type: 2}
+    Level: 1
+  - MoveData: {fileID: 11400000, guid: 3e1292b4718449e4ea488743fdb6f163, type: 2}
+    Level: 1
   _isEnemy: 1
   _maxHealthPoints: 25
-  _attackPower: 1
-  _defensePower: 1
-  _attackSpeed: 1
+  _attackPower: 15
+  _defensePower: 20
+  _attackSpeed: 10
   _experienceAmount: 6
   _element: 1

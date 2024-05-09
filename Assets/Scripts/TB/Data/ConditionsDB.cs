@@ -47,9 +47,9 @@ public class ConditionsDB
             {
                 ID = ConditionID.Soaked,
                 Name = "Soaked",
-                Description = "This unit is soaked and will have its accuracy reduced by 50%.",
+                Description = "This unit is soaked and will have its accuracy reduced by 25%.",
                 HudMessage = "SOAK",
-                StartMessage = "is soaked and will have its accuracy and speed reduced by 50%!",
+                StartMessage = "is soaked and will have its accuracy and speed reduced by 25%!",
                 RepeatedMovementMessage = "is already soaked and can't be soaked again!",
                 OnBeforeCharacterMove = (TBCharacter character) =>
                 {
@@ -78,8 +78,8 @@ public class ConditionsDB
                     //Reduce character's speed and moves accuracy
                     character.Moves.ForEach(move =>
                     {
-                        character.Speed = character.CharacterData.AttackSpeed / 2;
-                        move.Accuracy = move.MoveData.Accuracy / 2;
+                        character.Speed = character.CharacterData.AttackSpeed * (3/4);
+                        move.Accuracy = move.MoveData.Accuracy * (3/4);
                         Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
                         Debug.Log($"{character.CharacterData.Name} speed: " + character.Speed);
                     });

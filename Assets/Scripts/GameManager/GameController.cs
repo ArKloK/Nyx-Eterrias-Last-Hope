@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour, IDataPersistence
     [SerializeField] BattleSystem battleSystem;
     [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] Camera SSCamera;
+    [SerializeField] bool TBDemo;
     GameState state;
 
     void Start()
@@ -26,9 +27,12 @@ public class GameController : MonoBehaviour, IDataPersistence
     public void StartBattle()
     {
         state = GameState.TB;
-        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-        battleSystem.gameObject.SetActive(true);
-        SSCamera.gameObject.SetActive(false);
+        if (!TBDemo)
+        {
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            battleSystem.gameObject.SetActive(true);
+            SSCamera.gameObject.SetActive(false);
+        }
     }
 
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveName: Intimidate
   Description: 
-  Element: 2
+  Element: 0
   Category: 1
   Effects:
     statBoosts:
@@ -23,5 +23,5 @@ MonoBehaviour:
     status: 0
   Target: 0
   Power: 0
-  Accuracy: 60
-  CriticalChance: 60
+  Accuracy: 100
+  CriticalChance: 0

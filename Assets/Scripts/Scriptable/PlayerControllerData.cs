@@ -47,7 +47,8 @@ public class PlayerControllerData : ScriptableObject
 
 public enum Element
 {
-    None,
+
+    Normal,
     Fire,
     Water,
     Plant,
@@ -76,7 +77,7 @@ public class TypeChart
 
     public static float GetEffectiveness(Element attack, Element defense)
     {
-        if (attack == Element.None || defense == Element.None)
+        if (attack == Element.Normal || defense == Element.Normal)
             return 1f;
         return chart[(int)attack - 1][(int)defense - 1];
     }

@@ -20,6 +20,6 @@ MonoBehaviour:
     statBoosts: []
     status: 0
   Target: 0
-  Power: 2
-  Accuracy: 100
+  Power: 80
+  Accuracy: 95
   CriticalChance: 10
