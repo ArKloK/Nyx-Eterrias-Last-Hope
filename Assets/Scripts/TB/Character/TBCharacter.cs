@@ -162,6 +162,11 @@ public class TBCharacter
         }
         OnStatusChanged?.Invoke();
     }
+    public void RemoveAllStatuses()
+    {
+        _statuses.Clear();
+        //OnStatusChanged?.Invoke();
+    }
     public int GetStat(Stat stat)
     {
         int statValue = _stats[stat];
@@ -219,6 +224,11 @@ public class TBCharacter
         //IMPROVE THIS DAMAGE FORMULA LATER
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
         int damage = Mathf.FloorToInt((move.MoveData.Power * (attacker.Attack / Defense) * critical * type) * 0.1f);
+        if(!attacker._characterData.IsEnemy)
+        {
+            Debug.Log("Player Damage to Enemy: " + damage);
+        }
+            
 
         UpdateHp(damage);
 

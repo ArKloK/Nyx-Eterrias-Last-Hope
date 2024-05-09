@@ -18,6 +18,7 @@ public class Collectible : MonoBehaviour, ICollectible, IDataPersistence
 
     public string Id { get => id; set => id = value; }
     public bool IsCollected { get => isCollected; set => isCollected = value; }
+    public ItemData ItemData { get => itemData; set => itemData = value; }
 
     private void Start()
     {
@@ -34,7 +35,8 @@ public class Collectible : MonoBehaviour, ICollectible, IDataPersistence
         if (isCollected) return;
         isCollected = true;
         OnCollectibleCollected?.Invoke(itemData);
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     public void LoadData(GameData gameData)
@@ -43,7 +45,8 @@ public class Collectible : MonoBehaviour, ICollectible, IDataPersistence
         if (isCollected)
         {
             OnCollectibleCollected?.Invoke(itemData);
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

@@ -23,16 +23,29 @@ public class Inventory : MonoBehaviour, IDataPersistence
         InventoryManager.OnItemUsed -= RemoveItem;
     }
 
+    public void SetInventory(List<ItemData> itemDatas)
+    {
+        inventoryItems.Clear();
+        inventoryDictionary.Clear();
+        foreach (ItemData itemData in itemDatas)
+        {
+            InventoryItem inventoryItem = new InventoryItem(itemData);
+            inventoryItems.Add(inventoryItem);
+            inventoryDictionary.Add(itemData, inventoryItem);
+        }
+        LaunchInventoryChange();
+    }
+
     public void AddItem(ItemData itemData)
     {
         bool itemExists = inventoryDictionary.TryGetValue(itemData, out InventoryItem item);
-        foreach(KeyValuePair<ItemData, InventoryItem> entry in inventoryDictionary)
+        foreach (KeyValuePair<ItemData, InventoryItem> entry in inventoryDictionary)
         {
             if (entry.Key.ItemName == itemData.ItemName)
             {
                 itemData = entry.Key;//This will happen only when the item collected wants to merge with the ones who has been loadede from the save file. 
-                                    //Due to the fact that the itemData is not the same as the one in the dictionary, 
-                                    //we need to update it to the one in the dictionary to secure that the ItemData is the same as the one in the dictionary.
+                                     //Due to the fact that the itemData is not the same as the one in the dictionary, 
+                                     //we need to update it to the one in the dictionary to secure that the ItemData is the same as the one in the dictionary.
                 item = entry.Value;
                 itemExists = true;
                 break;

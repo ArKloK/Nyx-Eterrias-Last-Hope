@@ -22,7 +22,15 @@ public class GameController : MonoBehaviour, IDataPersistence
     void Start()
     {
         battleSystem.OnBattleEnd += EndBattle;
-        DialogueManager.OnStartTBCombat += StartBattle;
+        if (TBDemo)
+        {
+            state = GameState.TB;
+            //StartBattle();
+        }
+        else
+        {
+            DialogueManager.OnStartTBCombat += StartBattle;
+        }
     }
     public void StartBattle()
     {
@@ -30,21 +38,33 @@ public class GameController : MonoBehaviour, IDataPersistence
         if (!TBDemo)
         {
             player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-            battleSystem.gameObject.SetActive(true);
             SSCamera.gameObject.SetActive(false);
+            battleSystem.gameObject.SetActive(true);
+        }
+        else
+        {
+            StartCoroutine(battleSystem.SetupBattle());
         }
     }
 
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
     public void EndBattle(bool won)
     {
-        //TODO: Handle if the player loses the battle
-        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-        player.GetComponent<PlayerController>().setStats();
-        battleSystem.gameObject.SetActive(false);
-        SSCamera.gameObject.SetActive(true);
-        state = GameState.SS;
-        EventSystem.current.SetSelectedGameObject(null);
+
+        if (TBDemo)
+        {
+            StartBattle();
+        }
+        else
+        {
+            //TODO: Handle if the player loses the battle
+            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+            player.GetComponent<PlayerController>().setStats();
+            SSCamera.gameObject.SetActive(true);
+            battleSystem.gameObject.SetActive(false);
+            state = GameState.SS;
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     void Update()

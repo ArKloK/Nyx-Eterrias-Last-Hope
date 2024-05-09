@@ -19,6 +19,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Inventory inventory;
     [SerializeField] GameObject playerActionFirst;
     [SerializeField] GameObject playerMoveFirst;
+    [SerializeField] List<Collectible> collectibles;
+    [SerializeField] bool TBDemo;
     BattleState state;
     public event Action<bool> OnBattleEnd;
     int currentAction;
@@ -26,7 +28,7 @@ public class BattleSystem : MonoBehaviour
 
     void OnEnable()
     {
-        StartCoroutine(SetupBattle());
+
         PlayerController.OnPlayerLevelUp += HandleLevelUp;
         InventoryManager.OnTBItemUsedUpdateHP += UpdatePlayerHP;
     }
@@ -36,7 +38,10 @@ public class BattleSystem : MonoBehaviour
         PlayerController.OnPlayerLevelUp -= HandleLevelUp;
         InventoryManager.OnTBItemUsedUpdateHP -= UpdatePlayerHP;
     }
-
+    void Start()
+    {
+        StartCoroutine(SetupBattle());
+    }
     public void HandleUpdate()
     {
         if (state == BattleState.PLAYERACTION)
@@ -45,7 +50,12 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            if (playerUnit.Character.Moves.Count > 0)
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                dialogueBox.EnableMoveSelector(false);
+                PlayerAction();
+            }
+            else if (playerUnit.Character.Moves.Count > 0)
                 HandleMoveSelection();
         }
         else if (state == BattleState.INVENTORY)
@@ -81,8 +91,23 @@ public class BattleSystem : MonoBehaviour
         yield return RunTurns(BattleAction.INVENTORY);
     }
 
-    IEnumerator SetupBattle()
+    public IEnumerator SetupBattle()
     {
+        if (TBDemo)
+        {
+            PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
+            List<ItemData> items = new List<ItemData>();
+            foreach (Collectible collectible in collectibles)
+            {
+                items.Add(collectible.ItemData);
+            }
+            inventory.SetInventory(items);
+            // foreach (Collectible collectible in collectibles)
+            // {
+            //     inventory.AddItem(collectible.ItemData);
+            // }
+        }
+
         playerUnit.setData();
         playerHud.SetData(playerUnit.Character);
         enemyUnit.setData();
@@ -99,7 +124,7 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERACTION;
         StartCoroutine(dialogueBox.TypeDialogueTB("Choose an action."));
         dialogueBox.EnableActionSelector(true);
-        EventSystem.current.SetSelectedGameObject(playerActionFirst);
+        //EventSystem.current.SetSelectedGameObject(playerActionFirst);
     }
     void PlayerMove()
     {
@@ -107,7 +132,7 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableActionSelector(false);
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
-        EventSystem.current.SetSelectedGameObject(playerMoveFirst);
+        //EventSystem.current.SetSelectedGameObject(playerMoveFirst);
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -368,20 +393,20 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleMoveSelection()
     {
-        if (Input.GetAxis("Horizontal") == 1f && !isHorizontalInputPressed)
+        if (Input.GetAxis("Horizontal") > 0)
         //if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Debug.Log("Right arrow pressed" + Input.GetAxis("Horizontal"));
+            //Debug.Log("Right arrow pressed" + Input.GetAxis("Horizontal"));
             if (currentMove < playerUnit.Character.Moves.Count - 1)
             {
                 currentMove++;
                 isHorizontalInputPressed = true;
             }
         }
-        else if (Input.GetAxis("Horizontal") == -1f && !isHorizontalInputPressed)
+        else if (Input.GetAxis("Horizontal") < 0)
         //else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Debug.Log("Left arrow pressed" + Input.GetAxis("Horizontal"));
+            //Debug.Log("Left arrow pressed" + Input.GetAxis("Horizontal"));
             if (currentMove > 0)
             {
                 currentMove--;
@@ -429,7 +454,7 @@ public class BattleSystem : MonoBehaviour
     {
         PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
         //This will add experience to the player if he wins the battle
-        if (won)
+        if (won && !TBDemo)
         {
             ExperienceManager.Instance.AddExperience(enemyUnit.CharacterData.ExperienceAmount);
         }
@@ -465,7 +490,7 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Close player move");
         if (context.performed)
         {
-            
+
             dialogueBox.EnableMoveSelector(false);
             dialogueBox.EnableDialogueText(true);
             StartCoroutine(RunTurns(BattleAction.FIGHT));

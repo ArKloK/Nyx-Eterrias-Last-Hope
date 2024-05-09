@@ -75,13 +75,17 @@ public class ConditionsDB
                     //Soaked for 2-4 turns
                     character.StatusTime = UnityEngine.Random.Range(2, 5);
                     Debug.Log($"{character.CharacterData.Name} soaked for " + character.StatusTime + " turns");
+                    
                     //Reduce character's speed and moves accuracy
+                
+                    Debug.Log($"{character.CharacterData.Name} speed before soak: " + character.Speed);
+                    character.Speed = (int)(character.CharacterData.AttackSpeed * 0.75f);
+                    Debug.Log($"{character.CharacterData.Name} speed: " + character.Speed);
+
                     character.Moves.ForEach(move =>
                     {
-                        character.Speed = character.CharacterData.AttackSpeed * (3/4);
-                        move.Accuracy = move.MoveData.Accuracy * (3/4);
+                        move.Accuracy = (int)(move.MoveData.Accuracy * 0.75f);
                         Debug.Log("Move" + move.MoveData.MoveName + " accuracy: " + move.Accuracy);
-                        Debug.Log($"{character.CharacterData.Name} speed: " + character.Speed);
                     });
                 }
             }

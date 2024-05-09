@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentLevel = 1;
 
         PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
-        healthBar.SetMaxHealth(maxHealthPoints);
+        //healthBar.SetMaxHealth(maxHealthPoints);
     }
     void Start()
     {

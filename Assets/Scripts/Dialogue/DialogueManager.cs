@@ -60,6 +60,11 @@ public class DialogueManager : MonoBehaviour
                 //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = true;
+                foreach (EnemyAI enemy in FindObjectsOfType<EnemyAI>())
+                {
+                    enemy.CanMove = false;
+                }
+
             }
             if (isSelectingMove)
             {
@@ -145,7 +150,10 @@ public class DialogueManager : MonoBehaviour
             //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = false;
-
+            foreach (EnemyAI enemy in FindObjectsOfType<EnemyAI>())
+            {
+                enemy.CanMove = false;
+            }
         }
         PauseMenuController.canPause = true;
         gameObject.SetActive(false);

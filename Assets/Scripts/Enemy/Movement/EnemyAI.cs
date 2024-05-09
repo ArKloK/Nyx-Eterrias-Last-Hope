@@ -67,6 +67,7 @@ public class EnemyAI : MonoBehaviour
         {
             Fall();
         }
+        Debug.Log("CanMove: " + canMove);
         ApplyMovement();
     }
 
@@ -149,7 +150,11 @@ public class EnemyAI : MonoBehaviour
     //Makes the enemy move towards the next waypoint
     void ApplyMovement()
     {
-        if (path == null || !canMove) return;
+        if (path == null || !canMove) 
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
