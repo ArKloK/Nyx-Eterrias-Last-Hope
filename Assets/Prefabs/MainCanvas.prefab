@@ -227,7 +227,6 @@ MonoBehaviour:
   player: {fileID: 0}
   dialogueText: {fileID: 6858546233975545224}
   moveSelectionUI: {fileID: 2661502388120689749}
-  typingSpeed: 0.02
 --- !u!1 &614054948362142699
 GameObject:
   m_ObjectHideFlags: 0
@@ -2722,7 +2721,7 @@ GameObject:
   - component: {fileID: 8033582024725827481}
   - component: {fileID: 1874475899074484575}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: MainCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3256,6 +3255,14 @@ PrefabInstance:
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
       value: Fast
       objectReference: {fileID: 0}
+    - target: {fileID: 723439505079646160, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1874475899074484575}
+    - target: {fileID: 723439505079646160, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseMenuController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2714568896970617961, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3305,6 +3312,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1874475899074484575}
     - target: {fileID: 4013891164358398293, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Target
+      value: 
+      objectReference: {fileID: 1874475899074484575}
+    - target: {fileID: 4013891164358398293, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -3326,6 +3337,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4013891164358398293, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: PauseMenuController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013891164358398293, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_TargetAssemblyTypeName
       value: PauseMenuController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4671353559679646981, guid: bb3ef4e9218447c46b41f9e77ed4c559, type: 3}
@@ -3616,7 +3631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 281144779126061353, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1071.0499
+      value: 1071.05
       objectReference: {fileID: 0}
     - target: {fileID: 281144779126061353, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3840,7 +3855,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5997466304359064080, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1071.0499
+      value: 1071.05
       objectReference: {fileID: 0}
     - target: {fileID: 5997466304359064080, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3936,7 +3951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6231633909798640006, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1071.0499
+      value: 1071.05
       objectReference: {fileID: 0}
     - target: {fileID: 6231633909798640006, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4040,7 +4055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6415387932635821144, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1071.0499
+      value: 1071.05
       objectReference: {fileID: 0}
     - target: {fileID: 6415387932635821144, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4064,7 +4079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6731815969338561749, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1071.0499
+      value: 1071.05
       objectReference: {fileID: 0}
     - target: {fileID: 6731815969338561749, guid: ea5a26db213524b48a2c8dce1a8edc8a, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -408,7 +408,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueText: {fileID: 6248509397464907388}
-  typingSpeed: 0.02
   highlightedColor: {r: 1, g: 0, b: 0, a: 1}
   actionSelector: {fileID: 2047732235348374584}
   moveSelector: {fileID: 1935506608181648589}
@@ -2855,6 +2854,8 @@ MonoBehaviour:
   inventory: {fileID: 0}
   playerActionFirst: {fileID: 328432142259439702}
   playerMoveFirst: {fileID: 8928996747869305694}
+  collectibles: []
+  TBDemo: 0
 --- !u!114 &5916475853054118212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3389,7 +3390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterData: {fileID: 11400000, guid: 95da1aea83f362346902b1b13df0746f, type: 2}
-  _level: 3
+  _level: 5
 --- !u!1 &7186057057738975479
 GameObject:
   m_ObjectHideFlags: 0

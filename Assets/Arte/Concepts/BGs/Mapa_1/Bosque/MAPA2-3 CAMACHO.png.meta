@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 73ac64e4fb35c53429f62949ceec580e
+guid: 655f13203d79e0f4ca933aa17c8bb514
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -361,6 +361,90 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: MAPA2-3 CAMACHO_12
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 1502
+        width: 718
+        height: 674
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2920688b1b1a0f448919fd415da6c504
+      internalID: 1286925720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MAPA2-3 CAMACHO_13
+      rect:
+        serializedVersion: 2
+        x: 1497
+        y: 1502
+        width: 718
+        height: 674
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f82aee4023fed364cbb148c7e148cb41
+      internalID: 800299923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MAPA2-3 CAMACHO_14
+      rect:
+        serializedVersion: 2
+        x: 1497
+        y: 827
+        width: 718
+        height: 675
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4060b25fa1f16c042baf3baa1f6110a0
+      internalID: -1719874715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MAPA2-3 CAMACHO_15
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 827
+        width: 719
+        height: 675
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c51f6590489cd3941b53dd92b6ccca96
+      internalID: -2122617970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -377,6 +461,9 @@ TextureImporter:
       MAPA2-3 CAMACHO_10: 1791257239
       MAPA2-3 CAMACHO_11: -1727375118
       MAPA2-3 CAMACHO_12: 1286925720
+      MAPA2-3 CAMACHO_13: 800299923
+      MAPA2-3 CAMACHO_14: -1719874715
+      MAPA2-3 CAMACHO_15: -2122617970
       MAPA2-3 CAMACHO_2: -359512832
       MAPA2-3 CAMACHO_3: -903841323
       MAPA2-3 CAMACHO_4: -627246955
