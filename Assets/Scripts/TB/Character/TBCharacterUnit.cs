@@ -11,15 +11,24 @@ public class TBCharacterUnit : MonoBehaviour
     public TBCharacterData CharacterData { get => _characterData; set => _characterData = value; }
     public TBCharacter Character { get => _character; set => _character = value; }
 
-    public void setData()
+    public void setData(bool TBDemo)
     {
         if (_characterData.IsEnemy)
         {
-            _character = new TBCharacter(_characterData, _level);
+            _character = new TBCharacter(_characterData, _level, TBDemo);
         }
         else
         {
-            _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel);
+            if (!TBDemo)
+                _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel, TBDemo);
+            else
+            {
+                int randomLevel = Random.Range(5, 7);
+                PlayerStats.CurrentLevel = randomLevel;
+                PlayerStats.MaxHealthPoints = PlayerStats.MaxHealthPoints * PlayerStats.CurrentLevel;
+                PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
+                _character = new TBCharacter(_characterData, randomLevel, TBDemo);
+            }
         }
     }
 }

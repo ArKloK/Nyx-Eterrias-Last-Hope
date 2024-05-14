@@ -10,31 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bb6bd222e324f84b9382f106a6d244b, type: 3}
-  m_Name: TBPlayerData
+  m_Name: TBPlayerData DEMO
   m_EditorClassIdentifier: 
   _name: Nyx
   _sprite: {fileID: 0}
   _learnableMoves:
-  - MoveData: {fileID: 11400000, guid: e6a3fa09bd34e4c4cbdce8a1a33bb775, type: 2}
-    Level: 1
-  - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
-    Level: 1
-  - MoveData: {fileID: 11400000, guid: 70ccb4ae017a38a449d5c9638904f7be, type: 2}
-    Level: 1
-  - MoveData: {fileID: 11400000, guid: 45331c4dc82be964195b93c9220ec818, type: 2}
-    Level: 1
   - MoveData: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
-    Level: 2
+    Level: 0
   - MoveData: {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
-    Level: 3
-  - MoveData: {fileID: 11400000, guid: 3e1292b4718449e4ea488743fdb6f163, type: 2}
-    Level: 4
-  - MoveData: {fileID: 11400000, guid: 9af6b0e96bf5f674a84a0135eabd88fc, type: 2}
-    Level: 5
+    Level: 0
   - MoveData: {fileID: 11400000, guid: 8c1c28f343cbc0243b9cf93f63c5bec5, type: 2}
-    Level: 6
-  - MoveData: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
-    Level: 7
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 9af6b0e96bf5f674a84a0135eabd88fc, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: e6a3fa09bd34e4c4cbdce8a1a33bb775, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 70ccb4ae017a38a449d5c9638904f7be, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 0352a9c8c39e89448899039fa8a480bc, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 0f8c2185c847b2246a8d397faf40b8ae, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 45331c4dc82be964195b93c9220ec818, type: 2}
+    Level: 0
+  - MoveData: {fileID: 11400000, guid: 3e1292b4718449e4ea488743fdb6f163, type: 2}
+    Level: 0
   _isEnemy: 0
   _maxHealthPoints: 0
   _attackPower: 0

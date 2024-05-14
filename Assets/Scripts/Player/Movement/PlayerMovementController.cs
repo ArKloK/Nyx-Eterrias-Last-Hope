@@ -81,7 +81,7 @@ namespace PlayerMovementController
             PauseMenuController.OnPause -= HandlePause;
             PauseMenuController.OnResume -= HandleResume;
         }
-  
+
         public void HandleUpdate()
         {
             _time += Time.deltaTime;
@@ -496,6 +496,8 @@ namespace PlayerMovementController
                     {
                         if (!isDialogueActive)//If the player is in a dialogue, always play the idle animation
                             newAnimationState = PLAYER_RUN;
+                        else
+                            newAnimationState = PLAYER_IDLE;
                     }
                     else
                     {

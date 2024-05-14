@@ -102,15 +102,11 @@ public class BattleSystem : MonoBehaviour
                 items.Add(collectible.ItemData);
             }
             inventory.SetInventory(items);
-            // foreach (Collectible collectible in collectibles)
-            // {
-            //     inventory.AddItem(collectible.ItemData);
-            // }
         }
 
-        playerUnit.setData();
+        playerUnit.setData(TBDemo);
         playerHud.SetData(playerUnit.Character);
-        enemyUnit.setData();
+        enemyUnit.setData(TBDemo);
         enemyHud.SetData(enemyUnit.Character);
 
         dialogueBox.SetMoveNames(playerUnit.Character.Moves);
@@ -194,7 +190,7 @@ public class BattleSystem : MonoBehaviour
 
         if (CheckIfMoveHits(move))
         {
-            if (move.MoveData.Category == MoveCategory.Status)
+            if (move.MoveData.Category == MoveCategory.Stats)
             {
                 yield return RunMoveEffects(move, source.Character, target.Character);
             }

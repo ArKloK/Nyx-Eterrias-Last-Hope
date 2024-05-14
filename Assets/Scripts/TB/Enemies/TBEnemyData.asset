@@ -15,16 +15,16 @@ MonoBehaviour:
   _name: Enemy1
   _sprite: {fileID: 0}
   _learnableMoves:
-  - MoveData: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
+  - MoveData: {fileID: 11400000, guid: 8c1c28f343cbc0243b9cf93f63c5bec5, type: 2}
     Level: 1
   - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
     Level: 1
-  - MoveData: {fileID: 11400000, guid: e6a3fa09bd34e4c4cbdce8a1a33bb775, type: 2}
+  - MoveData: {fileID: 11400000, guid: 0f8c2185c847b2246a8d397faf40b8ae, type: 2}
     Level: 1
-  - MoveData: {fileID: 11400000, guid: 3e1292b4718449e4ea488743fdb6f163, type: 2}
+  - MoveData: {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
     Level: 1
   _isEnemy: 1
-  _maxHealthPoints: 25
+  _maxHealthPoints: 8
   _attackPower: 15
   _defensePower: 20
   _attackSpeed: 10

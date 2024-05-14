@@ -19,7 +19,7 @@ public class TBMoveData : ScriptableObject
 public enum MoveCategory
 {
     Physical,
-    Status
+    Stats
 }
 
 [System.Serializable]

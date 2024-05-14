@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
   Element: 0
-  MaxHealthPoints: 5
+  MaxHealthPoints: 8
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
   AttackSpeed: 0.5

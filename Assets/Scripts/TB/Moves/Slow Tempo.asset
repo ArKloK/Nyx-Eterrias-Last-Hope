@@ -15,7 +15,7 @@ MonoBehaviour:
   MoveName: Slow Tempo
   Description: 
   Element: 0
-  Category: 0
+  Category: 1
   Effects:
     statBoosts:
     - stat: 2

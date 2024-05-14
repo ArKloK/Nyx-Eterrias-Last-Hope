@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class TBCharacter
 {
@@ -65,7 +66,7 @@ public class TBCharacter
     }
     #endregion
 
-    public TBCharacter(TBCharacterData characterData, int level)
+    public TBCharacter(TBCharacterData characterData, int level, bool TBDemo)
     {
         _characterData = characterData;
         _level = level;
@@ -76,7 +77,34 @@ public class TBCharacter
         //If the character is the player, the moves will be taken from the player's stats unless the moves list in Player stats is empty
         if (!_characterData.IsEnemy)
         {
-            _moves = PlayerStats.Moves;
+            if (!TBDemo)
+                _moves = PlayerStats.Moves;
+            else
+            {
+                string[] randomAttacks = { "Aqua Shoot", "Heat Hit", "Roots Power" };
+                string randomAttack = randomAttacks[UnityEngine.Random.Range(0, randomAttacks.Length)];
+
+                string[] randomStatsMoves = { "Intimidate", "Robust Defense", "Slow Tempo", "Tailwind" };
+                string randomStatMove1 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
+                string randomStatMove2;
+                do
+                {
+                    randomStatMove2 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
+                } while (randomStatMove1 == randomStatMove2);
+
+                string[] randomStatusConditionMoves = { "Soak", "Burn", "Poison" };
+                string randomStatusConditionMove = randomStatusConditionMoves[UnityEngine.Random.Range(0, randomStatusConditionMoves.Length)];
+
+                LearnableMove desiredMove;
+                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomAttack);
+                _moves.Add(new TBMove(desiredMove.MoveData));
+                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatMove1);
+                _moves.Add(new TBMove(desiredMove.MoveData));
+                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatMove2);
+                _moves.Add(new TBMove(desiredMove.MoveData));
+                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatusConditionMove);
+                _moves.Add(new TBMove(desiredMove.MoveData));
+            }
         }
         //If the character is an enemy, it will have a set of moves        
         else
@@ -224,11 +252,11 @@ public class TBCharacter
         //IMPROVE THIS DAMAGE FORMULA LATER
         //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
         int damage = Mathf.FloorToInt((move.MoveData.Power * (attacker.Attack / Defense) * critical * type) * 0.1f);
-        if(!attacker._characterData.IsEnemy)
+        if (!attacker._characterData.IsEnemy)
         {
             Debug.Log("Player Damage to Enemy: " + damage);
         }
-            
+
 
         UpdateHp(damage);
 
