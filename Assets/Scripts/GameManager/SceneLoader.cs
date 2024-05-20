@@ -20,11 +20,37 @@ public class SceneLoader : MonoBehaviour
             DataPersistenceManager.OnSceneLoadedEvent += HandleSceneLoaded;
 
             // Cambia a la siguiente escena
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
-            Debug.Log("Scene Loaded");
+            //SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+
+            string nextSceneName = GetNextSceneName();
+            Debug.Log("Loading Scene: " + nextSceneName);
+
+            LevelManager.Instance.LoadScene(nextSceneName, "CrossFade");
         }
     }
 
+    public string GetNextSceneName()
+    {
+        // Obtiene el índice de la escena actual
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        // Calcula el índice de la siguiente escena
+        int nextSceneIndex = currentSceneIndex + 1;
+
+        // Verifica si el índice de la siguiente escena es válido
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            // Obtiene el nombre de la siguiente escena
+            string nextScenePath = SceneUtility.GetScenePathByBuildIndex(nextSceneIndex);
+            string nextSceneName = System.IO.Path.GetFileNameWithoutExtension(nextScenePath);
+            return nextSceneName;
+        }
+        else
+        {
+            Debug.LogWarning("No hay más escenas en el Build Settings.");
+            return null;
+        }
+    }
     // Maneja la lógica después de que se carga la escena
     private void HandleSceneLoaded(Vector3 position)
     {

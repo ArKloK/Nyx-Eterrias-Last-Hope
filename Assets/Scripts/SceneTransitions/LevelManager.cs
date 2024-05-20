@@ -7,16 +7,16 @@ using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager instance;
+    public static LevelManager Instance;
     public GameObject transitionsContainer;
     private SceneTransition[] transitions;
     public Slider progressBar;
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else

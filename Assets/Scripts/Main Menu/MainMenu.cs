@@ -49,7 +49,7 @@ public class MainMenu : MonoBehaviour
     {
         DisableMenuButtons();
         DataPersistenceManager.Instance.CreateNewGame = true;
-        LevelManager.instance.LoadScene("FirstLevel", "CrossFade");
+        LevelManager.Instance.LoadScene("FirstLevel", "CrossFade");
     }
     public void OnLoadGameButtonClicked()
     {
