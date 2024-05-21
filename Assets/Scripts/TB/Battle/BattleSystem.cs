@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using System.Linq;
 using UnityEngine.InputSystem;
 
 public enum BattleState { PLAYERACTION, PLAYERMOVE, RUNNINGTURN, BATTLEOVER, INVENTORY }
@@ -21,14 +21,21 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] GameObject playerMoveFirst;
     [SerializeField] List<Collectible> collectibles;
     [SerializeField] bool TBDemo;
+    [SerializeField] bool PlayerControlledByAI;
     BattleState state;
+    HumanModelAI humanModelAI;
     public event Action<bool> OnBattleEnd;
     int currentAction;
     int currentMove;
+    string humanModelAction = "";
+    private string humanModelActionFirstPart;
+    private string humanModelActionSecondPart;
+    private bool humanModelAIActionSelectioned;
+
+    public static event Action<InventoryItem> OnHumanModelHeals;
 
     void OnEnable()
     {
-
         PlayerController.OnPlayerLevelUp += HandleLevelUp;
         InventoryManager.OnTBItemUsedUpdateHP += UpdatePlayerHP;
     }
@@ -40,6 +47,10 @@ public class BattleSystem : MonoBehaviour
     }
     void Start()
     {
+        if (PlayerControlledByAI)
+        {
+            humanModelAI = GetComponent<HumanModelAI>();
+        }
         StartCoroutine(SetupBattle());
     }
     public void HandleUpdate()
@@ -50,7 +61,7 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerControlledByAI)
             {
                 dialogueBox.EnableMoveSelector(false);
                 PlayerAction();
@@ -60,20 +71,18 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.INVENTORY)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerControlledByAI)
             {
                 inventoryUI.SetActive(false);
                 PlayerAction();
             }
         }
     }
-
     void UpdatePlayerHP(ItemData item)
     {
         Debug.Log("Updating player HP");
         StartCoroutine(OnInventoryItemUsed(item));
     }
-
     IEnumerator OnInventoryItemUsed(ItemData item)
     {
         inventoryUI.SetActive(false);
@@ -90,7 +99,6 @@ public class BattleSystem : MonoBehaviour
         }
         yield return RunTurns(BattleAction.INVENTORY);
     }
-
     public IEnumerator SetupBattle()
     {
         if (TBDemo)
@@ -109,9 +117,13 @@ public class BattleSystem : MonoBehaviour
         enemyUnit.setData(TBDemo);
         enemyHud.SetData(enemyUnit.Character);
 
+        if (PlayerControlledByAI) humanModelAI.ResetBattle();
+
         dialogueBox.SetMoveNames(playerUnit.Character.Moves);
 
         yield return dialogueBox.TypeDialogueTB($"{enemyUnit.Character.CharacterData.Name} wants to battle!");
+
+        humanModelAction = humanModelAI.GetAction();
 
         PlayerAction();
     }
@@ -120,7 +132,6 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERACTION;
         StartCoroutine(dialogueBox.TypeDialogueTB("Choose an action."));
         dialogueBox.EnableActionSelector(true);
-        //EventSystem.current.SetSelectedGameObject(playerActionFirst);
     }
     void PlayerMove()
     {
@@ -128,7 +139,6 @@ public class BattleSystem : MonoBehaviour
         dialogueBox.EnableActionSelector(false);
         dialogueBox.EnableDialogueText(false);
         dialogueBox.EnableMoveSelector(true);
-        //EventSystem.current.SetSelectedGameObject(playerMoveFirst);
     }
 
     IEnumerator RunTurns(BattleAction playerAction)
@@ -254,6 +264,7 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(2f);
             EndBattle(unit.CharacterData.IsEnemy);
         }
+        humanModelAIActionSelectioned = false;
     }
 
     // IEnumerator RunAfterTurn()
@@ -351,92 +362,132 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleActionSelection()
     {
-        if (Input.GetAxis("Vertical") < 0)
-        //if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (!PlayerControlledByAI)
         {
-            if (currentAction < 1)
+            if (Input.GetAxis("Vertical") < 0)
+            //if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                currentAction++;
+                if (currentAction < 1)
+                {
+                    currentAction++;
+                }
+            }
+            else if (Input.GetAxis("Vertical") > 0)
+            //else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if (currentAction > 0)
+                {
+                    currentAction--;
+                }
+            }
+
+            dialogueBox.UpdateActionSelection(currentAction);
+
+            if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
+            {
+                if (currentAction == 0)
+                {
+                    //Fight action
+                    PlayerMove();
+                }
+                else if (currentAction == 1)
+                {
+                    //Inventory action
+                    OpenInventory();
+                }
             }
         }
-        else if (Input.GetAxis("Vertical") > 0)
-        //else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else
         {
-            if (currentAction > 0)
+            if (!humanModelAIActionSelectioned) HandleActionSelectionAI();
+
+            if (dialogueBox.IsDialogueLineFinished)
             {
-                currentAction--;
+                if (humanModelActionFirstPart.Equals("Attack"))
+                {
+                    PlayerMove();
+                }
+                else if (humanModelActionFirstPart.Equals("Healh"))
+                {
+                    OpenInventory();
+                    Debug.Log("Human model heals");
+                    InventoryItem item = inventory.inventoryItems.Find(item => item.ItemData.ItemName == humanModelActionSecondPart);
+                    Debug.Log(item.ItemData.ItemName + " found");
+                    OnHumanModelHeals?.Invoke(item);
+                    CloseInventory();
+                    Debug.Log("Human model heals invoked");
+                }
             }
+
         }
 
-        dialogueBox.UpdateActionSelection(currentAction);
-
-        if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
-        {
-            if (currentAction == 0)
-            {
-                //Fight action
-                PlayerMove();
-            }
-            else if (currentAction == 1)
-            {
-                //Inventory action
-                OpenInventory();
-            }
-        }
     }
-
-    private bool isHorizontalInputPressed = false;
-
+    public void HandleActionSelectionAI()
+    {
+        //yield return new WaitForSeconds(2f);
+        do{
+            humanModelAction = humanModelAI.GetAction();
+        }while(humanModelAction == "");
+        
+        humanModelAIActionSelectioned = true;
+        string[] actionParts = humanModelAction.Split(' ');
+        humanModelActionFirstPart = actionParts[0];
+        humanModelActionSecondPart = string.Join(" ", actionParts.Skip(1));
+    }
     private void HandleMoveSelection()
     {
-        if (Input.GetAxis("Horizontal") > 0)
-        //if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (!PlayerControlledByAI)
         {
-            //Debug.Log("Right arrow pressed" + Input.GetAxis("Horizontal"));
-            if (currentMove < playerUnit.Character.Moves.Count - 1)
+            if (Input.GetAxis("Horizontal") > 0)
             {
-                currentMove++;
-                isHorizontalInputPressed = true;
+                if (currentMove < playerUnit.Character.Moves.Count - 1)
+                {
+                    currentMove++;
+                }
             }
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        //else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            //Debug.Log("Left arrow pressed" + Input.GetAxis("Horizontal"));
-            if (currentMove > 0)
+            else if (Input.GetAxis("Horizontal") < 0)
             {
-                currentMove--;
-                isHorizontalInputPressed = true;
+                if (currentMove > 0)
+                {
+                    currentMove--;
+                }
             }
-        }
-        else if (Input.GetAxis("Vertical") < 0)
-        //else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (currentMove < playerUnit.Character.Moves.Count - 2)
+            else if (Input.GetAxis("Vertical") < 0)
             {
-                currentMove += 2;
+                if (currentMove < playerUnit.Character.Moves.Count - 2)
+                {
+                    currentMove += 2;
+                }
             }
-        }
-        else if (Input.GetAxis("Vertical") > 0)
-        //else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (currentMove > 1)
+            else if (Input.GetAxis("Vertical") > 0)
             {
-                currentMove -= 2;
+                if (currentMove > 1)
+                {
+                    currentMove -= 2;
+                }
             }
-        }
-        else if (Input.GetAxis("Horizontal") > -1f && Input.GetAxis("Horizontal") < 1f)
-        {
-            isHorizontalInputPressed = false;
-        }
 
-        dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
+            dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
-        if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
+            if (Input.GetKeyDown(KeyCode.Return) && dialogueBox.IsDialogueLineFinished)
+            {
+                dialogueBox.EnableMoveSelector(false);
+                dialogueBox.EnableDialogueText(true);
+                StartCoroutine(RunTurns(BattleAction.FIGHT));
+            }
+        }
+        else
         {
-            dialogueBox.EnableMoveSelector(false);
-            dialogueBox.EnableDialogueText(true);
-            StartCoroutine(RunTurns(BattleAction.FIGHT));
+            currentMove = playerUnit.Character.Moves.FindIndex(move => move.MoveData.MoveName == humanModelActionSecondPart);
+            Debug.Log("Current move index: " + currentMove);
+            dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
+
+            if (dialogueBox.IsDialogueLineFinished)
+            {
+                dialogueBox.EnableMoveSelector(false);
+                dialogueBox.EnableDialogueText(true);
+                StartCoroutine(RunTurns(BattleAction.FIGHT));
+            }
         }
     }
 
@@ -480,7 +531,10 @@ public class BattleSystem : MonoBehaviour
         inventoryUI.SetActive(true);
         inventory.LaunchInventoryChange();
     }
-
+    void CloseInventory()
+    {
+        inventoryUI.SetActive(false);
+    }
     public void ClosePlayerMove(InputAction.CallbackContext context)
     {
         Debug.Log("Close player move");

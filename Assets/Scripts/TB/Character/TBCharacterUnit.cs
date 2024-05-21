@@ -8,8 +8,14 @@ public class TBCharacterUnit : MonoBehaviour
     [SerializeField] TBCharacterData _characterData;
     [SerializeField] int _level;
     [SerializeField] TBCharacter _character;
+    int baseMaxHealthPoints;
     public TBCharacterData CharacterData { get => _characterData; set => _characterData = value; }
     public TBCharacter Character { get => _character; set => _character = value; }
+
+    void Start()
+    {
+        baseMaxHealthPoints = PlayerStats.MaxHealthPoints;
+    }
 
     public void setData(bool TBDemo)
     {
@@ -25,8 +31,8 @@ public class TBCharacterUnit : MonoBehaviour
             {
                 int randomLevel = Random.Range(5, 7);
                 PlayerStats.CurrentLevel = randomLevel;
-                PlayerStats.MaxHealthPoints = PlayerStats.MaxHealthPoints * PlayerStats.CurrentLevel;
-                PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
+                PlayerStats.MaxHealthPoints = baseMaxHealthPoints * PlayerStats.CurrentLevel;
+                PlayerStats.CurrentHealthPoints = (int)(PlayerStats.MaxHealthPoints * 0.2f);
                 _character = new TBCharacter(_characterData, randomLevel, TBDemo);
             }
         }

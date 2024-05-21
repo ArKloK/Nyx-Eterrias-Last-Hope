@@ -22,11 +22,13 @@ public class InventoryManager : MonoBehaviour
     void OnEnable()
     {
         Inventory.OnInventoryChange += DrawInventory;
+        BattleSystem.OnHumanModelHeals += HumanModelUseItem;
     }
 
     void OnDisable()
     {
         Inventory.OnInventoryChange -= DrawInventory;
+        BattleSystem.OnHumanModelHeals -= HumanModelUseItem;
     }
     void Update()
     {
@@ -62,6 +64,7 @@ public class InventoryManager : MonoBehaviour
 
     private void HandleSlotClicked(InventorySlot slot)
     {
+        Debug.Log("Slot clicked");
         inventoryDescription.SetDescription(slot.itemDescription);
         currentSlot = slot;
     }
@@ -74,7 +77,6 @@ public class InventoryManager : MonoBehaviour
         newInventorySlot.ClearSlot();
         inventorySlots.Add(newInventorySlot);
     }
-
     public void UseItem()
     {
         if (currentSlot != null)
@@ -84,7 +86,6 @@ public class InventoryManager : MonoBehaviour
             OnTBItemUsedUpdateHP?.Invoke(currentSlot.Item.ItemData);
         }
     }
-
     public void ConsumeItem()
     {
         int currentHealthPoints, currentSpiritualEnergyPoints;
@@ -98,9 +99,8 @@ public class InventoryManager : MonoBehaviour
         //--------------------------------
 
         PlayerStats.AttackPower += currentSlot.Item.ItemData.AttackBoost;
-        FindObjectOfType<PlayerController>().setStats();
+        FindObjectOfType<PlayerController>().SetLocalStats();
         TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
-        Debug.Log("TBCharacterUnit: " + tBCharacterUnit);
         foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
         {
             if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
@@ -109,5 +109,25 @@ public class InventoryManager : MonoBehaviour
                 tBCharacter.Character.setStats();
             }
         }
+    }
+    public void HumanModelUseItem(InventoryItem inventoryItem)
+    {
+        int currentHealthPoints;
+        currentHealthPoints = PlayerStats.CurrentHealthPoints += inventoryItem.ItemData.HealthBoost;
+        PlayerStats.CurrentHealthPoints = Mathf.Clamp(currentHealthPoints, 0, PlayerStats.MaxHealthPoints);
+
+        FindObjectOfType<PlayerController>().SetLocalStats();
+        TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
+        Debug.Log("Before foreach");
+        foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
+        {
+            if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
+            {
+                Debug.Log("Setting stats Human Model Method");
+                tBCharacter.Character.setStats();
+            }
+        }
+        OnItemUsed?.Invoke(inventoryItem.ItemData);
+        OnTBItemUsedUpdateHP?.Invoke(inventoryItem.ItemData);
     }
 }

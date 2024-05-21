@@ -16,6 +16,6 @@ MonoBehaviour:
   ConditionID: 0
   ItemSprite: {fileID: 21300000, guid: e6bce553d5830b24d904f12b81701429, type: 3}
   ItemDescription: A poison that heals you
-  HealthBoost: 1
+  HealthBoost: 20
   AttackBoost: 0
   SpiritualEnergyBoost: 0

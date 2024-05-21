@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour, IDataPersistence
 {
     [SerializeField] GameObject player;
     [SerializeField] BattleSystem battleSystem;
+    [SerializeField] HumanModelAI humanModelAI;
     [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] Camera SSCamera;
     [SerializeField] bool TBDemo;
@@ -44,9 +45,9 @@ public class GameController : MonoBehaviour, IDataPersistence
         else
         {
             StartCoroutine(battleSystem.SetupBattle());
+            
         }
     }
-
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
     public void EndBattle(bool won)
     {
@@ -59,7 +60,7 @@ public class GameController : MonoBehaviour, IDataPersistence
         {
             //TODO: Handle if the player loses the battle
             player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-            player.GetComponent<PlayerController>().setStats();
+            player.GetComponent<PlayerController>().SetLocalStats();
             SSCamera.gameObject.SetActive(true);
             battleSystem.gameObject.SetActive(false);
             state = GameState.SS;

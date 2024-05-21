@@ -79,7 +79,7 @@ public class ConditionsDB
                     //Reduce character's speed and moves accuracy
                 
                     Debug.Log($"{character.CharacterData.Name} speed before soak: " + character.Speed);
-                    character.Speed = (int)(character.CharacterData.AttackSpeed * 0.75f);
+                    character.Speed = (int)(character.Speed * 0.75f);
                     Debug.Log($"{character.CharacterData.Name} speed: " + character.Speed);
 
                     character.Moves.ForEach(move =>

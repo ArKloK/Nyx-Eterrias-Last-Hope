@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private int TBattackPower;
     private int TBdefensePower;
     private int TBattackSpeed;
+    [SerializeField] bool TBDemo;
     #endregion
 
     #region Level Variables
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         attackRadius = Data.AttackRadius;
         enemyMask = Data.EnemyMask;
 
-        UpdateStats();//This is called here as well to update the static stats before the method PlayerStats.SetMoves() is called
+        UpdateStaticStats();//This is called here as well to update the static stats before the method PlayerStats.SetMoves() is called
 
         PlayerStats.SetMoves();
     }
@@ -106,7 +107,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             TakeDamage(1);
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
-        UpdateStats();
+        UpdateStaticStats();
     }
 
     public void Attack()
@@ -119,7 +120,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             if (enemyController != null)
             {
                 enemyController.TakeDamage(attackPower);
-                if(enemyController.CurrentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
+                if (enemyController.CurrentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
                 Debug.Log("Enemy took damage, current health: " + enemyController.CurrentHealthPoints);
             }
         }
@@ -193,7 +194,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         maxSpriritualEnergyPoints += 10;
         currentHealthPoints = maxHealthPoints;
         currentSpiritualEnergyPoints = maxSpriritualEnergyPoints;
-        UpdateStats();//Updates the static stats when the player levels up
+        UpdateStaticStats();//Updates the static stats when the player levels up
         healthBar.SetMaxHealth(maxHealthPoints);
         OnPlayerLevelUp?.Invoke();
         Debug.Log("Current HP: " + currentHealthPoints);
@@ -223,7 +224,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         healthBar.SetHealth(currentHealthPoints);
     }
 
-    void UpdateStats()
+    void UpdateStaticStats()
     {
         PlayerStats.MaxHealthPoints = maxHealthPoints;
         PlayerStats.CurrentHealthPoints = currentHealthPoints;
@@ -238,7 +239,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         PlayerStats.CurrentLevel = currentLevel;
     }
 
-    public void setStats()
+    public void SetLocalStats()
     {
         maxHealthPoints = PlayerStats.MaxHealthPoints;
         currentHealthPoints = PlayerStats.CurrentHealthPoints;
@@ -251,14 +252,14 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentLevel = PlayerStats.CurrentLevel;
         maxSpriritualEnergyPoints = PlayerStats.MaxSpiritualEnergyPoints;
         currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints;
-        healthBar.SetHealth(currentHealthPoints);
+        if (!TBDemo) healthBar.SetHealth(currentHealthPoints);
     }
 
     public void LoadData(GameData gameData)
     {
         transform.position = gameData.playerPosition;
         PlayerStats.StaticLoadData(gameData);
-        setStats();
+        SetLocalStats();
     }
 
     public void SaveData(GameData gameData)

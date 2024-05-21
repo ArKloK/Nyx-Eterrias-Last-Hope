@@ -15,9 +15,8 @@ public class TBCharacter
     private TBMove _currentMove;
     private Dictionary<Stat, int> _stats;
     private Dictionary<Stat, int> _statBoosts;
+    private Queue<string> _statsChanges = new Queue<string>();
     private List<Condition> _statuses = new List<Condition>();
-    private Queue<string> _statusChanges = new Queue<string>();
-    public event System.Action OnStatusChanged;
     #endregion
 
     #region Public Properties
@@ -31,7 +30,8 @@ public class TBCharacter
     public Dictionary<Stat, int> Stats { get => _stats; set => _stats = value; }
     public Dictionary<Stat, int> StatBoosts { get => _statBoosts; set => _statBoosts = value; }
     public List<Condition> Statuses { get => _statuses; set => _statuses = value; }
-    public Queue<string> StatusChanges { get => _statusChanges; set => _statusChanges = value; }
+    public Queue<string> StatusChanges { get => _statsChanges; set => _statsChanges = value; }
+    public event Action OnStatusChanged;
     public float Attack
     {
         get
@@ -96,13 +96,17 @@ public class TBCharacter
                 string randomStatusConditionMove = randomStatusConditionMoves[UnityEngine.Random.Range(0, randomStatusConditionMoves.Length)];
 
                 LearnableMove desiredMove;
-                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomAttack);
+                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomAttack);
+                Debug.Log("Random attack: " + randomAttack);
                 _moves.Add(new TBMove(desiredMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatMove1);
+                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove1);
+                Debug.Log("Random stat move 1: " + randomStatMove1);
                 _moves.Add(new TBMove(desiredMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatMove2);
+                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove2);
+                Debug.Log("Random stat move 2: " + randomStatMove2);
                 _moves.Add(new TBMove(desiredMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.FirstOrDefault(m => m.MoveData.MoveName == randomStatusConditionMove);
+                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatusConditionMove);
+                Debug.Log("Random status condition move: " + randomStatusConditionMove);
                 _moves.Add(new TBMove(desiredMove.MoveData));
             }
         }
@@ -140,14 +144,15 @@ public class TBCharacter
     {
         if (_characterData.IsEnemy)
         {
-            _currentHP = _characterData.MaxHealthPoints;
+            MaxHp = _characterData.MaxHealthPoints * _level;
+            _currentHP = MaxHp;
             _stats = new Dictionary<Stat, int>
             {
                 { Stat.Attack, Mathf.FloorToInt(_characterData.AttackPower * _level) },
                 { Stat.Defense, Mathf.FloorToInt(_characterData.DefensePower * _level) },
                 { Stat.Speed, Mathf.FloorToInt(_characterData.AttackSpeed * _level) }
             };
-            MaxHp = _characterData.MaxHealthPoints;
+            
         }
         else
         {
@@ -168,7 +173,7 @@ public class TBCharacter
         var condition = ConditionsDB.Conditions[conditionId];
         if (_statuses.Contains(condition))
         {
-            _statusChanges.Enqueue($"{_characterData.Name} {condition.RepeatedMovementMessage}");
+            _statsChanges.Enqueue($"{_characterData.Name} {condition.RepeatedMovementMessage}");
             return;
         }
         _statuses.Add(condition);
@@ -178,7 +183,7 @@ public class TBCharacter
         {
             condition.OnEffectAppliedToCharacter?.Invoke(this);
         }
-        _statusChanges.Enqueue($"{_characterData.Name} {condition.StartMessage}");
+        _statsChanges.Enqueue($"{_characterData.Name} {condition.StartMessage}");
         OnStatusChanged?.Invoke();
     }
     public void RemoveStatus(ConditionID conditionId)
@@ -224,14 +229,14 @@ public class TBCharacter
 
             if (boost > 0)
             {
-                _statusChanges.Enqueue($"{_characterData.Name}'s {stat} increased!");
+                _statsChanges.Enqueue($"{_characterData.Name}'s {stat} increased!");
             }
             else
             {
-                _statusChanges.Enqueue($"{_characterData.Name}'s {stat} decreased!");
+                _statsChanges.Enqueue($"{_characterData.Name}'s {stat} decreased!");
             }
 
-            Debug.Log(stat + " has been boosted to " + this._statBoosts[stat]);
+            Debug.Log(CharacterData.Name + "'s " + stat + " has been boosted to " + this._statBoosts[stat]);
         }
     }
     public DamageDetails TakeDamage(TBMove move, TBCharacter attacker)
@@ -249,18 +254,36 @@ public class TBCharacter
             Critical = critical,
             TypeEffectiveness = type
         };
-        //IMPROVE THIS DAMAGE FORMULA LATER
-        //int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense));
-        int damage = Mathf.FloorToInt((move.MoveData.Power * (attacker.Attack / Defense) * critical * type) * 0.1f);
-        if (!attacker._characterData.IsEnemy)
-        {
-            Debug.Log("Player Damage to Enemy: " + damage);
-        }
 
+        int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type * 0.1f);
+        Debug.Log($"{attacker._characterData.Name} did {damage} damage to {_characterData.Name}");
 
         UpdateHp(damage);
 
         return damageDetails;
+    }
+    public bool CanAttackerFinishSelf(TBCharacter attacker)
+    {
+        bool canFinish = false;
+        foreach (var move in _moves)
+        {
+            float critical = 1f;
+            if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
+            {
+                critical = 2f;
+            }
+
+            float type = TypeChart.GetEffectiveness(move.MoveData.Element, _characterData.Element);
+
+            int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type * 0.1f);
+
+            if (damage >= _currentHP)
+            {
+                canFinish = true;
+                break;
+            }
+        }
+        return canFinish;
     }
     public void LearnMove(LearnableMove moveToLearn)
     {
