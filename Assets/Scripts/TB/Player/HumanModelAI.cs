@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HumanModelAI : MonoBehaviour
@@ -11,9 +12,11 @@ public class HumanModelAI : MonoBehaviour
     private List<TBMove> enemyMoves;
     private float playerCritical;
     private TBMove playerMostDamagingMove;
+    private bool canCheckIsConditioned = true;
 
     public float PlayerCritical { get => playerCritical; set => playerCritical = value; }
     public TBMove PlayerMostDamagingMove { get => playerMostDamagingMove; set => playerMostDamagingMove = value; }
+    public bool CanCheckIsConditioned { get => canCheckIsConditioned; set => canCheckIsConditioned = value; }
 
     public void ResetBattle()
     {
@@ -23,35 +26,46 @@ public class HumanModelAI : MonoBehaviour
 
     public string GetAction()
     {
-        string action = "";
+        bool playerCanFinishEnemy = PlayerCanFinishEnemy();
         //If the enemy can finish the player without critical, then think
         if (EnemyCanFinishPlayerWithoutCritical())
         {
             Debug.Log("Inside EnemyCanFinishPlayerWithoutCritical");
-            if (PlayerCanFinishEnemy())
+            if (playerCanFinishEnemy)
             {
                 //If the player can finish the enemy, and is faster than the enemy, then attack 
                 if (playerUnit.Character.Speed >= enemyUnit.Character.Speed)
                 {
-                    action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
+                    return "Attack " + playerMostDamagingMove.MoveData.MoveName;
                 }
                 // If the player can finish the enemy, and is slower than the enemy, then use a health potion if it exists. Otherwise, attack
                 else
                 {
                     if (HasHealPotion())
                     {
-                        action = "Healh Potion";
+                        return "Healh Potion";
                     }
                     else
                     {
-                        action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
+                        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
                     }
+                }
+            }
+            else
+            {
+                if (HasHealPotion())
+                {
+                    return "Healh Potion";
+                }
+                else
+                {
+                    return "Attack " + playerMostDamagingMove.MoveData.MoveName;
                 }
             }
         }
         //If the enemy can finish the player with critical, tends to ignore the menace but it has a low probability (15%) to be "scared" of losing the battle
         //and tries to use a health potion
-        else if (EnemyCanFinishPlayerWithCritical())
+        if (EnemyCanFinishPlayerWithCritical())
         {
             Debug.Log("Inside EnemyCanFinishPlayerWithCritical");
             int randomProbability = Random.Range(1, 21); // 1-20
@@ -59,23 +73,22 @@ public class HumanModelAI : MonoBehaviour
             {
                 if (HasHealPotion())
                 {
-                    action = "Healh Potion";
+                    return "Healh Potion";
                 }
                 else
                 {
-                    GetMostPowerfulAttack();
-                    action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
+                    return "Attack " + playerMostDamagingMove.MoveData.MoveName;
                 }
             }
         }
         //If the player can finish the enemy, then attack
-        else if (PlayerCanFinishEnemy())
+        if (playerCanFinishEnemy)
         {
             Debug.Log("Inside PlayerCanFinishEnemy");
-            action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
+            return "Attack " + playerMostDamagingMove.MoveData.MoveName;
         }
         // If the player is conditioned, then use the appropriate potion if it exists
-        else if (PlayerIsConditioned())
+        if (PlayerIsConditioned() && canCheckIsConditioned)
         {
             Debug.Log("Inside PlayerIsConditioned");
             if (PlayerCondition() == ConditionID.Burning)
@@ -84,142 +97,190 @@ public class HumanModelAI : MonoBehaviour
                 if (HasHealBurnPotion())
                 {
                     Debug.Log("Inside player burning has heal burn potion");
-                    action = "Healh Burn Potion";
+                    return "Healh Burn Potion";
+                }
+                else
+                {
+                    canCheckIsConditioned = false;
+                    return "";
                 }
             }
-            else if (PlayerCondition() == ConditionID.Poisoned)
+            if (PlayerCondition() == ConditionID.Poisoned)
             {
                 Debug.Log("Inside player poisoned");
                 if (HasHealPoisonPotion())
                 {
                     Debug.Log("Inside player poisoned has heal poison potion");
-                    action = "Healh Poison Potion";
+                    return "Healh Poison Potion";
+                }
+                else
+                {
+                    canCheckIsConditioned = false;
+                    return "";
                 }
             }
-            else if (PlayerCondition() == ConditionID.Soaked)
+            if (PlayerCondition() == ConditionID.Soaked)
             {
                 if (HasHealSoakPotion())
                 {
-                    action = "Healh Soak Potion";
+                    return "Healh Soak Potion";
+                }
+                else
+                {
+                    canCheckIsConditioned = false;
+                    return "";
                 }
             }
         }
         // If the player's health is less than 25% of the max health, then use a health potion if it exists
-        else if (playerUnit.Character.CurrentHP <= playerUnit.CharacterData.MaxHealthPoints * 0.25f)
+        if (playerUnit.Character.CurrentHP <= playerUnit.CharacterData.MaxHealthPoints * 0.25f)
         {
             Debug.Log("Inside player <= 25% health");
             if (HasHealPotion())
             {
-                action = "Healh Potion";
+                return "Healh Potion";
             }
-        }
-        else if (playerUnit.Character.CurrentHP >= enemyUnit.Character.CurrentHP)
-        {
-            Debug.Log("Inside player >= enemy health");
-            //If the player's health is greater than 75% of the max health, it means that he is in a save condition, so he prioritizes status condition or stats moves
-            if (playerUnit.Character.CurrentHP >= playerUnit.CharacterData.MaxHealthPoints * 0.75f)
-            {
-                int randomAction = Random.Range(1, 10); // 1-9
-                switch (randomAction)
-                {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4: // 1-4 Status condition move if the enemy is not conditioned
-                        {
-                            if (enemyUnit.Character.Statuses.Count == 0)
-                            {
-                                //Perform status condition move
-                                action = "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
-                            }
-                            break;
-                        }
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8: // 5-8 Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
-                        {
-                            TBMove selectedMove;
-                            do
-                            {
-                                Debug.Log("Enemy speed " + enemyUnit.Character.Speed + " Player speed " + playerUnit.Character.Speed);
-                                if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
-                                {
-                                    selectedMove = GetDropOrBoostSpeedMove();
-                                }
-                                else
-                                {
-                                    selectedMove = GetRandomStatsMove();
-                                }
-                            } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
-
-                            action = "Attack " + selectedMove.MoveData.MoveName;
-                            break;
-                        }
-                    case 9: // Attacks
-                        {
-                            GetMostPowerfulAttack();
-                            action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
-                            break;
-                        }
-                }
-            }
-            //If the player's health is less than 75% of the max health, then he prioritizes attacks
             else
             {
-                int randomAction = Random.Range(1, 7); // 1-6
-                switch (randomAction)
-                {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4: // 1-4 Attacks
-                        {
-                            GetMostPowerfulAttack();
-                            action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
-                            break;
-
-                        }
-                    case 5: // 5 Status condition move if the enemy is not conditioned
-                        {
-                            if (enemyUnit.Character.Statuses.Count == 0)
-                            {
-                                //Perform status condition move
-                                action = "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
-                            }
-                            break;
-                        }
-                    case 6: // 6 Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
-                        {
-                            TBMove selectedMove;
-                            do
-                            {
-                                if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
-                                {
-                                    selectedMove = GetDropOrBoostSpeedMove();
-                                }
-                                else
-                                {
-                                    selectedMove = GetRandomStatsMove();
-                                }
-                            } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
-
-                            action = "Attack " + selectedMove.MoveData.MoveName;
-                            break;
-                        }
-                }
+                return "Attack " + playerMostDamagingMove.MoveData.MoveName;
             }
         }
-        //Finally, if the player's health is less than the enemy's health, then attack
-        else if (playerUnit.Character.CurrentHP < enemyUnit.Character.CurrentHP)
+        //If the player's health is greater than 75% of the max health, it means that he is in a save condition, 
+        //so he can decide between attacking, using a status condition move, or using a stats move
+        if (playerUnit.Character.CurrentHP >= playerUnit.CharacterData.MaxHealthPoints * 0.75f)
         {
-            Debug.Log("Inside player < enemy health");
-            GetMostPowerfulAttack();
-            action = "Attack " + playerMostDamagingMove.MoveData.MoveName;
+            Debug.Log("Inside player >= 75% health");
+            //If the player's health is greater than the enemy's health, then he tends to use status condition moves or stats moves
+            if (playerUnit.Character.CurrentHP >= enemyUnit.Character.CurrentHP)
+            {
+                return DontPrioritizeAttack();
+
+            }
+            //If the player's health is lower than the enemy's health, then he tends to attack
+            else
+            {
+                return PrioritizeAttack();
+            }
         }
-        Debug.Log("Action: " + action);
-        return action;
+        if (playerUnit.Character.CurrentHP > playerUnit.CharacterData.MaxHealthPoints * 0.25f && playerUnit.Character.CurrentHP < playerUnit.CharacterData.MaxHealthPoints * 0.75f)
+        {
+            if (playerUnit.Character.CurrentHP > playerUnit.CharacterData.MaxHealthPoints * 0.5f)
+            {
+                return PrioritizeAttack();
+            }
+            else
+            {
+                return "Attack " + playerMostDamagingMove.MoveData.MoveName;
+            }
+        }
+        //Finally, if any of the previous conditions are not met, then attack
+        Debug.Log("Inside player < enemy health");
+        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
     }
+
+    private string PrioritizeAttack()
+    {
+        bool repeatSwitch;
+        do
+        {
+            repeatSwitch = false;
+            int randomAction = Random.Range(1, 7); // 1-6
+            switch (randomAction)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4: // Attacks
+                    {
+                        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
+
+                    }
+                case 5: // Status condition move if the enemy is not conditioned
+                    {
+                        if (enemyUnit.Character.Statuses.Count == 0)
+                        {
+                            //Perform status condition move
+                            return "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
+                        }
+                        repeatSwitch = true;
+                        break;
+                    }
+                case 6: // Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
+                    {
+                        TBMove selectedMove;
+                        do
+                        {
+                            if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                            {
+                                selectedMove = GetDropOrBoostSpeedMove();
+                            }
+                            else
+                            {
+                                selectedMove = GetRandomStatsMove();
+                            }
+                        } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
+
+                        return "Attack " + selectedMove.MoveData.MoveName;
+                    }
+            }
+        } while (repeatSwitch);
+        Debug.Log("Returning empty string in PrioritizeAttack method");
+        return "";
+    }
+
+    private string DontPrioritizeAttack()
+    {
+        bool repeatSwitch;
+        do
+        {
+            repeatSwitch = false;
+            int randomAction = Random.Range(1, 10); // 1-9
+            switch (randomAction)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4: // Status condition move if the enemy is not conditioned
+                    {
+                        if (enemyUnit.Character.Statuses.Count == 0)
+                        {
+                            //Perform status condition move
+                            return "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
+                        }
+                        repeatSwitch = true;
+                        break;
+                    }
+                case 5:
+                case 6:
+                case 7: // Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
+                    {
+                        TBMove selectedMove;
+                        do
+                        {
+                            Debug.Log("Enemy speed " + enemyUnit.Character.Speed + " Player speed " + playerUnit.Character.Speed);
+                            if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                            {
+                                selectedMove = GetDropOrBoostSpeedMove();
+                            }
+                            else
+                            {
+                                selectedMove = GetRandomStatsMove();
+                            }
+                        } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
+
+                        return "Attack " + selectedMove.MoveData.MoveName;
+                    }
+                case 8:
+                case 9: // Attacks
+                    {
+                        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
+                    }
+            }
+        } while (repeatSwitch);
+        Debug.Log("Returning empty string in DontPrioritizeAttack method");
+        return "";
+    }
+
     bool HasHealPotion()
     {
         foreach (InventoryItem item in inventory.inventoryItems)
@@ -363,7 +424,7 @@ public class HumanModelAI : MonoBehaviour
     {
         Debug.Log("Move to check stat max dropped or boosted " + move.MoveData.MoveName);
         //Returns true if the selected stat is max dropped or boosted
-        return playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 6 || playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 0;
+        return playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 5 || playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 0;
     }
 
 }

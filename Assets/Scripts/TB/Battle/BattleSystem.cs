@@ -123,8 +123,6 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogueBox.TypeDialogueTB($"{enemyUnit.Character.CharacterData.Name} wants to battle!");
 
-        humanModelAction = humanModelAI.GetAction();
-
         PlayerAction();
     }
     void PlayerAction()
@@ -323,6 +321,10 @@ public class BattleSystem : MonoBehaviour
             {
                 target.ApplyBoosts(effects.statBoosts);
             }
+            if (source.CharacterData.IsEnemy)
+            {
+                Debug.Log("Enemy used " + move.MoveData.MoveName + " and the value of the enemy stat is " + source.Defense);
+            }
         }
 
         //Status Condition
@@ -410,12 +412,9 @@ public class BattleSystem : MonoBehaviour
                 else if (humanModelActionFirstPart.Equals("Healh"))
                 {
                     OpenInventory();
-                    Debug.Log("Human model heals");
                     InventoryItem item = inventory.inventoryItems.Find(item => item.ItemData.ItemName == humanModelActionSecondPart);
-                    Debug.Log(item.ItemData.ItemName + " found");
                     OnHumanModelHeals?.Invoke(item);
                     CloseInventory();
-                    Debug.Log("Human model heals invoked");
                 }
             }
 
@@ -425,10 +424,16 @@ public class BattleSystem : MonoBehaviour
     public void HandleActionSelectionAI()
     {
         //yield return new WaitForSeconds(2f);
-        do{
+        do
+        {
             humanModelAction = humanModelAI.GetAction();
-        }while(humanModelAction == "");
-        
+            if (humanModelAction == "")
+            {
+                Debug.Log("Human model action is empty");
+            }
+        } while (humanModelAction == "");
+
+        humanModelAI.CanCheckIsConditioned = true;
         humanModelAIActionSelectioned = true;
         string[] actionParts = humanModelAction.Split(' ');
         humanModelActionFirstPart = actionParts[0];

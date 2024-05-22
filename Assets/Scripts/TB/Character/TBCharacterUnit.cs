@@ -32,7 +32,7 @@ public class TBCharacterUnit : MonoBehaviour
                 int randomLevel = Random.Range(5, 7);
                 PlayerStats.CurrentLevel = randomLevel;
                 PlayerStats.MaxHealthPoints = baseMaxHealthPoints * PlayerStats.CurrentLevel;
-                PlayerStats.CurrentHealthPoints = (int)(PlayerStats.MaxHealthPoints * 0.2f);
+                PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
                 _character = new TBCharacter(_characterData, randomLevel, TBDemo);
             }
         }

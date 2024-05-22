@@ -15,7 +15,7 @@ public class TBCharacter
     private TBMove _currentMove;
     private Dictionary<Stat, int> _stats;
     private Dictionary<Stat, int> _statBoosts;
-    private Queue<string> _statsChanges = new Queue<string>();
+    private Queue<string> _statusChanges = new Queue<string>();
     private List<Condition> _statuses = new List<Condition>();
     #endregion
 
@@ -30,7 +30,7 @@ public class TBCharacter
     public Dictionary<Stat, int> Stats { get => _stats; set => _stats = value; }
     public Dictionary<Stat, int> StatBoosts { get => _statBoosts; set => _statBoosts = value; }
     public List<Condition> Statuses { get => _statuses; set => _statuses = value; }
-    public Queue<string> StatusChanges { get => _statsChanges; set => _statsChanges = value; }
+    public Queue<string> StatusChanges { get => _statusChanges; set => _statusChanges = value; }
     public event Action OnStatusChanged;
     public float Attack
     {
@@ -93,12 +93,24 @@ public class TBCharacter
                 } while (randomStatMove1 == randomStatMove2);
 
                 string[] randomStatusConditionMoves = { "Soak", "Burn", "Poison" };
-                string randomStatusConditionMove = randomStatusConditionMoves[UnityEngine.Random.Range(0, randomStatusConditionMoves.Length)];
+                string randomStatusConditionMove = "";
+                switch (randomAttack)
+                {
+                    case "Aqua Shoot":
+                        randomStatusConditionMove = "Soak";
+                        break;
+                    case "Heat Hit":
+                        randomStatusConditionMove = "Burn";
+                        break;
+                    case "Roots Power":
+                        randomStatusConditionMove = "Poison";
+                        break;
+                }
 
-                LearnableMove desiredMove;
-                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomAttack);
+                LearnableMove desiredMove, attackMove;
+                attackMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomAttack);
                 Debug.Log("Random attack: " + randomAttack);
-                _moves.Add(new TBMove(desiredMove.MoveData));
+                _moves.Add(new TBMove(attackMove.MoveData));
                 desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove1);
                 Debug.Log("Random stat move 1: " + randomStatMove1);
                 _moves.Add(new TBMove(desiredMove.MoveData));
@@ -152,7 +164,7 @@ public class TBCharacter
                 { Stat.Defense, Mathf.FloorToInt(_characterData.DefensePower * _level) },
                 { Stat.Speed, Mathf.FloorToInt(_characterData.AttackSpeed * _level) }
             };
-            
+
         }
         else
         {
@@ -173,7 +185,7 @@ public class TBCharacter
         var condition = ConditionsDB.Conditions[conditionId];
         if (_statuses.Contains(condition))
         {
-            _statsChanges.Enqueue($"{_characterData.Name} {condition.RepeatedMovementMessage}");
+            _statusChanges.Enqueue($"{_characterData.Name} {condition.RepeatedMovementMessage}");
             return;
         }
         _statuses.Add(condition);
@@ -183,7 +195,7 @@ public class TBCharacter
         {
             condition.OnEffectAppliedToCharacter?.Invoke(this);
         }
-        _statsChanges.Enqueue($"{_characterData.Name} {condition.StartMessage}");
+        _statusChanges.Enqueue($"{_characterData.Name} {condition.StartMessage}");
         OnStatusChanged?.Invoke();
     }
     public void RemoveStatus(ConditionID conditionId)
@@ -224,19 +236,33 @@ public class TBCharacter
         {
             var stat = statBoost.stat;
             var boost = statBoost.boost;
+            bool canBoostOrDrop = true;
 
-            this._statBoosts[stat] = Mathf.Clamp(this._statBoosts[stat] + boost, -6, 6);
-
-            if (boost > 0)
+            //First we check if the stat can be boosted or dropped
+            if (_statBoosts[stat] == 5 || _statBoosts[stat] == -5)
             {
-                _statsChanges.Enqueue($"{_characterData.Name}'s {stat} increased!");
+                _statusChanges.Enqueue($"{_characterData.Name}'s {stat} can't go any higher or lower!");
+                canBoostOrDrop = false;
             }
             else
             {
-                _statsChanges.Enqueue($"{_characterData.Name}'s {stat} decreased!");
+                this._statBoosts[stat] = Mathf.Clamp(this._statBoosts[stat] + boost, -5, 5);
             }
 
-            Debug.Log(CharacterData.Name + "'s " + stat + " has been boosted to " + this._statBoosts[stat]);
+            //If the stat was boosted or dropped, we add the message to the status changes queue
+            if (canBoostOrDrop)
+            {
+                if (boost > 0)
+                {
+                    _statusChanges.Enqueue($"{_characterData.Name}'s {stat} increased!");
+                }
+                else
+                {
+                    _statusChanges.Enqueue($"{_characterData.Name}'s {stat} decreased!");
+                } 
+                
+                Debug.Log(CharacterData.Name + "'s " + stat + " has been boosted to " + this._statBoosts[stat]);
+            }
         }
     }
     public DamageDetails TakeDamage(TBMove move, TBCharacter attacker)
@@ -302,6 +328,9 @@ public class TBCharacter
             damage = 1;
 
         _currentHP = Mathf.Clamp(_currentHP - damage, 0, MaxHp);
+
+        if (!_characterData.IsEnemy) PlayerStats.CurrentHealthPoints = _currentHP;
+
         _hpChanged = true;
     }
     public void setStats()

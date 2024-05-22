@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb6bd222e324f84b9382f106a6d244b, type: 3}
+  m_Name: TBEnemyData 1
+  m_EditorClassIdentifier: 
+  _name: Enemy1
+  _sprite: {fileID: 0}
+  _learnableMoves:
+  - MoveData: {fileID: 11400000, guid: 8c1c28f343cbc0243b9cf93f63c5bec5, type: 2}
+    Level: 1
+  - MoveData: {fileID: 11400000, guid: f8a8979cb5a8493469fb61d08a03a617, type: 2}
+    Level: 1
+  - MoveData: {fileID: 11400000, guid: 0f8c2185c847b2246a8d397faf40b8ae, type: 2}
+    Level: 1
+  - MoveData: {fileID: 11400000, guid: 0c160f1482d04fb48931f694a6e3bc74, type: 2}
+    Level: 1
+  _isEnemy: 1
+  _maxHealthPoints: 8
+  _attackPower: 15
+  _defensePower: 20
+  _attackSpeed: 10
+  _experienceAmount: 6
+  _element: 1

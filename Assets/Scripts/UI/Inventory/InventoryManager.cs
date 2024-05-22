@@ -118,7 +118,6 @@ public class InventoryManager : MonoBehaviour
 
         FindObjectOfType<PlayerController>().SetLocalStats();
         TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
-        Debug.Log("Before foreach");
         foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
         {
             if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
