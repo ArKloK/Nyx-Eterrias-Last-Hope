@@ -99,8 +99,8 @@ public class InventoryManager : MonoBehaviour
         //--------------------------------
 
         PlayerStats.AttackPower += currentSlot.Item.ItemData.AttackBoost;
-        FindObjectOfType<PlayerController>().SetLocalStats();
-        TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
+        FindFirstObjectByType <PlayerController>().SetLocalStats();
+        TBCharacterUnit[] tBCharacterUnit = FindObjectsByType<TBCharacterUnit>(FindObjectsSortMode.None);
         foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
         {
             if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)
@@ -116,8 +116,8 @@ public class InventoryManager : MonoBehaviour
         currentHealthPoints = PlayerStats.CurrentHealthPoints += inventoryItem.ItemData.HealthBoost;
         PlayerStats.CurrentHealthPoints = Mathf.Clamp(currentHealthPoints, 0, PlayerStats.MaxHealthPoints);
 
-        FindObjectOfType<PlayerController>().SetLocalStats();
-        TBCharacterUnit[] tBCharacterUnit = FindObjectsOfType<TBCharacterUnit>();
+        FindFirstObjectByType <PlayerController>().SetLocalStats();
+        TBCharacterUnit[] tBCharacterUnit = FindObjectsByType<TBCharacterUnit>(FindObjectsSortMode.None);
         foreach (TBCharacterUnit tBCharacter in tBCharacterUnit)
         {
             if (tBCharacter != null && !tBCharacter.Character.CharacterData.IsEnemy)

@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class DialogueLine
 {
     [TextArea(3, 10)]
@@ -12,7 +11,7 @@ public class DialogueLine
     public bool isTBBattleLine = false;
 }
 
-[System.Serializable]
+[Serializable]
 public class Dialogue
 {
     public List<DialogueLine> lines;

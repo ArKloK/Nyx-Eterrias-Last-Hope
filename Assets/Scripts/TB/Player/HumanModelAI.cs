@@ -68,8 +68,8 @@ public class HumanModelAI : MonoBehaviour
         if (EnemyCanFinishPlayerWithCritical())
         {
             Debug.Log("Inside EnemyCanFinishPlayerWithCritical");
-            int randomProbability = Random.Range(1, 21); // 1-20
-            if (Random.Range(1, 21) > 1)// 
+            Random.InitState(System.DateTime.Now.Millisecond);
+            if (Random.Range(1, 21) > 17)// 18-20
             {
                 if (HasHealPotion())
                 {
@@ -174,43 +174,67 @@ public class HumanModelAI : MonoBehaviour
             }
         }
         //Finally, if any of the previous conditions are not met, then attack
-        Debug.Log("Inside player < enemy health");
+        Debug.Log("Inside default case");
         return "Attack " + playerMostDamagingMove.MoveData.MoveName;
     }
 
     private string PrioritizeAttack()
     {
         bool repeatSwitch;
+        int maxAttempts = 100; // Limitar el número de intentos
+        int attempts = 0;
+        TBMove selectedMove = null;
         do
         {
+            Random.InitState(System.DateTime.Now.Millisecond);
             repeatSwitch = false;
+            attempts++;
+            if (attempts > maxAttempts)
+            {
+                foreach (var move in playerMoves)
+                {
+                    Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
+                }
+                Debug.LogError("Exceeded maximum attempts in PrioritizeAttack");
+                break;
+            }
             int randomAction = Random.Range(1, 7); // 1-6
+            Debug.Log("Random action inside DontPrioritizeAttack" + randomAction);
             switch (randomAction)
             {
                 case 1:
                 case 2:
                 case 3:
                 case 4: // Attacks
-                    {
-                        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
-
-                    }
+                    return "Attack " + playerMostDamagingMove.MoveData.MoveName;
                 case 5: // Status condition move if the enemy is not conditioned
+                    if (enemyUnit.Character.Statuses.Count == 0)
                     {
-                        if (enemyUnit.Character.Statuses.Count == 0)
+                        var move = playerMoves.Find(m => m.MoveData.Effects.status != ConditionID.None);
+                        if (move != null)
                         {
-                            //Perform status condition move
-                            return "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
+                            return "Attack " + move.MoveData.MoveName;
                         }
-                        repeatSwitch = true;
-                        break;
                     }
-                case 6: // Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
+                    repeatSwitch = true;
+                    break;
+                case 6: // Stats move
+                    int innerAttempts = 0;
+                    do
                     {
-                        TBMove selectedMove;
-                        do
+                        innerAttempts++;
+                        if (innerAttempts > maxAttempts)
                         {
-                            if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                            foreach (var move in playerMoves)
+                            {
+                                Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
+                            }
+                            Debug.LogError("Exceeded maximum inner attempts in PrioritizeAttack");
+                            break;
+                        }
+                        if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                        {
+                            if (GetDropOrBoostSpeedMove() != null)
                             {
                                 selectedMove = GetDropOrBoostSpeedMove();
                             }
@@ -218,47 +242,81 @@ public class HumanModelAI : MonoBehaviour
                             {
                                 selectedMove = GetRandomStatsMove();
                             }
-                        } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
-
+                        }
+                        else
+                        {
+                            selectedMove = GetRandomStatsMove();
+                        }
+                    } while (selectedMove == null || IsSelectedStatMaxDroppedOrBoosted(selectedMove));
+                    if (selectedMove != null)
+                    {
                         return "Attack " + selectedMove.MoveData.MoveName;
                     }
+                    repeatSwitch = true;
+                    break;
             }
         } while (repeatSwitch);
-        Debug.Log("Returning empty string in PrioritizeAttack method");
         return "";
     }
 
     private string DontPrioritizeAttack()
     {
         bool repeatSwitch;
+        int maxAttempts = 100; // Limitar el número de intentos
+        int attempts = 0;
+        TBMove selectedMove = null;
         do
         {
+            Random.InitState(System.DateTime.Now.Millisecond);
             repeatSwitch = false;
+            attempts++;
+            if (attempts > maxAttempts)
+            {
+                foreach (var move in playerMoves)
+                {
+                    Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
+                }
+                Debug.LogError("Exceeded maximum attempts in DontPrioritizeAttack");
+                break;
+            }
+
             int randomAction = Random.Range(1, 10); // 1-9
+            Debug.Log("Random action inside DontPrioritizeAttack" + randomAction);
             switch (randomAction)
             {
                 case 1:
                 case 2:
                 case 3:
                 case 4: // Status condition move if the enemy is not conditioned
+                    if (enemyUnit.Character.Statuses.Count == 0)
                     {
-                        if (enemyUnit.Character.Statuses.Count == 0)
+                        var move = playerMoves.Find(m => m.MoveData.Effects.status != ConditionID.None);
+                        if (move != null)
                         {
-                            //Perform status condition move
-                            return "Attack " + playerMoves.Find(move => move.MoveData.Effects.status != ConditionID.None).MoveData.MoveName;
+                            return "Attack " + move.MoveData.MoveName;
                         }
-                        repeatSwitch = true;
-                        break;
                     }
+                    repeatSwitch = true;
+                    break;
                 case 5:
                 case 6:
-                case 7: // Stats move. If the speed of the enemy is greater than the player, then drop/boost the speed of the enemy/player respectively, else perform a random stats move
+                case 7: // Stats move
+                    int innerAttempts = 0;
+                    do
                     {
-                        TBMove selectedMove;
-                        do
+                        innerAttempts++;
+                        if (innerAttempts > maxAttempts)
                         {
-                            Debug.Log("Enemy speed " + enemyUnit.Character.Speed + " Player speed " + playerUnit.Character.Speed);
-                            if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                            foreach (var move in playerMoves)
+                            {
+                                Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
+                            }
+                            Debug.LogError("Exceeded maximum inner attempts in DontPrioritizeAttack");
+                            break;
+                        }
+                        if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+                        {
+                            if (GetDropOrBoostSpeedMove() != null)
                             {
                                 selectedMove = GetDropOrBoostSpeedMove();
                             }
@@ -266,20 +324,26 @@ public class HumanModelAI : MonoBehaviour
                             {
                                 selectedMove = GetRandomStatsMove();
                             }
-                        } while (IsSelectedStatMaxDroppedOrBoosted(selectedMove));
-
+                        }
+                        else
+                        {
+                            selectedMove = GetRandomStatsMove();
+                        }
+                    } while (selectedMove == null || IsSelectedStatMaxDroppedOrBoosted(selectedMove));
+                    if (selectedMove != null)
+                    {
                         return "Attack " + selectedMove.MoveData.MoveName;
                     }
+                    repeatSwitch = true;
+                    break;
                 case 8:
                 case 9: // Attacks
-                    {
-                        return "Attack " + playerMostDamagingMove.MoveData.MoveName;
-                    }
+                    return "Attack " + playerMostDamagingMove.MoveData.MoveName;
             }
         } while (repeatSwitch);
-        Debug.Log("Returning empty string in DontPrioritizeAttack method");
         return "";
     }
+
 
     bool HasHealPotion()
     {
@@ -412,19 +476,32 @@ public class HumanModelAI : MonoBehaviour
     }
     TBMove GetDropOrBoostSpeedMove()
     {
-        //Returns the first move that drops/boosts the speed of the enemy/player respectively
-        return playerMoves.Find(move => move.MoveData.Effects.statBoosts.Exists(statBoost => statBoost.stat == Stat.Speed && statBoost.boost < 0) || move.MoveData.Effects.statBoosts.Exists(statBoost => statBoost.stat == Stat.Speed && statBoost.boost > 0));
+        var move = playerMoves.Find(move => move.MoveData.Effects.statBoosts.Exists(statBoost => statBoost.stat == Stat.Speed && (statBoost.boost < 0 || statBoost.boost > 0)));
+        if (move == null)
+        {
+            Debug.LogWarning("No move found in GetDropOrBoostSpeedMove");
+        }
+        return move;
     }
     TBMove GetRandomStatsMove()
     {
-        //Returns the first move that drops/boosts the stats of the enemy/player respectively
-        return playerMoves.Find(move => move.MoveData.Category == MoveCategory.Stats);
+        var move = playerMoves.Find(move => move.MoveData.Category == MoveCategory.Stats);
+        if (move == null)
+        {
+            Debug.LogWarning("No move found in GetRandomStatsMove");
+        }
+        return move;
     }
     bool IsSelectedStatMaxDroppedOrBoosted(TBMove move)
     {
         Debug.Log("Move to check stat max dropped or boosted " + move.MoveData.MoveName);
-        //Returns true if the selected stat is max dropped or boosted
-        return playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 5 || playerUnit.Character.Stats[move.MoveData.Effects.statBoosts[0].stat] == 0;
+        if (move.MoveData.Effects.statBoosts == null || move.MoveData.Effects.statBoosts.Count == 0)
+        {
+            Debug.LogWarning("No stat boosts found for move " + move.MoveData.MoveName);
+            return false;
+        }
+        var stat = move.MoveData.Effects.statBoosts[0].stat;
+        return playerUnit.Character.Stats.ContainsKey(stat) && (playerUnit.Character.Stats[stat] == 5 || playerUnit.Character.Stats[stat] == 0);
     }
 
 }

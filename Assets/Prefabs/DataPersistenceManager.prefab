@@ -46,6 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerControllerData: {fileID: 11400000, guid: 98c90f65953e27f47a7569d59df4c854, type: 2}
   initializeDataIfNull: 1
-  useLoadandSave: 1
+  useLoadandSave: 0
   fileName: GameSave.game
   useEncryption: 0

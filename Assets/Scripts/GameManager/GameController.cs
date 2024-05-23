@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour, IDataPersistence
 
     void Start()
     {
-        battleSystem.OnBattleEnd += EndBattle;
+        BattleSystem.OnBattleEnd += EndBattle;
         if (TBDemo)
         {
             state = GameState.TB;

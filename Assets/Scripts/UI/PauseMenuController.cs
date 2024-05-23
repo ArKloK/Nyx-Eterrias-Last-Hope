@@ -31,7 +31,7 @@ public class PauseMenuController : MonoBehaviour
         LoadVolume();
         LoadDarkOverlay();
         LoadTextVelocity();
-        playerMovementController = FindObjectOfType<PlayerMovementController.PlayerMovementController>();
+        playerMovementController = FindFirstObjectByType<PlayerMovementController.PlayerMovementController>();
     }
 
     void OnEnable()

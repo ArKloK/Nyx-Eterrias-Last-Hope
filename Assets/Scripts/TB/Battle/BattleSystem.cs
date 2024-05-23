@@ -17,6 +17,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] TBDialogueBox dialogueBox;
     [SerializeField] GameObject inventoryUI;
     [SerializeField] Inventory inventory;
+    [SerializeField] SelectMovementAgent selectMovementAgent;
     [SerializeField] GameObject playerActionFirst;
     [SerializeField] GameObject playerMoveFirst;
     [SerializeField] List<Collectible> collectibles;
@@ -24,13 +25,15 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] bool PlayerControlledByAI;
     BattleState state;
     HumanModelAI humanModelAI;
-    public event Action<bool> OnBattleEnd;
+    public static event Action<bool> OnBattleEnd;
     int currentAction;
     int currentMove;
+    int currentEnemyMove;
     string humanModelAction = "";
     private string humanModelActionFirstPart;
     private string humanModelActionSecondPart;
     private bool humanModelAIActionSelectioned;
+    private bool enemyActionSelectioned;
 
     public static event Action<InventoryItem> OnHumanModelHeals;
 
@@ -38,12 +41,14 @@ public class BattleSystem : MonoBehaviour
     {
         PlayerController.OnPlayerLevelUp += HandleLevelUp;
         InventoryManager.OnTBItemUsedUpdateHP += UpdatePlayerHP;
+        SelectMovementAgent.OnEpisodeBeginAction += RestartBattle;
     }
 
     void OnDisable()
     {
         PlayerController.OnPlayerLevelUp -= HandleLevelUp;
         InventoryManager.OnTBItemUsedUpdateHP -= UpdatePlayerHP;
+        SelectMovementAgent.OnEpisodeBeginAction -= RestartBattle;
     }
     void Start()
     {
@@ -51,6 +56,11 @@ public class BattleSystem : MonoBehaviour
         {
             humanModelAI = GetComponent<HumanModelAI>();
         }
+        else
+            StartCoroutine(SetupBattle());
+    }
+    private void RestartBattle()
+    {
         StartCoroutine(SetupBattle());
     }
     public void HandleUpdate()
@@ -142,6 +152,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator RunTurns(BattleAction playerAction)
     {
         state = BattleState.RUNNINGTURN;
+        enemyActionSelectioned = false;
         if (playerAction == BattleAction.FIGHT)
         {
             //Check who goes first
@@ -188,7 +199,7 @@ public class BattleSystem : MonoBehaviour
         TBMove move;
         if (source.CharacterData.IsEnemy)
         {
-            move = source.Character.GetRandomMove();
+            move = source.Character.Moves[currentEnemyMove];
         }
         else
         {
@@ -264,50 +275,6 @@ public class BattleSystem : MonoBehaviour
         }
         humanModelAIActionSelectioned = false;
     }
-
-    // IEnumerator RunAfterTurn()
-    // {
-    //     //This will check if the battle is over before running the after turn effects
-    //     if (state == BattleState.BATTLEOVER)
-    //     {
-    //         if (playerUnit.Character.CurrentHP <= 0)
-    //         {
-    //             yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
-    //             yield return new WaitForSeconds(2f);
-    //             EndBattle(false);
-    //         }
-    //         else if (enemyUnit.Character.CurrentHP <= 0)
-    //         {
-    //             yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
-    //             yield return new WaitForSeconds(2f);
-    //             EndBattle(true);
-    //         }
-    //         //This will break the coroutine if the battle is over
-    //         yield break;
-    //     }
-    //     //Statuses like poison will affect the enemy after the turn
-    //     enemyUnit.Character.OnAfterTurn();
-    //     yield return ShowStatusChanges(enemyUnit.Character);
-    //     yield return enemyHud.UpdateHp();
-    //     if (enemyUnit.Character.CurrentHP <= 0)
-    //     {
-    //         yield return dialogueBox.TypeDialogueTB(enemyUnit.CharacterData.Name + " fainted!");
-    //         yield return new WaitForSeconds(2f);
-    //         EndBattle(true);
-    //     }
-    //     else
-    //     {
-    //         playerUnit.Character.OnAfterTurn();
-    //         yield return ShowStatusChanges(playerUnit.Character);
-    //         yield return playerHud.UpdateHp();
-    //         if (playerUnit.Character.CurrentHP <= 0)
-    //         {
-    //             yield return dialogueBox.TypeDialogueTB(playerUnit.CharacterData.Name + " fainted!");
-    //             yield return new WaitForSeconds(2f);
-    //             EndBattle(false);
-    //         }
-    //     }
-    // }
     IEnumerator RunMoveEffects(TBMove move, TBCharacter source, TBCharacter target)
     {
         var effects = move.MoveData.Effects;
@@ -420,10 +387,16 @@ public class BattleSystem : MonoBehaviour
 
         }
 
+        if (!enemyActionSelectioned)
+        {
+            currentEnemyMove = selectMovementAgent.GetMoveIndex();
+            enemyActionSelectioned = true;
+            Debug.Log("Current enemy move: " + currentEnemyMove);
+        }
+
     }
     public void HandleActionSelectionAI()
     {
-        //yield return new WaitForSeconds(2f);
         do
         {
             humanModelAction = humanModelAI.GetAction();
@@ -484,7 +457,6 @@ public class BattleSystem : MonoBehaviour
         else
         {
             currentMove = playerUnit.Character.Moves.FindIndex(move => move.MoveData.MoveName == humanModelActionSecondPart);
-            Debug.Log("Current move index: " + currentMove);
             dialogueBox.UpdateMoveSelection(currentMove, playerUnit.Character.Moves[currentMove]);
 
             if (dialogueBox.IsDialogueLineFinished)
@@ -502,18 +474,18 @@ public class BattleSystem : MonoBehaviour
     }
 
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
-    public void EndBattle(bool won)
+    public void EndBattle(bool playerWon)
     {
         PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
         //This will add experience to the player if he wins the battle
-        if (won && !TBDemo)
+        if (playerWon && !TBDemo)
         {
             ExperienceManager.Instance.AddExperience(enemyUnit.CharacterData.ExperienceAmount);
         }
         state = BattleState.BATTLEOVER;
         playerUnit.Character.ResetStatBoosts();
         enemyUnit.Character.ResetStatBoosts();
-        OnBattleEnd?.Invoke(won);
+        OnBattleEnd?.Invoke(playerWon);
     }
 
     public void HandleLevelUp()

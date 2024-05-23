@@ -60,7 +60,7 @@ public class DialogueManager : MonoBehaviour
                 //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = false;
                 player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = true;
-                foreach (EnemyAI enemy in FindObjectsOfType<EnemyAI>())
+                foreach (EnemyAI enemy in FindObjectsByType<EnemyAI>(FindObjectsSortMode.None))
                 {
                     enemy.CanMove = false;
                 }
@@ -150,7 +150,7 @@ public class DialogueManager : MonoBehaviour
             //player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().canMove = true;
             player.GetComponent<PlayerMovementController.PlayerMovementController>().isDialogueActive = false;
-            foreach (EnemyAI enemy in FindObjectsOfType<EnemyAI>())
+            foreach (EnemyAI enemy in FindObjectsByType<EnemyAI>(FindObjectsSortMode.None))
             {
                 enemy.CanMove = false;
             }
