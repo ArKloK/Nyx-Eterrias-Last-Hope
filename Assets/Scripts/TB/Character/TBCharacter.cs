@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-
 public class TBCharacter
 {
     #region Private Fields
@@ -11,6 +9,7 @@ public class TBCharacter
     private int _currentHP;
     private bool _hpChanged;
     private int _statusTime;
+    private int currentSet = 0;
     private List<TBMove> _moves;
     private TBMove _currentMove;
     private Dictionary<Stat, int> _stats;
@@ -81,45 +80,9 @@ public class TBCharacter
                 _moves = PlayerStats.Moves;
             else
             {
-                string[] randomAttacks = { "Aqua Shoot", "Heat Hit", "Roots Power" };
-                string randomAttack = randomAttacks[UnityEngine.Random.Range(0, randomAttacks.Length)];
-
-                string[] randomStatsMoves = { "Intimidate", "Robust Defense", "Slow Tempo", "Tailwind" };
-                string randomStatMove1 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
-                string randomStatMove2;
-                do
-                {
-                    randomStatMove2 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
-                } while (randomStatMove1 == randomStatMove2);
-
-                string[] randomStatusConditionMoves = { "Soak", "Burn", "Poison" };
-                string randomStatusConditionMove = "";
-                switch (randomAttack)
-                {
-                    case "Aqua Shoot":
-                        randomStatusConditionMove = "Soak";
-                        break;
-                    case "Heat Hit":
-                        randomStatusConditionMove = "Burn";
-                        break;
-                    case "Roots Power":
-                        randomStatusConditionMove = "Poison";
-                        break;
-                }
-
-                LearnableMove desiredMove, attackMove;
-                attackMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomAttack);
-                Debug.Log("Random attack: " + randomAttack);
-                _moves.Add(new TBMove(attackMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove1);
-                Debug.Log("Random stat move 1: " + randomStatMove1);
-                _moves.Add(new TBMove(desiredMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove2);
-                Debug.Log("Random stat move 2: " + randomStatMove2);
-                _moves.Add(new TBMove(desiredMove.MoveData));
-                desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatusConditionMove);
-                Debug.Log("Random status condition move: " + randomStatusConditionMove);
-                _moves.Add(new TBMove(desiredMove.MoveData));
+                SelectSetOfMoves();
+                //SelectMovesBasedOnElement();
+                //SelectRandomMovesForTBDemo();
             }
         }
         //If the character is an enemy, it will have a set of moves        
@@ -140,6 +103,107 @@ public class TBCharacter
         }
 
         ResetStatBoosts();
+    }
+
+    private void SelectSetOfMoves()
+    {
+        if (currentSet > 2)
+            currentSet = 0;
+
+        Debug.Log("Current set: " + currentSet);
+
+        switch (currentSet)
+        {
+            case 0:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Heat Hit").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Intimidate").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Burn").MoveData));
+                break;
+            case 1:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Aqua Shoot").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Slow Tempo").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Soak").MoveData));
+                break;
+            case 2:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Roots Power").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Poison").MoveData));
+                break;
+        }
+        currentSet++;
+    }
+
+    private void SelectMovesBasedOnElement()
+    {
+        switch (PlayerStats.Element)
+        {
+            case Element.Fire:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Heat Hit").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Intimidate").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Burn").MoveData));
+                break;
+            case Element.Water:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Aqua Shoot").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Slow Tempo").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Soak").MoveData));
+                break;
+            case Element.Plant:
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Roots Power").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
+                _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Poison").MoveData));
+                break;
+        }
+    }
+
+    private void SelectRandomMovesForTBDemo()
+    {
+        string[] randomAttacks = { "Aqua Shoot", "Heat Hit", "Roots Power" };
+        string randomAttack = randomAttacks[UnityEngine.Random.Range(0, randomAttacks.Length)];
+
+        string[] randomStatsMoves = { "Intimidate", "Robust Defense", "Slow Tempo", "Tailwind" };
+        string randomStatMove1 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
+        string randomStatMove2;
+        do
+        {
+            randomStatMove2 = randomStatsMoves[UnityEngine.Random.Range(0, randomStatsMoves.Length)];
+        } while (randomStatMove1 == randomStatMove2);
+
+        string randomStatusConditionMove = "";
+        switch (randomAttack)
+        {
+            case "Aqua Shoot":
+                randomStatusConditionMove = "Soak";
+                break;
+            case "Heat Hit":
+                randomStatusConditionMove = "Burn";
+                break;
+            case "Roots Power":
+                randomStatusConditionMove = "Poison";
+                break;
+        }
+
+        LearnableMove desiredMove, attackMove;
+        attackMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomAttack);
+        Debug.Log("Random attack: " + attackMove);
+        _moves.Add(new TBMove(attackMove.MoveData));
+
+        desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove1);
+        Debug.Log("Random stat move 1: " + desiredMove);
+        _moves.Add(new TBMove(desiredMove.MoveData));
+
+        desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatMove2);
+        Debug.Log("Random stat move 2: " + desiredMove);
+        _moves.Add(new TBMove(desiredMove.MoveData));
+
+        desiredMove = PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == randomStatusConditionMove);
+        Debug.Log("Random status condition move: " + desiredMove);
+        _moves.Add(new TBMove(desiredMove.MoveData));
     }
 
     public void ResetStatBoosts()
@@ -259,8 +323,8 @@ public class TBCharacter
                 else
                 {
                     _statusChanges.Enqueue($"{_characterData.Name}'s {stat} decreased!");
-                } 
-                
+                }
+
                 Debug.Log(CharacterData.Name + "'s " + stat + " has been boosted to " + this._statBoosts[stat]);
             }
         }

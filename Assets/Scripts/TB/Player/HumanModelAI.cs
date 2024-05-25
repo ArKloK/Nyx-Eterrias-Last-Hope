@@ -447,7 +447,7 @@ public class HumanModelAI : MonoBehaviour
         foreach (TBMove move in playerMoves)
         {
             playerCritical = 1f;
-            if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
+            if (Random.value * 100f <= move.MoveData.CriticalChance)
             {
                 playerCritical = 2f;
             }

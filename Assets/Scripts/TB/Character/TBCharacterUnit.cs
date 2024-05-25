@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TBCharacterUnit : MonoBehaviour
@@ -8,15 +9,10 @@ public class TBCharacterUnit : MonoBehaviour
     [SerializeField] TBCharacterData _characterData;
     [SerializeField] int _level;
     [SerializeField] TBCharacter _character;
-    int baseMaxHealthPoints;
+    int baseMaxHealthPoints = 0;
     public TBCharacterData CharacterData { get => _characterData; set => _characterData = value; }
     public TBCharacter Character { get => _character; set => _character = value; }
-
-    void Start()
-    {
-        baseMaxHealthPoints = PlayerStats.MaxHealthPoints;
-    }
-
+    
     public void setData(bool TBDemo)
     {
         if (_characterData.IsEnemy)
@@ -29,6 +25,7 @@ public class TBCharacterUnit : MonoBehaviour
                 _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel, TBDemo);
             else
             {
+                if (baseMaxHealthPoints == 0) baseMaxHealthPoints = PlayerStats.MaxHealthPoints;
                 int randomLevel = Random.Range(5, 7);
                 PlayerStats.CurrentLevel = randomLevel;
                 PlayerStats.MaxHealthPoints = baseMaxHealthPoints * PlayerStats.CurrentLevel;

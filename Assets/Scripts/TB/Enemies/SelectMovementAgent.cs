@@ -46,6 +46,7 @@ public class SelectMovementAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        Debug.Log("Collecting Observations");
         // Verificar si enemyUnit y playerUnit están asignados
         if (enemyUnit == null || playerUnit == null || enemyUnit.Character == null || playerUnit.Character == null)
         {
@@ -122,10 +123,12 @@ public class SelectMovementAgent : Agent
     {
         if (playerWon)
         {
+            Debug.Log("Player won the battle.");
             AddReward(-1f);
         }
         else
         {
+            Debug.Log("Enemy won the battle.");
             AddReward(1f);
         }
 

@@ -69,9 +69,9 @@ public class TypeChart
     {
         //HAS TO BE IMPROVED
         //           Fire, Water, Plant, Darkness
-        new float[] {1f,   0.5f,  2f,    1f}, //Fire
-        new float[] {2f,   1f,    0.5f,  1f}, //Water
-        new float[] {0.5f, 2f,    1f,    1f}, //Plant
+        new float[] {1f,   0.5f,  1.5f,    1f}, //Fire
+        new float[] {1.5f,   1f,    0.5f,  1f}, //Water
+        new float[] {0.5f, 1.5f,    1f,    1f}, //Plant
         new float[] {1f,   1f,    1f,    1f}, //Darkness
     };
 

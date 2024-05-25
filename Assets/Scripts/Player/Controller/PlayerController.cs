@@ -60,6 +60,8 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     void Awake()
     {
+        PlayerStats.Element = Data.Element;
+        PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
         maxHealthPoints = Data.MaxHealthPoints;
         currentHealthPoints = maxHealthPoints;
         maxSpriritualEnergyPoints = Data.MaxSpiritualEnergyPoints;
@@ -72,7 +74,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         maxExperiencePoints = Data.BaseMaxExperiencePoints;
         currentLevel = 1;
 
-        PlayerStats.LearnableMoves = tBCharacterData.LearnableMoves;
         //healthBar.SetMaxHealth(maxHealthPoints);
     }
     void Start()
@@ -92,11 +93,13 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     void OnEnable()
     {
         ExperienceManager.OnExperienceChanged += HandleExperienceChanged;
+        SelectMovementAgent.OnEpisodeBeginAction += UpdateStaticStats;
     }
 
     void OnDisable()
     {
         ExperienceManager.OnExperienceChanged -= HandleExperienceChanged;
+        SelectMovementAgent.OnEpisodeBeginAction -= UpdateStaticStats;
     }
 
     // Update is called once per frame
@@ -226,6 +229,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     void UpdateStaticStats()
     {
+        PlayerStats.Element = Data.Element;
         PlayerStats.MaxHealthPoints = maxHealthPoints;
         PlayerStats.CurrentHealthPoints = currentHealthPoints;
         PlayerStats.MaxSpiritualEnergyPoints = maxSpriritualEnergyPoints;
@@ -241,6 +245,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     public void SetLocalStats()
     {
+
         maxHealthPoints = PlayerStats.MaxHealthPoints;
         currentHealthPoints = PlayerStats.CurrentHealthPoints;
         TBattackPower = PlayerStats.TBAttackPower;
