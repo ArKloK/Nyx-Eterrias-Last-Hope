@@ -22,7 +22,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] GameObject playerMoveFirst;
     [SerializeField] List<Collectible> collectibles;
     [SerializeField] bool TBDemo;
-    [SerializeField] bool PlayerControlledByAI;
+    [SerializeField] bool playerControlledByAI;
     BattleState state;
     HumanModelAI humanModelAI;
     public static event Action<bool> OnBattleEnd;
@@ -33,7 +33,7 @@ public class BattleSystem : MonoBehaviour
     private string humanModelActionFirstPart;
     private string humanModelActionSecondPart;
     private bool humanModelAIActionSelectioned;
-    private bool enemyActionSelectioned;
+    private bool enemyActionSelected;
 
     public static event Action<InventoryItem> OnHumanModelHeals;
 
@@ -52,12 +52,13 @@ public class BattleSystem : MonoBehaviour
     }
     void Start()
     {
-        if (PlayerControlledByAI)
+        dialogueBox.PlayerControlledByAI1 = playerControlledByAI;
+        if (playerControlledByAI)
         {
             humanModelAI = GetComponent<HumanModelAI>();
         }
-        else
-            StartCoroutine(SetupBattle());
+        // else
+        //     StartCoroutine(SetupBattle());
     }
     private void RestartBattle()
     {
@@ -71,17 +72,17 @@ public class BattleSystem : MonoBehaviour
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerControlledByAI)
-            {
-                dialogueBox.EnableMoveSelector(false);
-                PlayerAction();
-            }
-            else if (playerUnit.Character.Moves.Count > 0)
+            // if (Input.GetKeyDown(KeyCode.Escape) && !playerControlledByAI)
+            // {
+            //     dialogueBox.EnableMoveSelector(false);
+            //     PlayerAction();
+            // }
+            if (playerUnit.Character.Moves.Count > 0)
                 HandleMoveSelection();
         }
         else if (state == BattleState.INVENTORY)
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerControlledByAI)
+            if (Input.GetKeyDown(KeyCode.Escape) && !playerControlledByAI)
             {
                 inventoryUI.SetActive(false);
                 PlayerAction();
@@ -127,7 +128,7 @@ public class BattleSystem : MonoBehaviour
         enemyUnit.setData(TBDemo);
         enemyHud.SetData(enemyUnit.Character);
 
-        if (PlayerControlledByAI) humanModelAI.ResetBattle();
+        if (playerControlledByAI) humanModelAI.ResetBattle();
 
         dialogueBox.SetMoveNames(playerUnit.Character.Moves);
 
@@ -139,6 +140,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.PLAYERACTION;
         StartCoroutine(dialogueBox.TypeDialogueTB("Choose an action."));
+        dialogueBox.EnableMoveSelector(false);
         dialogueBox.EnableActionSelector(true);
     }
     void PlayerMove()
@@ -152,13 +154,23 @@ public class BattleSystem : MonoBehaviour
     IEnumerator RunTurns(BattleAction playerAction)
     {
         state = BattleState.RUNNINGTURN;
-        enemyActionSelectioned = false;
+        enemyActionSelected = false;
         if (playerAction == BattleAction.FIGHT)
         {
             //Check who goes first
             bool playerGoesFirst = playerUnit.Character.Speed >= enemyUnit.Character.Speed;
             var firstUnitToMove = playerGoesFirst ? playerUnit : enemyUnit;
             var secondUnitToMove = playerGoesFirst ? enemyUnit : playerUnit;
+
+            if (!playerGoesFirst)
+            {
+                if (!enemyActionSelected)
+                {
+                    currentEnemyMove = selectMovementAgent.GetMoveIndex();
+                    enemyActionSelected = true;
+                    Debug.Log("Current enemy move: " + currentEnemyMove);
+                }
+            }
 
             yield return CharacterMoveTurn(firstUnitToMove, secondUnitToMove);
             //This will check if the battle is over before the second character moves
@@ -167,7 +179,15 @@ public class BattleSystem : MonoBehaviour
                 yield return RunAfterTurn(secondUnitToMove);
                 yield break;
             }
-
+            if (playerGoesFirst)
+            {
+                if (!enemyActionSelected)
+                {
+                    currentEnemyMove = selectMovementAgent.GetMoveIndex();
+                    enemyActionSelected = true;
+                    Debug.Log("Current enemy move: " + currentEnemyMove);
+                }
+            }
             yield return CharacterMoveTurn(secondUnitToMove, firstUnitToMove);
 
             yield return RunAfterTurn(enemyUnit);
@@ -331,7 +351,7 @@ public class BattleSystem : MonoBehaviour
 
     private void HandleActionSelection()
     {
-        if (!PlayerControlledByAI)
+        if (!playerControlledByAI)
         {
             if (Input.GetAxis("Vertical") < 0)
             //if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -387,13 +407,6 @@ public class BattleSystem : MonoBehaviour
 
         }
 
-        if (!enemyActionSelectioned)
-        {
-            currentEnemyMove = selectMovementAgent.GetMoveIndex();
-            enemyActionSelectioned = true;
-            Debug.Log("Current enemy move: " + currentEnemyMove);
-        }
-
     }
     public void HandleActionSelectionAI()
     {
@@ -414,7 +427,7 @@ public class BattleSystem : MonoBehaviour
     }
     private void HandleMoveSelection()
     {
-        if (!PlayerControlledByAI)
+        if (!playerControlledByAI)
         {
             if (Input.GetAxis("Horizontal") > 0)
             {
@@ -514,13 +527,10 @@ public class BattleSystem : MonoBehaviour
     }
     public void ClosePlayerMove(InputAction.CallbackContext context)
     {
-        Debug.Log("Close player move");
-        if (context.performed)
+        if (context.performed && state == BattleState.PLAYERMOVE)
         {
-
-            dialogueBox.EnableMoveSelector(false);
-            dialogueBox.EnableDialogueText(true);
-            StartCoroutine(RunTurns(BattleAction.FIGHT));
+            Debug.Log("Close player move");
+            PlayerAction();
         }
     }
 }

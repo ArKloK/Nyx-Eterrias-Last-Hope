@@ -26,4 +26,4 @@ MonoBehaviour:
   InvincibleTime: 0.55
   TBAttackPower: 15
   TBAttackSpeed: 12
-  TBDefensePower: 25
+  TBDefensePower: 20

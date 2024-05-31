@@ -3,6 +3,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using System;
+using Unity.MLAgents.Integrations.Match3;
 
 public class SelectMovementAgent : Agent
 {
@@ -26,7 +27,7 @@ public class SelectMovementAgent : Agent
     public override void OnEpisodeBegin()
     {
         OnEpisodeBeginAction?.Invoke();
-        
+
         // Verificar si enemyUnit y playerUnit están asignados
         if (enemyUnit == null || playerUnit == null)
         {
@@ -115,8 +116,51 @@ public class SelectMovementAgent : Agent
         }
 
         RequestDecision();
+        CheckIfIsACorrectMove();
         Academy.Instance.EnvironmentStep();
         return selectedMoveIndex;
+    }
+
+    private void CheckIfIsACorrectMove()
+    {
+        TBMove enemyMove = enemyUnit.Character.Moves[selectedMoveIndex];
+        if (enemyMove.MoveData.Effects.statBoosts.Count > 0)
+        {
+            var stat = enemyMove.MoveData.Effects.statBoosts[0].stat;
+            if (enemyMove.MoveData.Target == MoveTarget.Self)
+            {
+                if (enemyUnit.Character.Stats[stat] == 5 || enemyUnit.Character.Stats[stat] == 0)
+                {
+                    AddReward(-20f);
+                }
+            }
+            else if (enemyMove.MoveData.Target == MoveTarget.Foe)
+            {
+                if (playerUnit.Character.Stats[stat] == 5 || playerUnit.Character.Stats[stat] == 0)
+                {
+                    AddReward(-20f);
+                }
+            }
+            else if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
+            {
+                AddReward(20f);
+            }
+        }
+        else if (enemyMove.MoveData.Effects.status != ConditionID.None)
+        {
+            var condition = ConditionsDB.Conditions[enemyMove.MoveData.Effects.status];
+            if (enemyMove.MoveData.Target == MoveTarget.Foe)
+            {
+                if (playerUnit.Character.Statuses.Contains(condition))
+                {
+                    AddReward(-20f);
+                }
+            }
+        }
+        else
+        {
+            AddReward(10f);
+        }
     }
 
     private void AddRewards(bool playerWon)
@@ -124,12 +168,12 @@ public class SelectMovementAgent : Agent
         if (playerWon)
         {
             Debug.Log("Player won the battle.");
-            AddReward(-1f);
+            AddReward(-10f * playerUnit.Character.CurrentHP);
         }
         else
         {
             Debug.Log("Enemy won the battle.");
-            AddReward(1f);
+            AddReward(10f * enemyUnit.Character.CurrentHP);
         }
 
         // Asegurarse de que el episodio puede terminar correctamente

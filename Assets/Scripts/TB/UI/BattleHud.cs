@@ -6,6 +6,7 @@ using UnityEngine;
 public class BattleHud : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
+    public TextMeshProUGUI elementText;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI statusText;
@@ -29,27 +30,28 @@ public class BattleHud : MonoBehaviour
     public void SetData(TBCharacter ch)
     {
         character = ch;
-        if (character.CharacterData.IsEnemy)
+        nameText.text = character.CharacterData.Name;
+        levelText.text = "Lvl " + character.Level;
+        if(!character.CharacterData.IsEnemy) hpText.text = character.CurrentHP + "/" + character.MaxHp;
+            
+        elementText.text = character.CharacterData.Element.ToString();
+        switch (character.CharacterData.Element)
         {
-            nameText.text = character.CharacterData.Name;
-            levelText.text = "Lvl " + character.Level;
-            healthBar.SetMaxHealth(character.MaxHp);
-            healthBar.SetHealth(character.CurrentHP);
-            SetStatusText();
-            setConditionColors();
-            this.character.OnStatusChanged += SetStatusText;
+            case Element.Fire:
+                elementText.color = Color.red;
+                break;
+            case Element.Water:
+                elementText.color = Color.blue;
+                break;
+            case Element.Grass:
+                elementText.color = Color.green;
+                break;
         }
-        else
-        {
-            nameText.text = character.CharacterData.Name;
-            levelText.text = "Lvl " + character.Level;
-            hpText.text = character.CurrentHP + "/" + character.MaxHp;
-            healthBar.SetMaxHealth(character.MaxHp);
-            healthBar.SetHealth(character.CurrentHP);
-            SetStatusText();
-            setConditionColors();
-            this.character.OnStatusChanged += SetStatusText;
-        }
+        healthBar.SetMaxHealth(character.MaxHp);
+        healthBar.SetHealth(character.CurrentHP);
+        SetStatusText();
+        setConditionColors();
+        this.character.OnStatusChanged += SetStatusText;
     }
 
     public IEnumerator UpdateHp()

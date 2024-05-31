@@ -9,7 +9,6 @@ public class TBCharacter
     private int _currentHP;
     private bool _hpChanged;
     private int _statusTime;
-    private int currentSet = 0;
     private List<TBMove> _moves;
     private TBMove _currentMove;
     private Dictionary<Stat, int> _stats;
@@ -65,11 +64,10 @@ public class TBCharacter
     }
     #endregion
 
-    public TBCharacter(TBCharacterData characterData, int level, bool TBDemo)
+    public TBCharacter(TBCharacterData characterData, int level, bool TBDemo, int currentSet)
     {
         _characterData = characterData;
         _level = level;
-        CalculateStats();
 
         _moves = new List<TBMove>();
 
@@ -80,7 +78,7 @@ public class TBCharacter
                 _moves = PlayerStats.Moves;
             else
             {
-                SelectSetOfMoves();
+                SelectSetOfMoves(currentSet);
                 //SelectMovesBasedOnElement();
                 //SelectRandomMovesForTBDemo();
             }
@@ -101,39 +99,36 @@ public class TBCharacter
                 }
             }
         }
-
+        CalculateStats();
         ResetStatBoosts();
     }
 
-    private void SelectSetOfMoves()
+    private void SelectSetOfMoves(int currentSet)
     {
-        if (currentSet > 2)
-            currentSet = 0;
-
-        Debug.Log("Current set: " + currentSet);
-
         switch (currentSet)
         {
             case 0:
+                PlayerStats.Element = Element.Fire;
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Heat Hit").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Intimidate").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Burn").MoveData));
                 break;
             case 1:
+                PlayerStats.Element = Element.Water;
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Aqua Shoot").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Slow Tempo").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Soak").MoveData));
                 break;
             case 2:
+                PlayerStats.Element = Element.Grass;
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Roots Power").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Poison").MoveData));
                 break;
         }
-        currentSet++;
     }
 
     private void SelectMovesBasedOnElement()
@@ -152,7 +147,7 @@ public class TBCharacter
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Slow Tempo").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Soak").MoveData));
                 break;
-            case Element.Plant:
+            case Element.Grass:
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Roots Power").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Robust Defense").MoveData));
                 _moves.Add(new TBMove(PlayerStats.LearnableMoves.Find(m => m.MoveData.MoveName == "Tailwind").MoveData));
@@ -351,29 +346,6 @@ public class TBCharacter
         UpdateHp(damage);
 
         return damageDetails;
-    }
-    public bool CanAttackerFinishSelf(TBCharacter attacker)
-    {
-        bool canFinish = false;
-        foreach (var move in _moves)
-        {
-            float critical = 1f;
-            if (UnityEngine.Random.value * 100f <= move.MoveData.CriticalChance)
-            {
-                critical = 2f;
-            }
-
-            float type = TypeChart.GetEffectiveness(move.MoveData.Element, _characterData.Element);
-
-            int damage = Mathf.FloorToInt(move.MoveData.Power * (attacker.Attack / Defense) * critical * type * 0.1f);
-
-            if (damage >= _currentHP)
-            {
-                canFinish = true;
-                break;
-            }
-        }
-        return canFinish;
     }
     public void LearnMove(LearnableMove moveToLearn)
     {

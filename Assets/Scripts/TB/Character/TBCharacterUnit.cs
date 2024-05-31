@@ -10,27 +10,35 @@ public class TBCharacterUnit : MonoBehaviour
     [SerializeField] int _level;
     [SerializeField] TBCharacter _character;
     int baseMaxHealthPoints = 0;
+    private int currentSet;
+
     public TBCharacterData CharacterData { get => _characterData; set => _characterData = value; }
     public TBCharacter Character { get => _character; set => _character = value; }
-    
+
     public void setData(bool TBDemo)
     {
         if (_characterData.IsEnemy)
         {
-            _character = new TBCharacter(_characterData, _level, TBDemo);
+            _character = new TBCharacter(_characterData, _level, TBDemo, currentSet);
         }
         else
         {
             if (!TBDemo)
-                _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel, TBDemo);
+                _character = new TBCharacter(_characterData, PlayerStats.CurrentLevel, TBDemo, currentSet);
             else
             {
                 if (baseMaxHealthPoints == 0) baseMaxHealthPoints = PlayerStats.MaxHealthPoints;
+
+                if (currentSet > 2)
+                    currentSet = 0;
+
+                Debug.Log("Current set: " + currentSet);
                 int randomLevel = Random.Range(5, 7);
                 PlayerStats.CurrentLevel = randomLevel;
                 PlayerStats.MaxHealthPoints = baseMaxHealthPoints * PlayerStats.CurrentLevel;
                 PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
-                _character = new TBCharacter(_characterData, randomLevel, TBDemo);
+                _character = new TBCharacter(_characterData, randomLevel, TBDemo, currentSet);
+                currentSet++;
             }
         }
     }

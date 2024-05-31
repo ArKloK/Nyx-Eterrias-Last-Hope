@@ -51,7 +51,7 @@ public enum Element
     Normal,
     Fire,
     Water,
-    Plant,
+    Grass,
     Darkness,
 }
 

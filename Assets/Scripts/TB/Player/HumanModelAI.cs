@@ -195,8 +195,8 @@ public class HumanModelAI : MonoBehaviour
                 {
                     Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
                 }
-                Debug.LogError("Exceeded maximum attempts in PrioritizeAttack");
-                break;
+                Debug.LogWarning("Exceeded maximum attempts in PrioritizeAttack. Attacking");
+                return "Attack " + playerMostDamagingMove.MoveData.MoveName;
             }
             int randomAction = Random.Range(1, 7); // 1-6
             Debug.Log("Random action inside DontPrioritizeAttack" + randomAction);
@@ -229,7 +229,7 @@ public class HumanModelAI : MonoBehaviour
                             {
                                 Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
                             }
-                            Debug.LogError("Exceeded maximum inner attempts in PrioritizeAttack");
+                            Debug.LogError("Exceeded maximum inner attempts getting a stat move in PrioritizeAttack");
                             break;
                         }
                         if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
@@ -276,8 +276,8 @@ public class HumanModelAI : MonoBehaviour
                 {
                     Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
                 }
-                Debug.LogError("Exceeded maximum attempts in DontPrioritizeAttack");
-                break;
+                Debug.LogWarning("Exceeded maximum attempts in DontPrioritizeAttack. Attacking");
+                return "Attack " + playerMostDamagingMove.MoveData.MoveName;
             }
 
             int randomAction = Random.Range(1, 10); // 1-9
@@ -311,7 +311,7 @@ public class HumanModelAI : MonoBehaviour
                             {
                                 Debug.Log("Player move before ERROR " + move.MoveData.MoveName);
                             }
-                            Debug.LogError("Exceeded maximum inner attempts in DontPrioritizeAttack");
+                            Debug.LogError("Exceeded maximum inner attempts getting a stat move in DontPrioritizeAttack");
                             break;
                         }
                         if (enemyUnit.Character.Speed > playerUnit.Character.Speed)

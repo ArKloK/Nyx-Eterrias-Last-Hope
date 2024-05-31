@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour, IDataPersistence
         }
         else
         {
-            StartCoroutine(battleSystem.SetupBattle());
+            //StartCoroutine(battleSystem.SetupBattle());
             
         }
     }

@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         foreach (Collider2D enemy in hitEnemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+            EnemyMovementController enemyAI = enemy.GetComponent<EnemyMovementController>();
             if (enemyController != null)
             {
                 enemyController.TakeDamage(attackPower);

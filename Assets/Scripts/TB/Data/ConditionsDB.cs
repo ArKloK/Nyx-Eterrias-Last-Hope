@@ -20,7 +20,7 @@ public class ConditionsDB
                 OnEffectAppliedToCharacter = (TBCharacter character) =>
                 {
                     character.StatusChanges.Enqueue($"{character.CharacterData.Name} is hurt by poison!");
-                    character.UpdateHp(character.MaxHp / 8);
+                    character.UpdateHp(character.MaxHp / 12);
                 },
             }
         },

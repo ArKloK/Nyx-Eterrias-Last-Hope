@@ -4,7 +4,7 @@ using UnityEngine;
 using Pathfinding;
 using System;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyMovementController : MonoBehaviour
 {
     [SerializeField] EnemyMovementData Data;
     private Rigidbody2D rb;

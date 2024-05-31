@@ -19,11 +19,18 @@ public class TBDialogueBox : MonoBehaviour
     [SerializeField] TextMeshProUGUI typeText;
     [SerializeField] TextMeshProUGUI accuracyText;
     private bool isDialogueLineFinished;
+    private bool PlayerControlledByAI;
 
     public bool IsDialogueLineFinished { get => isDialogueLineFinished; set => isDialogueLineFinished = value; }
+    public bool PlayerControlledByAI1 { get => PlayerControlledByAI; set => PlayerControlledByAI = value; }
 
     void Update()
     {
+        // if(PlayerControlledByAI)
+        // {
+        //     typingSpeed = 0.0001f;
+        //     return;
+        // }
         if (PlayerPrefs.HasKey("TextVelocity"))
         {
             int dbTextVelocity = PlayerPrefs.GetInt("TextVelocity");

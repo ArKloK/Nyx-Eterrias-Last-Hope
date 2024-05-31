@@ -161,7 +161,7 @@ namespace PlayerMovementController
             if (context.started && canMove && !_isDashing && attackCooldownTimer <= 0)
             {
                 StartCoroutine(ExecuteAttack());
-                attackCooldownTimer = attackCooldown;
+                attackCooldownTimer = Data.AttackCooldown;
             }
         }
         #endregion
@@ -212,7 +212,6 @@ namespace PlayerMovementController
             #endregion
         }
         private float attackCooldownTimer = 0;
-        public float attackCooldown = 0.5f;
         private IEnumerator ExecuteAttack()
         {
             _isAttacking = true;
