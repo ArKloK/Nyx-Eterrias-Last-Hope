@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TBPlayerData DEMO
   m_EditorClassIdentifier: 
   _name: Nyx
-  _sprite: {fileID: 0}
+  _sprite: {fileID: 2024140517587746652, guid: 0b7d93df169c9584383b1839089c1da7, type: 3}
   _learnableMoves:
   - MoveData: {fileID: 11400000, guid: 284a04660af0f704caccd2f7d3823c28, type: 2}
     Level: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   _defensePower: 0
   _attackSpeed: 0
   _experienceAmount: 0
-  _element: 0
+  _element: 2

@@ -61,7 +61,6 @@ public class GameData
             moves[3] = 3;
         }
     }
-    
     public override string ToString()
     {
         return "Element: " + element + "\n" +

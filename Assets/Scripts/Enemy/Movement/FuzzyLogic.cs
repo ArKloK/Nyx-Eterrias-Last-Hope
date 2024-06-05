@@ -11,7 +11,7 @@ public class FuzzyLogic : MonoBehaviour
     AnimationCurve enemyMediumHealth;
     AnimationCurve enemyHighHealth;
     private float[,] rules = new float[3, 3];
-    private float LOW, MEDIUM, HIGH;
+    private float SLOW, MEDIUM, FAST;
 
     void OnEnable()
     {
@@ -25,7 +25,7 @@ public class FuzzyLogic : MonoBehaviour
 
     void Start()
     {
-        LOW = 1000; MEDIUM = 1700; HIGH = 3000;
+        SLOW = 1000; MEDIUM = 2000; FAST = 3000;
         SetRules();
         setCurvesValues();
     }
@@ -40,7 +40,7 @@ public class FuzzyLogic : MonoBehaviour
         enemyMediumHealth = new AnimationCurve();
         enemyHighHealth = new AnimationCurve();
 
-        int playerMaxLevel = 15;
+        int playerMaxLevel = 10;
         Debug.Log("Player Max Health: " + playerMaxLevel);
         //Set the keys for the player health curves
         playerLowLevel.AddKey(0, 1);
@@ -63,15 +63,15 @@ public class FuzzyLogic : MonoBehaviour
 
     void SetRules()
     {
-        rules[0, 0] = LOW;
-        rules[0, 1] = LOW;
+        rules[0, 0] = SLOW;
+        rules[0, 1] = SLOW;
         rules[0, 2] = MEDIUM;
-        rules[1, 0] = LOW;
+        rules[1, 0] = SLOW;
         rules[1, 1] = MEDIUM;
-        rules[1, 2] = HIGH;
+        rules[1, 2] = FAST;
         rules[2, 0] = MEDIUM;
-        rules[2, 1] = HIGH;
-        rules[2, 2] = HIGH;
+        rules[2, 1] = FAST;
+        rules[2, 2] = FAST;
     }
 
     private float[] EvaluatePlayerLevel()
@@ -86,7 +86,7 @@ public class FuzzyLogic : MonoBehaviour
             result[2] = playerHighLevel.Evaluate(playerLevel);
         }
 
-        Debug.Log("Player Health: " + result[0] + " " + result[1] + " " + result[2]);
+        Debug.Log("Player Level: " + result[0] + " " + result[1] + " " + result[2]);
         return result;
     }
 

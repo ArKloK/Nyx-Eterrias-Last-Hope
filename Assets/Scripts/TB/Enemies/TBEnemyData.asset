@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb6bd222e324f84b9382f106a6d244b, type: 3}
   m_Name: TBEnemyData
   m_EditorClassIdentifier: 
-  _name: Enemy1
-  _sprite: {fileID: 0}
+  _name: Pyroxis
+  _sprite: {fileID: 5918382280877511823, guid: c0ee6c13b37aa6b49a039d353a8497ab, type: 3}
   _learnableMoves:
   - MoveData: {fileID: 11400000, guid: 8c1c28f343cbc0243b9cf93f63c5bec5, type: 2}
     Level: 1

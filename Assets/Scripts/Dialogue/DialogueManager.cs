@@ -18,7 +18,6 @@ public class DialogueManager : MonoBehaviour
     private bool isTBBattleLine;
     private bool isDialogueLineFinished;
 
-    // Start is called before the first frame update
     void Awake()
     {
         if (Instance == null)
