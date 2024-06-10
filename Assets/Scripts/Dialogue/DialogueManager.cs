@@ -11,10 +11,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] MoveSelectionUI moveSelectionUI;
+    [SerializeField] ElementSelectionUI elementSelectionUI;
     float typingSpeed;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive;
     private bool isSelectingMove;
+    private bool isSelectingElement;
     private bool isTBBattleLine;
     private bool isDialogueLineFinished;
 
@@ -68,6 +70,10 @@ public class DialogueManager : MonoBehaviour
             if (isSelectingMove)
             {
                 moveSelectionUI.HandleMoveSelection();
+            }
+            if (isSelectingElement)
+            {
+                elementSelectionUI.HandleElementSelection();
             }
             if (Input.GetKeyDown(KeyCode.Return) && isDialogueLineFinished)
             {
@@ -133,6 +139,17 @@ public class DialogueManager : MonoBehaviour
         {
             moveSelectionUI.gameObject.SetActive(false);
             isSelectingMove = false;
+        }
+
+        if (dialogueLine.isElementSelectionLine)
+        {
+            elementSelectionUI.gameObject.SetActive(true);
+            isSelectingElement = true;
+        }
+        else
+        {
+            elementSelectionUI.gameObject.SetActive(false);
+            isSelectingElement = false;
         }
 
         if (dialogueLine.isTBBattleLine)

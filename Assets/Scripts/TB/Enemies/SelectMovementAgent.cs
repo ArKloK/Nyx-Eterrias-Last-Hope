@@ -3,7 +3,6 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using System;
-using Unity.MLAgents.Integrations.Match3;
 
 public class SelectMovementAgent : Agent
 {
@@ -65,7 +64,7 @@ public class SelectMovementAgent : Agent
         sensor.AddObservation(enemy.Statuses.Count / 10);  // Número de estados actuales
         foreach (Condition status in enemy.Statuses)
         {
-            sensor.AddObservation((int)status.ID / 10);  // ID del estado (suponiendo que ConditionID es un enum)
+            sensor.AddObservation((int)status.ID / 10);  // ID del estado 
         }
 
         // Añadir información sobre los movimientos disponibles
@@ -73,7 +72,7 @@ public class SelectMovementAgent : Agent
         foreach (TBMove move in enemy.Moves)
         {
             sensor.AddObservation(move.MoveData.Power / 100);
-            sensor.AddObservation((int)move.MoveData.Element / 10); // Suponiendo que Element es un enum
+            sensor.AddObservation((int)move.MoveData.Element / 10);
             sensor.AddObservation(move.MoveData.CriticalChance / 100);
         }
 
@@ -90,7 +89,7 @@ public class SelectMovementAgent : Agent
             sensor.AddObservation((int)status.ID / 10);
         }
 
-        // Añadir información sobre los movimientos del jugador (si es relevante para la toma de decisiones)
+        // Añadir información sobre los movimientos del jugador
         sensor.AddObservation(player.Moves.Count / 10);
         foreach (var move in player.Moves)
         {
@@ -108,6 +107,7 @@ public class SelectMovementAgent : Agent
 
     public int GetMoveIndex()
     {
+        int maxChecks = 100, currentCheck = 0;
         // Verificar si enemyUnit y playerUnit están asignados
         if (enemyUnit == null || playerUnit == null || enemyUnit.Character == null || playerUnit.Character == null)
         {
@@ -115,15 +115,29 @@ public class SelectMovementAgent : Agent
             return -1; // Devuelve un valor por defecto o lanza una excepción
         }
 
-        RequestDecision();
-        CheckIfIsACorrectMove();
+        do
+        {
+            RequestDecision();
+            currentCheck++;
+            if (currentCheck >= maxChecks)
+            {
+                Debug.LogWarning("Reached maximum number of checks. Returning a random move index.");
+                selectedMoveIndex = UnityEngine.Random.Range(0, enemyUnit.Character.Moves.Count);
+                AddReward(-50f);
+                break;
+            }
+        } while (CheckIfIsACorrectMove() == false);
+
         Academy.Instance.EnvironmentStep();
         return selectedMoveIndex;
     }
 
-    private void CheckIfIsACorrectMove()
+    private bool CheckIfIsACorrectMove()
     {
         TBMove enemyMove = enemyUnit.Character.Moves[selectedMoveIndex];
+        float effectiveness = TypeChart.GetEffectiveness(enemyMove.MoveData.Element, playerUnit.Character.CharacterData.Element);
+        Debug.Log("Effectiveness: " + effectiveness);
+        
         if (enemyMove.MoveData.Effects.statBoosts.Count > 0)
         {
             var stat = enemyMove.MoveData.Effects.statBoosts[0].stat;
@@ -131,36 +145,55 @@ public class SelectMovementAgent : Agent
             {
                 if (enemyUnit.Character.Stats[stat] == 5 || enemyUnit.Character.Stats[stat] == 0)
                 {
-                    AddReward(-20f);
+                    AddReward(-10f);
+                    return false;
                 }
             }
-            else if (enemyMove.MoveData.Target == MoveTarget.Foe)
+            if (enemyMove.MoveData.Target == MoveTarget.Foe)
             {
                 if (playerUnit.Character.Stats[stat] == 5 || playerUnit.Character.Stats[stat] == 0)
                 {
-                    AddReward(-20f);
+                    AddReward(-10f);
+                    return false;
                 }
             }
-            else if (enemyUnit.Character.Speed > playerUnit.Character.Speed)
-            {
-                AddReward(20f);
-            }
         }
-        else if (enemyMove.MoveData.Effects.status != ConditionID.None)
+        if (enemyMove.MoveData.Effects.status != ConditionID.None)
         {
             var condition = ConditionsDB.Conditions[enemyMove.MoveData.Effects.status];
             if (enemyMove.MoveData.Target == MoveTarget.Foe)
             {
                 if (playerUnit.Character.Statuses.Contains(condition))
                 {
-                    AddReward(-20f);
+                    AddReward(-10f);
+                    return false;
                 }
             }
         }
-        else
+        if (playerUnit.Character.Statuses.Count <= 0)
         {
-            AddReward(10f);
+            AddReward(-10f);
+            return false;
         }
+        if (enemyUnit.Character.Speed < playerUnit.Character.Speed)
+        {
+            AddReward(-10f);
+            return false;
+        }
+        // TODO: Si escoge un movimiento de bajar velocidad y el jugador ya tiene una velocidad menor que la del enemigo
+        if (effectiveness <= 0.5f)
+        {
+            AddReward(-10f);
+            return false;
+        }
+        if (effectiveness >= 1.5f)
+        {
+            AddReward(60f);
+            return true;
+        }
+
+        AddReward(50f);
+        return true;
     }
 
     private void AddRewards(bool playerWon)

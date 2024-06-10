@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
     public EnemyData Data;
-
-    [HideInInspector]
+    private EnemyMovementController enemyMovementController;
     private int currentHealthPoints;
 
     public int CurrentHealthPoints { get => currentHealthPoints; set => currentHealthPoints = value; }
@@ -15,12 +14,20 @@ public class EnemyController : MonoBehaviour
     {
         currentHealthPoints = Data.MaxHealthPoints;
     }
-    public void TakeDamage(int damage)
+    void Start()
+    {
+        enemyMovementController = GetComponent<EnemyMovementController>();
+    }
+    public void TakeDamage(int damage, Vector2 attackerPosition)
     {
         currentHealthPoints -= damage;
         if (currentHealthPoints <= 0)
         {
             Die();
+        }else{
+            Vector2 knockBackDirection = ((Vector2)transform.position - attackerPosition).normalized;
+            StartCoroutine(enemyMovementController.LoseControl());
+            enemyMovementController.KnockBack(knockBackDirection);
         }
     }
 
@@ -32,12 +39,11 @@ public class EnemyController : MonoBehaviour
             if (playerController != null)
             {
                 playerController.TakeDamage(Data.AttackPower, other.GetContact(0).normal);
-                
-                Debug.Log("Player took damage"); 
+
+                Debug.Log("Player took damage");
             }
         }
     }
-
     public void Die()
     {
         ExperienceManager.Instance.AddExperience(Data.ExperiencePoints);

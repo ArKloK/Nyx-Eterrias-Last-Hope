@@ -20,5 +20,5 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  KnockBackForce: {x: 50, y: 50}
+  KnockBackPower: {x: 50, y: 50}
   KnockBackTime: 0.3

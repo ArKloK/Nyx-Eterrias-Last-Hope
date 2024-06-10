@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     #region Attack Variables
     private int attackPower;
-    private float attackSpeed;
     private float attackRadius;
     [SerializeField] Transform attackOrigin;
     private LayerMask enemyMask;
@@ -81,7 +80,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         playerMovementController = GetComponent<PlayerMovementController.PlayerMovementController>();
 
         attackPower = Data.AttackPower;
-        attackSpeed = Data.AttackSpeed;
         attackRadius = Data.AttackRadius;
         enemyMask = Data.EnemyMask;
 
@@ -119,11 +117,9 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         foreach (Collider2D enemy in hitEnemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            EnemyMovementController enemyAI = enemy.GetComponent<EnemyMovementController>();
             if (enemyController != null)
             {
-                enemyController.TakeDamage(attackPower);
-                if (enemyController.CurrentHealthPoints > 0) enemyAI.KnockBack(this.gameObject);
+                enemyController.TakeDamage(attackPower, transform.position);
                 Debug.Log("Enemy took damage, current health: " + enemyController.CurrentHealthPoints);
             }
         }

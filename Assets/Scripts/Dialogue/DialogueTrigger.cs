@@ -8,6 +8,7 @@ public class DialogueLine
     [TextArea(3, 10)]
     public string line;
     public bool isMoveSelectionLine = false;
+    public bool isElementSelectionLine = false;
     public bool isTBBattleLine = false;
 }
 

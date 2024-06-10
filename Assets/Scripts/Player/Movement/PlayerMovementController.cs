@@ -27,8 +27,8 @@ namespace PlayerMovementController
         bool ceilingHit;
         public bool canMove = true;
         public bool isDialogueActive;
-        private bool _isAttacking;
-        public bool IsAttacking { get => _isAttacking; set => _isAttacking = value; }
+        private bool isAttacking;
+        public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         #endregion
 
         #region Animation
@@ -94,7 +94,7 @@ namespace PlayerMovementController
 
             CheckAnimations();
 
-            if (canMove)
+            if (canMove && !isAttacking)
             {
                 HandleJump();
                 HandleDoubleJump();
@@ -102,7 +102,7 @@ namespace PlayerMovementController
                 HandleWallJump();
                 HandleDirection();
             }
-            else if (!canMove && isDialogueActive) //If the player can´t move, just apply gravity and stop the player
+            else if ((!canMove && isDialogueActive) || isAttacking) //If the player can´t move, just apply gravity and stop the player
             {
                 _frameVelocity = new Vector2(0, _frameVelocity.y);
             }
@@ -214,11 +214,11 @@ namespace PlayerMovementController
         private float attackCooldownTimer = 0;
         private IEnumerator ExecuteAttack()
         {
-            _isAttacking = true;
+            isAttacking = true;
             Debug.Log("Attacking");
             playerController.Attack();
-            yield return new WaitForSeconds(0.5f);
-            _isAttacking = false;
+            yield return new WaitForSeconds(Data.AttackCooldown);
+            isAttacking = false;
         }
 
         #region Collisions
@@ -453,7 +453,7 @@ namespace PlayerMovementController
         #region Auxiliar Methods
         private void Flip()
         {
-            if (canMove && (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump) && !_isAttacking)
+            if (canMove && (_isFacingRight && _frameInput.Move.x < 0f || !_isFacingRight && _frameInput.Move.x > 0 || turnOnWallJump) && !isAttacking)
             {
                 Vector3 scale = transform.localScale;
                 scale.x *= -1;
@@ -479,7 +479,7 @@ namespace PlayerMovementController
         }
         void CheckAnimations()
         {
-            if (_isAttacking)
+            if (isAttacking)
             {
                 newAnimationState = PLAYER_ATTACK;
             }

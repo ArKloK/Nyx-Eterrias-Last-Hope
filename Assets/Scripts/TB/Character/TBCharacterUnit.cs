@@ -33,11 +33,11 @@ public class TBCharacterUnit : MonoBehaviour
                     currentSet = 0;
 
                 Debug.Log("Current set: " + currentSet);
-                int randomLevel = Random.Range(5, 7);
-                PlayerStats.CurrentLevel = randomLevel;
+                int tBDemoPlayerLevel = 5;
+                PlayerStats.CurrentLevel = tBDemoPlayerLevel;
                 PlayerStats.MaxHealthPoints = baseMaxHealthPoints * PlayerStats.CurrentLevel;
                 PlayerStats.CurrentHealthPoints = PlayerStats.MaxHealthPoints;
-                _character = new TBCharacter(_characterData, randomLevel, TBDemo, currentSet);
+                _character = new TBCharacter(_characterData, tBDemoPlayerLevel, TBDemo, currentSet);
                 currentSet++;
             }
         }

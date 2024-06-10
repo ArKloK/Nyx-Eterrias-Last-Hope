@@ -6,10 +6,9 @@ using System;
 
 public class EnemyMovementController : MonoBehaviour
 {
-    [SerializeField] EnemyMovementData Data;
+    public EnemyMovementData Data;
     private Rigidbody2D rb;
     private BoxCollider2D _col;
-    private bool _grounded;
     private Transform currentTarget;
     private bool canMove = true;
     private bool runAway = false;
@@ -25,7 +24,6 @@ public class EnemyMovementController : MonoBehaviour
 
     Path path;
     int currentWaypoint = 0;
-    //bool reachedEndOfPath = false;
 
     Seeker seeker;
 
@@ -50,56 +48,38 @@ public class EnemyMovementController : MonoBehaviour
     void Update()
     {
         if (canMove) CheckTarget();
-        if(GetComponent<EnemyController>().CurrentHealthPoints <= GetComponent<EnemyController>().Data.MaxHealthPoints / 2)
+        if (GetComponent<EnemyController>().CurrentHealthPoints <= GetComponent<EnemyController>().Data.MaxHealthPoints / 2)
         {
             runAway = true;
+            rb.gravityScale = 1f;
         }
         else
         {
             runAway = false;
+            rb.gravityScale = 0f;
         }
     }
 
     void FixedUpdate()
     {
-        CheckGrounded();
-        if (!_grounded)
-        {
-            Fall();
-        }
-        Debug.Log("CanMove: " + canMove);
-        ApplyMovement();
+        if (canMove)
+            ApplyMovement();
+        else
+            rb.velocity = Vector2.zero;
     }
 
-    public void KnockBack(GameObject sender)
+    public void KnockBack(Vector2 direction)
+    {
+        float knockBackPower = 16f;
+        rb.AddForce(direction * knockBackPower, ForceMode2D.Impulse);
+    }
+
+    public IEnumerator LoseControl()
     {
         canMove = false;
-        Vector2 direction = new Vector2((transform.position - sender.transform.position).normalized.x, 1f);
-        rb.AddForce(direction * Data.KnockBackForce, ForceMode2D.Impulse);
-        StartCoroutine(LoseControl());
-    }
-
-    IEnumerator LoseControl()
-    {
-        yield return new WaitForSeconds(Data.KnockBackTime);
         rb.velocity = Vector2.zero;
+        yield return new WaitForSeconds(Data.KnockBackTime);
         canMove = true;
-    }
-
-    public void Fall()
-    {
-        if (!_grounded && canMove)
-        {
-            rb.AddForce(Vector2.down * Data.FallAcceleration, ForceMode2D.Force);
-            Vector2 aux = new Vector2();
-            aux.y = Mathf.MoveTowards(rb.velocity.y, -Data.MaxFallSpeed, Data.FallAcceleration * Time.fixedDeltaTime);
-            rb.velocity = aux;
-        }
-    }
-
-    void CheckGrounded()
-    {
-        _grounded = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0f, Vector2.down, 0.1f, Data.GroundLayer);
     }
 
     //Switches the target between the player and the patrol points
@@ -150,7 +130,7 @@ public class EnemyMovementController : MonoBehaviour
     //Makes the enemy move towards the next waypoint
     void ApplyMovement()
     {
-        if (path == null || !canMove) 
+        if (path == null || !canMove)
         {
             rb.velocity = Vector2.zero;
             return;
@@ -158,18 +138,13 @@ public class EnemyMovementController : MonoBehaviour
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
-            //reachedEndOfPath = true;
             return;
-        }
-        else
-        {
-            //reachedEndOfPath = false;
         }
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         speed = GetComponent<FuzzyLogic>().SetEnemySpeed();
         Debug.Log("Speed: " + speed);
-        
+
         Vector2 force;
         if (currentTarget == Playertarget)
             force = direction * speed * Time.deltaTime;
