@@ -288,7 +288,6 @@ namespace PlayerMovementController
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = Data.JumpPower;
-            //newAnimationState = PLAYER_JUMP;
             dust.Play();
             Jumped?.Invoke();
         }

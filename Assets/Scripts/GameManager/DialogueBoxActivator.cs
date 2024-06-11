@@ -16,6 +16,6 @@ public class DialogueBoxActivator : MonoBehaviour
     {
         PauseMenuController.canPause = false;
         dialogueBox.SetActive(true);
-        DialogueManager.Instance.StartDialogue(dialogue);
+        StartCoroutine(DialogueManager.Instance.StartDialogue(dialogue));
     }
 }

@@ -137,7 +137,7 @@ public class SelectMovementAgent : Agent
         TBMove enemyMove = enemyUnit.Character.Moves[selectedMoveIndex];
         float effectiveness = TypeChart.GetEffectiveness(enemyMove.MoveData.Element, playerUnit.Character.CharacterData.Element);
         Debug.Log("Effectiveness: " + effectiveness);
-        
+
         if (enemyMove.MoveData.Effects.statBoosts.Count > 0)
         {
             var stat = enemyMove.MoveData.Effects.statBoosts[0].stat;
@@ -151,7 +151,13 @@ public class SelectMovementAgent : Agent
             }
             if (enemyMove.MoveData.Target == MoveTarget.Foe)
             {
+                
                 if (playerUnit.Character.Stats[stat] == 5 || playerUnit.Character.Stats[stat] == 0)
+                {
+                    AddReward(-10f);
+                    return false;
+                }
+                if (enemyUnit.Character.Speed > playerUnit.Character.Speed && enemyMove.MoveData.Effects.statBoosts[0].stat == Stat.Speed)
                 {
                     AddReward(-10f);
                     return false;
@@ -175,15 +181,15 @@ public class SelectMovementAgent : Agent
             AddReward(-10f);
             return false;
         }
+
         if (enemyUnit.Character.Speed < playerUnit.Character.Speed)
         {
             AddReward(-10f);
             return false;
         }
-        // TODO: Si escoge un movimiento de bajar velocidad y el jugador ya tiene una velocidad menor que la del enemigo
         if (effectiveness <= 0.5f)
         {
-            AddReward(-10f);
+            AddReward(-5f);
             return false;
         }
         if (effectiveness >= 1.5f)

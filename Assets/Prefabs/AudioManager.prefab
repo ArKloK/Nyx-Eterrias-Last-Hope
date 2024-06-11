@@ -49,7 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa39eec3f92dbc94893f783cc5c05305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffects: []
+  soundEffects:
+  - groupID: Hover
+    clips:
+    - {fileID: 8300000, guid: 5cdf34c0935d6ea4e877427e938b28bc, type: 3}
+  - groupID: Click
+    clips:
+    - {fileID: 8300000, guid: c73a657a9644a004d8202b42d714261c, type: 3}
 --- !u!114 &2711435025785893811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,8 +138,9 @@ AudioSource:
   m_GameObject: {fileID: 2748330648726316140}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2552872439168433867, guid: fde33df8313ae57458989ceb2587c07f, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -260,8 +267,9 @@ AudioSource:
   m_GameObject: {fileID: 3497683712579383818}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 206971032919554970, guid: fde33df8313ae57458989ceb2587c07f, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

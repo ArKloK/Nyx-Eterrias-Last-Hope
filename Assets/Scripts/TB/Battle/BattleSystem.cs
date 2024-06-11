@@ -25,6 +25,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] bool playerControlledByAI;
     BattleState state;
     HumanModelAI humanModelAI;
+    Animator animator;
     public static event Action<bool> OnBattleEnd;
     int currentAction;
     int currentMove;
@@ -36,6 +37,12 @@ public class BattleSystem : MonoBehaviour
     private bool enemyActionSelected;
 
     public static event Action<InventoryItem> OnHumanModelHeals;
+
+    void Awake()
+    {
+        if (!TBDemo)
+            animator = GetComponent<Animator>();
+    }
 
     void OnEnable()
     {
@@ -131,6 +138,9 @@ public class BattleSystem : MonoBehaviour
         if (playerControlledByAI) humanModelAI.ResetBattle();
 
         dialogueBox.SetMoveNames(playerUnit.Character.Moves);
+
+        if (!TBDemo)
+            yield return new WaitForSeconds(GetAnimationDuration("StartCombat"));
 
         yield return dialogueBox.TypeDialogueTB($"{enemyUnit.Character.CharacterData.Name} wants to battle!");
 
@@ -253,11 +263,11 @@ public class BattleSystem : MonoBehaviour
                 yield return new WaitForSeconds(2f);
                 if (target.CharacterData.IsEnemy)
                 {
-                    EndBattle(true);
+                    StartCoroutine(EndBattle(true));
                 }
                 else
                 {
-                    EndBattle(false);
+                    StartCoroutine(EndBattle(false));
                 }
             }
         }
@@ -277,7 +287,7 @@ public class BattleSystem : MonoBehaviour
             {
                 yield return dialogueBox.TypeDialogueTB(unit.CharacterData.Name + " fainted!");
                 yield return new WaitForSeconds(2f);
-                EndBattle(unit.CharacterData.IsEnemy);
+                StartCoroutine(EndBattle(unit.CharacterData.IsEnemy));
                 //This will break the coroutine if the battle is over
                 yield break;
             }
@@ -291,7 +301,7 @@ public class BattleSystem : MonoBehaviour
         {
             yield return dialogueBox.TypeDialogueTB(unit.CharacterData.Name + " fainted!");
             yield return new WaitForSeconds(2f);
-            EndBattle(unit.CharacterData.IsEnemy);
+            StartCoroutine(EndBattle(unit.CharacterData.IsEnemy));
         }
         humanModelAIActionSelectioned = false;
     }
@@ -487,14 +497,22 @@ public class BattleSystem : MonoBehaviour
     }
 
     //The parameter won is going to be true if the player wins the battle, and false if the player loses the battle.
-    public void EndBattle(bool playerWon)
+    public IEnumerator EndBattle(bool playerWon)
     {
         PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
         //This will add experience to the player if he wins the battle
         if (playerWon && !TBDemo)
         {
+            animator.Play("EnemyFaint");
+            yield return new WaitForSeconds(GetAnimationDuration("EnemyFaint"));
             ExperienceManager.Instance.AddExperience(enemyUnit.CharacterData.ExperienceAmount);
         }
+        else if (!playerWon && !TBDemo)
+        {
+            animator.Play("PlayerFaint");
+            yield return new WaitForSeconds(GetAnimationDuration("PlayerFaint"));
+        }
+
         state = BattleState.BATTLEOVER;
         playerUnit.Character.ResetStatBoosts();
         enemyUnit.Character.ResetStatBoosts();
@@ -532,5 +550,20 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("Close player move");
             PlayerAction();
         }
+    }
+    float GetAnimationDuration(string animationName)
+    {
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+
+        for (int i = 0; i < ac.animationClips.Length; i++)
+        {
+            if (ac.animationClips[i].name == animationName)
+            {
+                return ac.animationClips[i].length;
+            }
+        }
+
+        Debug.LogError("La animación con nombre '" + animationName + "' no fue encontrada.");
+        return 0;
     }
 }

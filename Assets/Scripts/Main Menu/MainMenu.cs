@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using Unity.VisualScripting;
 
 public class MainMenu : MonoBehaviour
 {
@@ -43,6 +44,14 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         ChangeDarkOverlay();
+        UpdateMusicVolume();
+        UpdateSFXVolume();
+    }
+    void OnApplicationQuit()
+    {
+        SaveVolume();
+        SaveDarkOverlay();
+        SaveTextVelocity();
     }
     #region Buttons
     public void OnNewGameButtonClicked()
@@ -67,13 +76,13 @@ public class MainMenu : MonoBehaviour
     }
     #endregion
     #region Music and SFX Volume
-    public void UpdateMusicVolume(float volume)
+    public void UpdateMusicVolume()
     {
-        audioMixer.SetFloat("MusicVolume", volume);
+        audioMixer.SetFloat("MusicVolume", musicSlider.value);
     }
-    public void UpdateSFXVolume(float volume)
+    public void UpdateSFXVolume()
     {
-        audioMixer.SetFloat("SFXVolume", volume);
+        audioMixer.SetFloat("SFXVolume", sfxSlider.value);
     }
     public void SaveVolume()
     {
@@ -88,12 +97,12 @@ public class MainMenu : MonoBehaviour
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
-            UpdateMusicVolume(musicSlider.value);
+            UpdateMusicVolume();
         }
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
             sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
-            UpdateSFXVolume(sfxSlider.value);
+            UpdateSFXVolume();
         }
 
     }
@@ -117,7 +126,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("DarkOverlay", brightnessSlider.value);
     }
     #endregion
-    #region Text Velocitys
+    #region Text Velocity
     public void LoadTextVelocity()
     {
         if (PlayerPrefs.HasKey("TextVelocity"))
@@ -134,5 +143,4 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
     }
     #endregion
-
 }

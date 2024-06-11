@@ -12,6 +12,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] MoveSelectionUI moveSelectionUI;
     [SerializeField] ElementSelectionUI elementSelectionUI;
+    private Animator animator;
     float typingSpeed;
     private Queue<DialogueLine> lines;
     private bool isDialogueActive;
@@ -22,6 +23,7 @@ public class DialogueManager : MonoBehaviour
 
     void Awake()
     {
+        animator = GetComponent<Animator>();
         if (Instance == null)
             Instance = this;
     }
@@ -86,8 +88,9 @@ public class DialogueManager : MonoBehaviour
             }
         }
     }
-    public void StartDialogue(Dialogue dialogue)
+    public IEnumerator StartDialogue(Dialogue dialogue)
     {
+        dialogueText.text = "";
         isDialogueActive = true;
         lines = new Queue<DialogueLine>();
 
@@ -95,6 +98,9 @@ public class DialogueManager : MonoBehaviour
         {
             lines.Enqueue(line);
         }
+
+        yield return new WaitForSeconds(GetAnimationDuration("Open"));
+
         DisplayNextLine();
     }
 
@@ -110,7 +116,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (lines.Count == 0)
         {
-            EndDialogue();
+            StartCoroutine(EndDialogue());
             return;
         }
         DialogueLine line = lines.Dequeue();
@@ -158,7 +164,7 @@ public class DialogueManager : MonoBehaviour
         }
         isDialogueLineFinished = true;
     }
-    public void EndDialogue()
+    public IEnumerator EndDialogue()
     {
         //This should avoid the script from modifying the player's movement while in TB
         if (player != null)
@@ -172,9 +178,28 @@ public class DialogueManager : MonoBehaviour
             }
         }
         PauseMenuController.canPause = true;
-        gameObject.SetActive(false);
-        moveSelectionUI.gameObject.SetActive(false);
         isDialogueActive = false;
         dialogueText.text = "";
+        animator.Play("Close");
+        yield return new WaitForSeconds(GetAnimationDuration("Close"));
+        gameObject.SetActive(false);
+        moveSelectionUI.gameObject.SetActive(false);
+        
+    }
+
+    float GetAnimationDuration(string animationName)
+    {
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+
+        for (int i = 0; i < ac.animationClips.Length; i++)
+        {
+            if (ac.animationClips[i].name == animationName)
+            {
+                return ac.animationClips[i].length;
+            }
+        }
+
+        Debug.LogError("La animación con nombre '" + animationName + "' no fue encontrada.");
+        return 0;
     }
 }

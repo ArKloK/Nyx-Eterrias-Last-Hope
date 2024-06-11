@@ -45,6 +45,8 @@ public class PauseMenuController : MonoBehaviour
     public void HandleUpdate()
     {
         ChangeDarkOverlay();
+        UpdateMusicVolume();
+        UpdateSFXVolume();
         if (Input.GetKeyDown(KeyCode.Escape) && canPause)
         {
             if (inventoryUI.activeSelf)
@@ -88,13 +90,13 @@ public class PauseMenuController : MonoBehaviour
     }
 
     #region Music and SFX Volume
-    public void UpdateMusicVolume(float volume)
+    public void UpdateMusicVolume()
     {
-        audioMixer.SetFloat("MusicVolume", volume);
+        audioMixer.SetFloat("MusicVolume", musicSlider.value);
     }
-    public void UpdateSFXVolume(float volume)
+    public void UpdateSFXVolume()
     {
-        audioMixer.SetFloat("SFXVolume", volume);
+        audioMixer.SetFloat("SFXVolume", sfxSlider.value);
     }
     public void SaveVolume()
     {
@@ -109,13 +111,14 @@ public class PauseMenuController : MonoBehaviour
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
-            UpdateMusicVolume(musicSlider.value);
+            UpdateMusicVolume();
         }
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
             sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
-            UpdateSFXVolume(sfxSlider.value);
+            UpdateSFXVolume();
         }
+
     }
     #endregion
     #region Dark Overlay
