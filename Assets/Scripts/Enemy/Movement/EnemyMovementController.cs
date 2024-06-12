@@ -11,6 +11,7 @@ public class EnemyMovementController : MonoBehaviour
     private BoxCollider2D _col;
     private Transform currentTarget;
     private bool canMove = true;
+    private bool isDialogueActive;
     private bool runAway = false;
     private float speed;
 
@@ -29,6 +30,7 @@ public class EnemyMovementController : MonoBehaviour
 
     public float Speed { get => standardSpeed; set => standardSpeed = value; }
     public bool CanMove { get => canMove; set => canMove = value; }
+    public bool IsDialogueActive { get => isDialogueActive; set => isDialogueActive = value; }
 
     void Start()
     {
@@ -62,10 +64,13 @@ public class EnemyMovementController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDialogueActive)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
         if (canMove)
             ApplyMovement();
-        else
-            rb.velocity = Vector2.zero;
     }
 
     public void KnockBack(Vector2 direction)
@@ -147,13 +152,16 @@ public class EnemyMovementController : MonoBehaviour
 
         Vector2 force;
         if (currentTarget == Playertarget)
-            force = direction * speed * Time.deltaTime;
+        {
+            force = direction * speed * 2 * Time.deltaTime;
+            if (runAway) force *= -1;
+            rb.AddForce(force);
+        }
         else
+        {
             force = direction * standardSpeed * Time.deltaTime;
-
-        if (runAway && currentTarget == Playertarget) force *= -1;
-
-        rb.AddForce(force);
+            rb.velocity = force;
+        }        
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 

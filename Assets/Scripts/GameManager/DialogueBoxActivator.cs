@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueBoxActivator : MonoBehaviour
@@ -10,6 +8,11 @@ public class DialogueBoxActivator : MonoBehaviour
     void Start()
     {
         DialogueTrigger.OnTriggerDialogue += TriggerDialogue;
+    }
+
+    void OnDestroy()
+    {
+        DialogueTrigger.OnTriggerDialogue -= TriggerDialogue;
     }
 
     public void TriggerDialogue(Dialogue dialogue)

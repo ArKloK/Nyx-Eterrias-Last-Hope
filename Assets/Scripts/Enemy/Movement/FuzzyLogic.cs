@@ -41,7 +41,6 @@ public class FuzzyLogic : MonoBehaviour
         enemyHighHealth = new AnimationCurve();
 
         int playerMaxLevel = 10;
-        Debug.Log("Player Max Health: " + playerMaxLevel);
         //Set the keys for the player health curves
         playerLowLevel.AddKey(0, 1);
         playerLowLevel.AddKey(playerMaxLevel / 2, 0);
@@ -76,7 +75,12 @@ public class FuzzyLogic : MonoBehaviour
 
     private float[] EvaluatePlayerLevel()
     {
-        PlayerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        PlayerController playerController = null;
+        if(GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        }
+        
         float[] result = new float[3];
         if (playerController != null)
         {

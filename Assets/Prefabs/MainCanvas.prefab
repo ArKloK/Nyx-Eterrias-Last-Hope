@@ -687,7 +687,7 @@ GameObject:
   - component: {fileID: 6421456647929068317}
   - component: {fileID: 1429073857281550171}
   m_Layer: 5
-  m_Name: MoveText (2)
+  m_Name: ElementText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -707,9 +707,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4503002933641022984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.30775, y: -376.96106}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6421456647929068317
@@ -740,7 +740,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Move
+  m_text: Element
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1514,7 +1514,7 @@ GameObject:
   - component: {fileID: 2173153683496131786}
   - component: {fileID: 6496855445512760490}
   m_Layer: 5
-  m_Name: MoveText (2)
+  m_Name: MoveText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1534,9 +1534,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6058711865607904236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 177.06255, y: -279.52576}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2173153683496131786
@@ -1650,7 +1650,7 @@ GameObject:
   - component: {fileID: 346984322808347328}
   - component: {fileID: 7715500863748007585}
   m_Layer: 5
-  m_Name: MoveText (1)
+  m_Name: MoveText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1670,9 +1670,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6058711865607904236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 177.06255, y: -171.71545}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &346984322808347328
@@ -2266,7 +2266,7 @@ GameObject:
   - component: {fileID: 8799565738580046875}
   - component: {fileID: 5380302861377097135}
   m_Layer: 5
-  m_Name: MoveText (3)
+  m_Name: MoveText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2286,9 +2286,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6058711865607904236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 177.06255, y: -387.33606}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8799565738580046875
@@ -2491,7 +2491,7 @@ GameObject:
   - component: {fileID: 2896480786187145634}
   - component: {fileID: 2338623214721605177}
   m_Layer: 5
-  m_Name: MoveText (4)
+  m_Name: MoveText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2511,9 +2511,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6058711865607904236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 177.06255, y: -495.14636}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2896480786187145634
@@ -3022,7 +3022,7 @@ GameObject:
   - component: {fileID: 3661490827815566480}
   - component: {fileID: 4275989670217797957}
   m_Layer: 5
-  m_Name: MoveText (1)
+  m_Name: ElementText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3042,9 +3042,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4503002933641022984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.30775, y: -230.17664}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3661490827815566480
@@ -3075,7 +3075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Move
+  m_text: Element
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3443,9 +3443,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6058711865607904236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 177.06255, y: -63.90515}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4637454437816066571
@@ -3559,7 +3559,7 @@ GameObject:
   - component: {fileID: 924272615690459205}
   - component: {fileID: 4114660410352360731}
   m_Layer: 5
-  m_Name: MoveText
+  m_Name: ElementText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3579,9 +3579,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4503002933641022984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.30775, y: -83.39221}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 506.1158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &924272615690459205
@@ -3612,7 +3612,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Move
+  m_text: Element
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

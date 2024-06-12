@@ -46,7 +46,6 @@ public class SelectMovementAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        Debug.Log("Collecting Observations");
         // Verificar si enemyUnit y playerUnit están asignados
         if (enemyUnit == null || playerUnit == null || enemyUnit.Character == null || playerUnit.Character == null)
         {
@@ -56,6 +55,7 @@ public class SelectMovementAgent : Agent
 
         // Observaciones del enemigo (agente controlado por ML-Agents)
         var enemy = enemyUnit.Character;
+        sensor.AddObservation((int)enemy.CharacterData.Element);  // Elemento del enemigo
         sensor.AddObservation(enemy.Level / 10);
         sensor.AddObservation(enemy.CurrentHP / 100);
         sensor.AddObservation(enemy.Attack / 100);
@@ -68,7 +68,6 @@ public class SelectMovementAgent : Agent
         }
 
         // Añadir información sobre los movimientos disponibles
-        sensor.AddObservation(enemy.Moves.Count / 10);
         foreach (TBMove move in enemy.Moves)
         {
             sensor.AddObservation(move.MoveData.Power / 100);
@@ -78,6 +77,7 @@ public class SelectMovementAgent : Agent
 
         // Observaciones del jugador (oponente del enemigo)
         var player = playerUnit.Character;
+        sensor.AddObservation((int)PlayerStats.Element);
         sensor.AddObservation(player.Level / 10);
         sensor.AddObservation(player.CurrentHP / 100);
         sensor.AddObservation(player.Attack / 100);
@@ -90,7 +90,6 @@ public class SelectMovementAgent : Agent
         }
 
         // Añadir información sobre los movimientos del jugador
-        sensor.AddObservation(player.Moves.Count / 10);
         foreach (var move in player.Moves)
         {
             sensor.AddObservation(move.MoveData.Power / 100);
@@ -189,7 +188,7 @@ public class SelectMovementAgent : Agent
         }
         if (effectiveness <= 0.5f)
         {
-            AddReward(-5f);
+            AddReward(-10f);
             return false;
         }
         if (effectiveness >= 1.5f)

@@ -11,13 +11,36 @@ public class CorssFade : SceneTransition
 
     public override IEnumerator AnimateTransitionIn()
     {
-        var tweener = crossFade.DOFade(1f, duration);
-        yield return tweener.WaitForCompletion();
+        if (crossFade != null)
+        {
+            var tweener = crossFade.DOFade(1f, duration);
+            yield return tweener.WaitForCompletion();
+        }
+        else
+        {
+            Debug.LogWarning("CanvasGroup is null, cannot perform transition in.");
+        }
     }
 
     public override IEnumerator AnimateTransitionOut()
     {
-        var tweener = crossFade.DOFade(0f, duration);
-        yield return tweener.WaitForCompletion();
+        if (crossFade != null)
+        {
+            var tweener = crossFade.DOFade(0f, duration);
+            yield return tweener.WaitForCompletion();
+        }
+        else
+        {
+            Debug.LogWarning("CanvasGroup is null, cannot perform transition out.");
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Cancela todos los tweens asociados con el objeto si el objeto se destruye
+        if (crossFade != null)
+        {
+            DOTween.Kill(crossFade);
+        }
     }
 }

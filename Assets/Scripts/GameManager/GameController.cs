@@ -33,6 +33,11 @@ public class GameController : MonoBehaviour, IDataPersistence
             DialogueManager.OnStartTBCombat += StartBattle;
         }
     }
+    void OnDestroy()
+    {
+        BattleSystem.OnBattleEnd -= EndBattle;
+        DialogueManager.OnStartTBCombat -= StartBattle;
+    }
     public void StartBattle()
     {
         state = GameState.TB;

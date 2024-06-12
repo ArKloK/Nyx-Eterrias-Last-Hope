@@ -97,7 +97,8 @@ namespace PlayerMovementController
             if (canMove && !isAttacking)
             {
                 HandleJump();
-                HandleDoubleJump();
+                if (doubleJumpUnlocked)
+                    HandleDoubleJump();
                 HandleWallSlide();
                 HandleWallJump();
                 HandleDirection();
@@ -123,7 +124,7 @@ namespace PlayerMovementController
         public void Jump(InputAction.CallbackContext context)
         {
             Debug.Log("Jump");
-            if (groundHit)
+            if (groundHit || IsWalled())
             {
                 if (context.started)
                 {
@@ -203,6 +204,7 @@ namespace PlayerMovementController
             if (_frameInput.JumpDown && wallJumpingCounter > 0)
             {
                 isWallJumping = true;
+                Debug.Log("Wall Jump");
             }
             #endregion
             #region Attack Input
@@ -336,7 +338,6 @@ namespace PlayerMovementController
 
         #region Wall Jump
 
-
         [Tooltip("The object used to check if the player is touching a wall")]
         public Transform WallCheck;
         private bool turnOnWallJump;
@@ -350,7 +351,7 @@ namespace PlayerMovementController
             if (isWallSliding)
             {
                 isWallJumping = false;
-                wallJumpingDirection = -transform.localScale.x;
+                wallJumpingDirection = transform.localScale.x;
                 wallJumpingCounter = Data.WallJumpingTime;
 
                 CancelInvoke(nameof(StopWallJumping));
@@ -389,6 +390,11 @@ namespace PlayerMovementController
         private bool IsWalled()
         {
             return Physics2D.OverlapCircle(WallCheck.position, Data.WallCheckRadius, Data.WallLayer);
+        }
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(WallCheck.position, Data.WallCheckRadius);
         }
         private void HandleWallSlide()
         {

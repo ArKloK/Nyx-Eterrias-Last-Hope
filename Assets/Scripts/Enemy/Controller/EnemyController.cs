@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
             PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
             if (playerController != null)
             {
-                playerController.TakeDamage(Data.AttackPower, other.GetContact(0).normal);
+                playerController.TakeDamage(other.GetContact(0).normal);
 
                 Debug.Log("Player took damage");
             }

@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         maxExperiencePoints = Data.BaseMaxExperiencePoints;
         currentLevel = 1;
 
-        //healthBar.SetMaxHealth(maxHealthPoints);
+        if (!TBDemo) healthBar.SetMaxHealth(maxHealthPoints);
     }
     void Start()
     {
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            TakeDamage(1);
+            TakeDamage();
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
         UpdateStaticStats();
@@ -138,6 +138,35 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     public void TakeDamage(int damage, Vector2 knockbackDirection)
     {
         currentHealthPoints -= damage;
+        healthBar.SetHealth(currentHealthPoints);
+        if (currentHealthPoints <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            StartCoroutine(LoseControl());
+            StartCoroutine(DisableCollider());
+            playerMovementController.KnockBack(knockbackDirection);
+        }
+    }
+    public void TakeDamage()
+    {
+        float damage = Mathf.Ceil(maxHealthPoints * 0.1f);
+        Debug.Log("Player took damage: " + damage);
+        currentHealthPoints -= (int)damage;
+        healthBar.SetHealth(currentHealthPoints);
+        if (currentHealthPoints <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void TakeDamage(Vector2 knockbackDirection)
+    {
+        float damage = Mathf.Ceil(maxHealthPoints * 0.1f);
+        Debug.Log("Player took damage: " + damage);
+        currentHealthPoints -= (int)damage;
         healthBar.SetHealth(currentHealthPoints);
         if (currentHealthPoints <= 0)
         {

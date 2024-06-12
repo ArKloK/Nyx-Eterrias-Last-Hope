@@ -66,6 +66,7 @@ public class DialogueManager : MonoBehaviour
                 foreach (EnemyMovementController enemy in FindObjectsByType<EnemyMovementController>(FindObjectsSortMode.None))
                 {
                     enemy.CanMove = false;
+                    enemy.IsDialogueActive = true;
                 }
 
             }
