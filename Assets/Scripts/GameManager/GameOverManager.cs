@@ -33,9 +33,9 @@ public class GameOverManager : MonoBehaviour
 
     private void HandleRestartButtonClicked()
     {
-        Vector3 respawnPoint = RespawnController.instance.respawnPoint.position;
+        Vector3 respawnPoint = RespawnController.Instance.respawnPoint.position;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        player.transform.position = RespawnController.instance.respawnPoint.position;
+        player.transform.position = RespawnController.Instance.respawnPoint.position;
         gameOverPanel.SetActive(false);
         player.SetActive(true);
         player.GetComponent<PlayerController>().setmaxHealthPoints();

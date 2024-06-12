@@ -15,7 +15,10 @@ public class CheckPoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            RespawnController.instance.respawnPoint = this.transform;
+            RespawnController.Instance.respawnPoint = this.transform;
+            RespawnController.Instance.PlayerHealth = PlayerStats.CurrentHealthPoints;
+            RespawnController.Instance.PlayerLevel = PlayerStats.CurrentLevel;
+            RespawnController.Instance.PlayerExperience = PlayerStats.CurrentExperiencePoints;
             boxCollider2D.enabled = false;
         }
     }

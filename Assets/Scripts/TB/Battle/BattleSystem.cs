@@ -511,6 +511,7 @@ public class BattleSystem : MonoBehaviour
         {
             animator.Play("PlayerFaint");
             yield return new WaitForSeconds(GetAnimationDuration("PlayerFaint"));
+            RespawnController.Instance.SetPlayerStats();
         }
 
         state = BattleState.BATTLEOVER;
