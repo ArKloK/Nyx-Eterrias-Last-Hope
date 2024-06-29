@@ -27,6 +27,7 @@ public class EnemyMovementController : MonoBehaviour
     int currentWaypoint = 0;
 
     Seeker seeker;
+    private bool facingRight;
 
     public float Speed { get => standardSpeed; set => standardSpeed = value; }
     public bool CanMove { get => canMove; set => canMove = value; }
@@ -49,6 +50,15 @@ public class EnemyMovementController : MonoBehaviour
 
     void Update()
     {
+        if (rb.velocity.x > 0 && !facingRight)
+        {
+            Flip();
+        }
+        // Otherwise, if the enemy is moving left and is currently facing right, flip
+        else if (rb.velocity.x < 0 && facingRight)
+        {
+            Flip();
+        }
         if (canMove) CheckTarget();
         if (GetComponent<EnemyController>().CurrentHealthPoints <= GetComponent<EnemyController>().Data.MaxHealthPoints / 2)
         {
@@ -60,6 +70,17 @@ public class EnemyMovementController : MonoBehaviour
             runAway = false;
             rb.gravityScale = 0f;
         }
+    }
+
+    private void Flip()
+    {
+        // Switch the way the enemy is labelled as facing.
+        facingRight = !facingRight;
+
+        // Multiply the enemy's x local scale by -1.
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
     void FixedUpdate()
@@ -161,7 +182,7 @@ public class EnemyMovementController : MonoBehaviour
         {
             force = direction * standardSpeed * Time.deltaTime;
             rb.velocity = force;
-        }        
+        }
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 

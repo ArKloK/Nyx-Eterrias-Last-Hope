@@ -105,6 +105,7 @@ namespace PlayerMovementController
             }
             else if ((!canMove && isDialogueActive) || isAttacking) //If the player can´t move, just apply gravity and stop the player
             {
+                _frameInput.Move = Vector2.zero;
                 _frameVelocity = new Vector2(0, _frameVelocity.y);
             }
 
@@ -391,11 +392,11 @@ namespace PlayerMovementController
         {
             return Physics2D.OverlapCircle(WallCheck.position, Data.WallCheckRadius, Data.WallLayer);
         }
-        void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(WallCheck.position, Data.WallCheckRadius);
-        }
+        // void OnDrawGizmos()
+        // {
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawWireSphere(WallCheck.position, Data.WallCheckRadius);
+        // }
         private void HandleWallSlide()
         {
             if (IsWalled() && !_grounded)

@@ -104,6 +104,14 @@ public class DialogueManager : MonoBehaviour
 
         DisplayNextLine();
     }
+    public IEnumerator EnqueueDialogueFromInvoke(Dialogue dialogue)
+    {
+        foreach (DialogueLine line in dialogue.lines)
+        {
+            lines.Enqueue(line);
+        }
+        yield return null;
+    }
 
     public void EnqueueDialogue(Dialogue dialogue)
     {

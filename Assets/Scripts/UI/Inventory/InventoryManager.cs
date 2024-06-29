@@ -88,15 +88,16 @@ public class InventoryManager : MonoBehaviour
     }
     public void ConsumeItem()
     {
-        int currentHealthPoints, currentSpiritualEnergyPoints;
+        int currentHealthPoints;
         currentHealthPoints = PlayerStats.CurrentHealthPoints += currentSlot.Item.ItemData.HealthBoost;
-        currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints += currentSlot.Item.ItemData.SpiritualEnergyBoost;
         Debug.Log("Using " + currentSlot.Item.ItemData.ItemName);
 
         // Clamp the health and spiritual energy points to their maximum values in case a max boost potion is used
+        Debug.Log("Player stats Max health points: " + PlayerStats.MaxHealthPoints);
         PlayerStats.CurrentHealthPoints = Mathf.Clamp(currentHealthPoints, 0, PlayerStats.MaxHealthPoints);
-        PlayerStats.CurrentSpiritualEnergyPoints = Mathf.Clamp(currentSpiritualEnergyPoints, 0, PlayerStats.MaxSpiritualEnergyPoints);
         //--------------------------------
+
+        Debug.Log("Player Stats 2 current health points: " + PlayerStats.CurrentHealthPoints);
 
         PlayerStats.AttackPower += currentSlot.Item.ItemData.AttackBoost;
         FindFirstObjectByType <PlayerController>().SetLocalStats();

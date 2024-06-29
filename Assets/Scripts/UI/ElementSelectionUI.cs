@@ -60,7 +60,8 @@ public class ElementSelectionUI : MonoBehaviour
                 }
             );
             //Assign the element to the player
-            PlayerStats.Element = (Element)currentSelection+1;
+            PlayerStats.Element = (Element)currentSelection + 1;
+            UpdateLearnableMoves();
             DialogueManager.Instance.EnqueueDialogue(selectingElementDIalogue);
         }
     }
@@ -78,5 +79,31 @@ public class ElementSelectionUI : MonoBehaviour
                 elementTexts[i].color = Color.black;
             }
         }
+    }
+
+    void UpdateLearnableMoves()
+    {
+        List<LearnableMove> learnableMoves = new List<LearnableMove>();
+        if (PlayerStats.Element == Element.Fire)
+        {
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Heat Hit"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Intimidate"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Tailwind"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Burn"));
+        }
+        else if (PlayerStats.Element == Element.Water)
+        {
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Aqua Shoot"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Robust Defense"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Slow Tempo"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Soak"));
+        }else if (PlayerStats.Element == Element.Grass)
+        {
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Roots Power"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Robust Defense"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Tailwind"));
+            learnableMoves.Add(PlayerStats.LearnableMoves.Find(x => x.MoveData.MoveName == "Poison"));
+        }
+        PlayerStats.LearnableMoves = learnableMoves;
     }
 }

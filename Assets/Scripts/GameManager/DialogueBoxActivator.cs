@@ -18,7 +18,14 @@ public class DialogueBoxActivator : MonoBehaviour
     public void TriggerDialogue(Dialogue dialogue)
     {
         PauseMenuController.canPause = false;
-        dialogueBox.SetActive(true);
-        StartCoroutine(DialogueManager.Instance.StartDialogue(dialogue));
+        if (dialogueBox.activeSelf)
+        {
+            StartCoroutine(DialogueManager.Instance.EnqueueDialogueFromInvoke(dialogue));
+        }
+        else
+        {
+            dialogueBox.SetActive(true);
+            StartCoroutine(DialogueManager.Instance.StartDialogue(dialogue));
+        }
     }
 }
