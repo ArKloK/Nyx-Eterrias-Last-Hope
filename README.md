@@ -1,90 +1,50 @@
-<h1><em>📜 2D Video Game with AI Applied to NPCs</em></h1>
+<h1><em>📜 2D Video Game with AI Applied to NPCs</em></h1> 
 
-<p align="left">
-   <img src="https://img.shields.io/badge/STATUS-EN%20DESAROLLO-green">
-   </p>
-
-<h2>🎮 Descripción General</h2>
+<p align="left"> <img src="https://img.shields.io/badge/STATUS-IN%20DEVELOPMENT-green"> </p>
 
 
-Este es un videojuego en 2D que combina dos géneros clásicos: plataformas y combate por turnos. El objetivo principal es que el jugador avance a través de distintos niveles, enfrentándose a enemigos controlados por IA, que ofrecen un desafío tanto en el entorno de plataformas como en los combates estratégicos por turnos.
+<h2>🎮 General Description</h2>
+This is a 2D video game that combines two classic genres: platformer and turn-based combat. The main objective is for the player to advance through various levels, facing AI-controlled enemies that offer a challenge both in the platform environment and in strategic turn-based combat.
 
-El proyecto fue desarrollado utilizando el motor Unity y hace uso de varias técnicas de Inteligencia Artificial (IA) para controlar el comportamiento de los NPCs (personajes no jugables). Esto proporciona al juego una experiencia dinámica y desafiante, ya que los enemigos responden a las acciones del jugador de manera adaptativa.
+The project was developed using the Unity engine and utilizes several Artificial Intelligence (AI) techniques to control NPC (non-playable character) behavior. This provides the game with a dynamic and challenging experience, as enemies adapt to the player’s actions.
 
+<h2>📂 Project Structure</h2> <li>Assets/: Contains all the necessary resources for the game, including scripts, graphics, sounds, and other multimedia elements.</li> <li>Scenes/: Contains the different game scenes, including turn-based combat and platformer levels.</li> <li>Scripts/: Contains the AI scripts and other game components.</li> <li>Prefabs/: Reusable templates for objects like enemies, platforms, and other interactive game elements.</li> <h2>🧠 Implemented AI</h2>
+The game employs two main types of AI for the enemies:
 
-<h2>📂 Estructura del Proyecto</h2>
+<h3>1 - Platformer Enemy AI</h3>
+This AI manages the behavior of enemies in the platformer levels. Enemies patrol, chase, and attack the player according to a set of predefined rules. The AI components used are:
 
+Finite State Machine (FSM):
 
-<li>Assets/: Contiene todos los recursos necesarios para el juego, incluidos los scripts, gráficos, sonidos y otros elementos multimedia.</li>
+Controls the behavior of enemies through various states such as patrolling, chasing, and attacking. Enemies switch between states based on the player’s actions and the environment.
 
-<li>Scenes/: Aquí se encuentran las distintas escenas del juego, incluidas las de combate por turnos y los niveles de plataformas.</li>
+Implementation: An FSM is used to efficiently handle state transitions and ensure that enemies behave in a predictable but challenging way.
 
-<li>Scripts/: Contiene los scripts de IA y otros componentes del juego.</li>
+Pathfinding Algorithm:
 
-<li>Prefabs/: Plantillas reutilizables para objetos como enemigos, plataformas y otros elementos interactivos del juego.</li>
+Enemies in platformer levels use the A* algorithm to navigate the level and find the player.
 
+Implementation: The A* algorithm allows enemies to find the optimal path to the player, avoiding obstacles and making efficient movement decisions.
 
-<h2>🧠 IA Implementada</h2>
+Fuzzy Logic:
 
-El juego emplea dos tipos principales de IA para los enemigos en el juego:
+This system is used to adjust enemy behavior depending on the situation. For example, if an enemy’s health is low, it might decide to flee or become more aggressive.
 
-<h3>1 - IA de Enemigos en Plataformas.</h3> 
+Implementation: Based on logical rules that allow more "human-like" and adaptive decisions depending on the state of the enemy and the player.
 
-Esta IA se encarga del comportamiento de los enemigos en los niveles de plataformas. Los enemigos patrullan, persiguen y atacan al jugador de acuerdo con una serie de reglas predefinidas. Los componentes de IA utilizados son:
+<h3>2 - Turn-Based Combat Enemy AI</h3>
+In turn-based encounters, the enemy AI follows a more strategic logic:
 
-***Máquina de Estados Finita (FSM):***
+Reinforcement Learning:
 
-Controla el comportamiento de los enemigos a través de varios estados como patrullar, perseguir y atacar. Los enemigos cambian de estado según las acciones del jugador y el entorno.
+Enemies learn through rewards and punishments. Each decision made by the enemy is evaluated with a reward that helps improve its performance in future battles.
 
-Implementación: Se utiliza una FSM para manejar las transiciones de estado de manera eficiente y asegurarse de que los enemigos actúen de manera predecible pero desafiante.
+Implementation: The enemy learns the best actions during combat, evaluating whether it is better to attack, defend, or use a special ability.
 
-***Algoritmo de Búsqueda de Caminos (Pathfinding):***
+Heuristic-Based Decision Making:
 
-Los enemigos en las plataformas utilizan el algoritmo A* para navegar por el nivel y encontrar al jugador.
+In addition to learning, a set of heuristics is employed to guide the AI’s decisions. For example, attacking the player when their health is low or applying a status effect when deemed appropriate.
 
-Implementación: El algoritmo A* permite a los enemigos encontrar el camino óptimo hacia el jugador, evitando obstáculos y tomando decisiones de movimiento eficientes.
+Implementation: These rules ensure that the enemy acts in a consistent and logical manner based on the current state of the battle.
 
-***Lógica Difusa (Fuzzy Logic):***
-
-Este sistema se utiliza para ajustar el comportamiento de los enemigos dependiendo de la situación. Por ejemplo, si la vida del enemigo es baja, puede decidir huir o ser más agresivo.
-
-Implementación: Basado en reglas lógicas que permiten decisiones más "humanas" y adaptativas según el estado del enemigo y del jugador.
-
-<h3>2 - IA de Enemigos en Combate por Turnos.</h3>
-        
-En los enfrentamientos por turnos, la IA de los enemigos sigue una lógica más estratégica:
-
-***Aprendizaje por Refuerzo (Reinforcement Learning):***
-
-Los enemigos aprenden a través de recompensas y castigos. Cada decisión que toma el enemigo es evaluada con una recompensa que le ayuda a mejorar en futuras batallas.
-
-Implementación: El enemigo puede aprender las mejores acciones durante el combate, evaluando si es mejor atacar, defenderse o utilizar alguna habilidad especial.
-
-***Toma de Decisiones Basada en Heurísticas:***
-
-Además del aprendizaje, se emplea un conjunto de heurísticas para guiar las decisiones de la IA. Por ejemplo, atacar al jugador cuando su salud es baja o aplicarle una alteración de estado si lo ve oportuno.
-
-Implementación: Estas reglas aseguran que el enemigo actúe de manera coherente y lógica, basándose en el estado actual de la batalla.
-
-
-<h2>🎯 Objetivos del Proyecto</h2>
-
-
-<li>Desarrollar un videojuego 2D que combine plataformas y combate por turnos, brindando una experiencia variada al jugador.</li>
-
-<li>Aplicar técnicas de IA para controlar el comportamiento de los enemigos, haciendo que el juego sea dinámico y adaptable a las acciones del jugador.</li>
-
-<li>Proporcionar un sistema de combate táctico por turnos, donde cada decisión del jugador puede influir en el resultado de la batalla.</li>
-
-<li>Crear un sistema de plataformas fluido y desafiante, utilizando IA para los enemigos que naveguen inteligentemente por el entorno.</li>
-
-
-<h2>🛠️ Tecnologías Utilizadas</h2>
-
-<li>Unity: Motor principal para el desarrollo del videojuego.</li>
-
-<li>C#: Lenguaje de programación utilizado para los scripts y la lógica del juego.</li>
-
-<li>ML-Agents: Herramienta utilizada para implementar la IA basada en aprendizaje por refuerzo.</li>
-
-<li>A Pathfinding Project*: Utilizado para el algoritmo de búsqueda de caminos de los enemigos en plataformas.</li>
+<h2>🎯 Project Objectives</h2> <li>Develop a 2D video game that combines platforming and turn-based combat, offering a varied experience to the player.</li> <li>Apply AI techniques to control enemy behavior, making the game dynamic and adaptable to the player’s actions.</li> <li>Provide a tactical turn-based combat system where every decision made by the player can influence the outcome of the battle.</li> <li>Create a fluid and challenging platformer system, utilizing AI for enemies to intelligently navigate the environment.</li> <h2>🛠️ Technologies Used</h2> <li>Unity: Main engine for the video game development.</li> <li>C#: Programming language used for scripts and game logic.</li> <li>ML-Agents: Tool used to implement AI based on reinforcement learning.</li> <li>A* Pathfinding Project: Used for the pathfinding algorithm of the platformer enemies.</li>
