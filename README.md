@@ -14,19 +14,20 @@ The game employs two main types of AI for the enemies:
 <h3>1 - Platformer Enemy AI</h3>
 This AI manages the behavior of enemies in the platformer levels. Enemies patrol, chase, and attack the player according to a set of predefined rules. The AI components used are:
 
-Finite State Machine (FSM):
+
+<h4>Finite State Machine (FSM):</h4>
 
 Controls the behavior of enemies through various states such as patrolling, chasing, and attacking. Enemies switch between states based on the player’s actions and the environment.
 
 Implementation: An FSM is used to efficiently handle state transitions and ensure that enemies behave in a predictable but challenging way.
 
-Pathfinding Algorithm:
+<h4>Pathfinding Algorithm:</h4>
 
 Enemies in platformer levels use the A* algorithm to navigate the level and find the player.
 
 Implementation: The A* algorithm allows enemies to find the optimal path to the player, avoiding obstacles and making efficient movement decisions.
 
-Fuzzy Logic:
+<h4>Fuzzy Logic:</h4>
 
 This system is used to adjust enemy behavior depending on the situation. For example, if an enemy’s health is low, it might decide to flee or become more aggressive.
 
@@ -35,13 +36,13 @@ Implementation: Based on logical rules that allow more "human-like" and adaptive
 <h3>2 - Turn-Based Combat Enemy AI</h3>
 In turn-based encounters, the enemy AI follows a more strategic logic:
 
-Reinforcement Learning:
+<h4>Reinforcement Learning:</h4>
 
 Enemies learn through rewards and punishments. Each decision made by the enemy is evaluated with a reward that helps improve its performance in future battles.
 
 Implementation: The enemy learns the best actions during combat, evaluating whether it is better to attack, defend, or use a special ability.
 
-Heuristic-Based Decision Making:
+<h4>Heuristic-Based Decision Making:</h4>
 
 In addition to learning, a set of heuristics is employed to guide the AI’s decisions. For example, attacking the player when their health is low or applying a status effect when deemed appropriate.
 
