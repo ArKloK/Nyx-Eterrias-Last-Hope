@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EnemyData
   m_EditorClassIdentifier: 
   MaxHealthPoints: 5
-  ExperiencePoints: 4
+  ExperiencePoints: 20
   AttackPower: 1

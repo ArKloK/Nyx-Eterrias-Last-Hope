@@ -15,7 +15,7 @@ MonoBehaviour:
   ItemName: Potion
   ConditionID: 0
   ItemSprite: {fileID: -5613877833462332727, guid: 6a06a9c9ee755804a8314192f34cb795, type: 3}
-  ItemDescription: A poison that heals you
+  ItemDescription: A potion that heals you
   HealthBoost: 10
   AttackBoost: 0
   SpiritualEnergyBoost: 0

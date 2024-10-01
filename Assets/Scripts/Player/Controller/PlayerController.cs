@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class PlayerEventArgs : EventArgs
@@ -16,8 +17,9 @@ public class PlayerEventArgs : EventArgs
 public class PlayerController : MonoBehaviour, IDataPersistence
 {
     [Header("Script References")]
-    public PlayerControllerData Data;
-    public HealthBar healthBar;
+    [SerializeField] PlayerControllerData Data;
+    [SerializeField] HealthBar healthBar;
+    [SerializeField] ExperienceBar experienceBar;
     private PlayerMovementController.PlayerMovementController playerMovementController;
     [SerializeField] TBCharacterData tBCharacterData;
 
@@ -50,6 +52,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     private int currentExperiencePoints;
     private int maxExperiencePoints;
     private int currentLevel;
+    [SerializeField] TextMeshProUGUI levelText;
     #endregion
 
     #region Events
@@ -73,7 +76,13 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         maxExperiencePoints = Data.BaseMaxExperiencePoints;
         currentLevel = 1;
 
-        if (!TBDemo) healthBar.SetMaxHealth(maxHealthPoints);
+        if (!TBDemo)
+        {
+            healthBar.SetMaxHealth(maxHealthPoints);
+            experienceBar.SetMaxExperience(maxExperiencePoints);
+            experienceBar.SetExperience(currentExperiencePoints);
+            levelText.text = currentLevel.ToString();
+        }
     }
     void Start()
     {
@@ -108,7 +117,7 @@ public class PlayerController : MonoBehaviour, IDataPersistence
             TakeDamage();
             Debug.Log("Player took damage, current health: " + currentHealthPoints);
         }
-        UpdateStaticStats();
+        if (!TBDemo) UpdateStaticStats();
     }
 
     public void Attack()
@@ -206,11 +215,27 @@ public class PlayerController : MonoBehaviour, IDataPersistence
     #region Level Methods
     private void HandleExperienceChanged(int amount)
     {
-        currentExperiencePoints += amount;
-        if (currentExperiencePoints >= maxExperiencePoints)
+        int leftoverExp = amount;
+
+        while (leftoverExp > 0)
         {
-            LevelUp();
+            Debug.Log("Amount: " + amount);
+            int experienceNeeded = maxExperiencePoints - currentExperiencePoints;
+            Debug.Log("Experience needed: " + experienceNeeded);
+
+            if (leftoverExp >= experienceNeeded)
+            {
+                leftoverExp -= experienceNeeded;
+                LevelUp();
+            }
+            else
+            {
+                currentExperiencePoints += leftoverExp;
+                leftoverExp = 0;
+            }
         }
+
+        experienceBar.SetExperience(currentExperiencePoints);
     }
 
     private void LevelUp()
@@ -218,12 +243,14 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentLevel++;
         currentExperiencePoints = 0;
         maxExperiencePoints += 10;
-        maxHealthPoints += 10;
-        maxSpriritualEnergyPoints += 10;
+        maxHealthPoints = Data.MaxHealthPoints * currentLevel;
         currentHealthPoints = maxHealthPoints;
         currentSpiritualEnergyPoints = maxSpriritualEnergyPoints;
         UpdateStaticStats();//Updates the static stats when the player levels up
         healthBar.SetMaxHealth(maxHealthPoints);
+        experienceBar.SetMaxExperience(maxExperiencePoints);
+        experienceBar.SetExperience(currentExperiencePoints);
+        levelText.text = currentLevel.ToString();
         OnPlayerLevelUp?.Invoke();
         Debug.Log("Current HP: " + currentHealthPoints);
         Debug.Log("Player leveled up to level " + currentLevel);
@@ -270,7 +297,6 @@ public class PlayerController : MonoBehaviour, IDataPersistence
 
     public void SetLocalStats()
     {
-
         maxHealthPoints = PlayerStats.MaxHealthPoints;
         currentHealthPoints = PlayerStats.CurrentHealthPoints;
         TBattackPower = PlayerStats.TBAttackPower;
@@ -282,7 +308,11 @@ public class PlayerController : MonoBehaviour, IDataPersistence
         currentLevel = PlayerStats.CurrentLevel;
         maxSpriritualEnergyPoints = PlayerStats.MaxSpiritualEnergyPoints;
         currentSpiritualEnergyPoints = PlayerStats.CurrentSpiritualEnergyPoints;
-        if (!TBDemo) healthBar.SetHealth(currentHealthPoints);
+        if (!TBDemo)
+        {
+            healthBar.SetHealth(currentHealthPoints);
+            experienceBar.SetExperience(currentExperiencePoints);
+        }
     }
 
     public void LoadData(GameData gameData)

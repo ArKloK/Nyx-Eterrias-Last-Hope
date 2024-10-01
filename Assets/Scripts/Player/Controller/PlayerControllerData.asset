@@ -16,12 +16,11 @@ MonoBehaviour:
   MaxHealthPoints: 8
   MaxSpiritualEnergyPoints: 5
   AttackPower: 1
-  AttackSpeed: 0.5
-  AttackRadius: 8
+  AttackRadius: 13
   EnemyMask:
     serializedVersion: 2
     m_Bits: 256
-  BaseMaxExperiencePoints: 4
+  BaseMaxExperiencePoints: 5
   LoseControlTime: 0.2
   InvincibleTime: 0.55
   TBAttackPower: 15

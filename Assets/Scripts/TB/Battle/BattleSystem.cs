@@ -73,17 +73,19 @@ public class BattleSystem : MonoBehaviour
     }
     public void HandleUpdate()
     {
+        PlayerStats.MaxHealthPoints = playerUnit.Character.MaxHp;
+        Debug.Log("Player max health points: " + PlayerStats.MaxHealthPoints);
         if (state == BattleState.PLAYERACTION)
         {
             HandleActionSelection();
         }
         else if (state == BattleState.PLAYERMOVE)
         {
-            // if (Input.GetKeyDown(KeyCode.Escape) && !playerControlledByAI)
-            // {
-            //     dialogueBox.EnableMoveSelector(false);
-            //     PlayerAction();
-            // }
+            if (Input.GetKeyDown(KeyCode.Escape) && !playerControlledByAI)
+            {
+                dialogueBox.EnableMoveSelector(false);
+                PlayerAction();
+            }
             if (playerUnit.Character.Moves.Count > 0)
                 HandleMoveSelection();
         }
@@ -500,7 +502,9 @@ public class BattleSystem : MonoBehaviour
     public IEnumerator EndBattle(bool playerWon)
     {
         PlayerStats.CurrentHealthPoints = playerUnit.Character.CurrentHP;
+        dialogueBox.ClearDialogueText();
         //This will add experience to the player if he wins the battle
+
         if (playerWon && !TBDemo)
         {
             animator.Play("EnemyFaint");
@@ -514,7 +518,9 @@ public class BattleSystem : MonoBehaviour
             RespawnController.Instance.SetPlayerStats();
         }
 
+        StopAllCoroutines();
         state = BattleState.BATTLEOVER;
+
         playerUnit.Character.ResetStatBoosts();
         enemyUnit.Character.ResetStatBoosts();
         OnBattleEnd?.Invoke(playerWon);

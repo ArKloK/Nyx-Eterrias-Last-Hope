@@ -26,11 +26,6 @@ public class TBDialogueBox : MonoBehaviour
 
     void Update()
     {
-        // if(PlayerControlledByAI)
-        // {
-        //     typingSpeed = 0.0001f;
-        //     return;
-        // }
         if (PlayerPrefs.HasKey("TextVelocity"))
         {
             int dbTextVelocity = PlayerPrefs.GetInt("TextVelocity");
@@ -51,6 +46,10 @@ public class TBDialogueBox : MonoBehaviour
         {
             typingSpeed = 0.05f;
         }
+    }
+    public void ClearDialogueText()
+    {
+        dialogueText.text = "";
     }
 
     public IEnumerator TypeDialogueTB(string dialogue)
