@@ -178,7 +178,10 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemigo volador camacho copia_0: -1018101193399818862
+      enemigo volador camacho copia_1: 5090163411465645992
+      enemigo volador camacho copia_2: 3791931560975799937
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -63,7 +63,7 @@ public class EnemyMovementController : MonoBehaviour
         if (GetComponent<EnemyController>().CurrentHealthPoints <= GetComponent<EnemyController>().Data.MaxHealthPoints / 2)
         {
             runAway = true;
-            rb.gravityScale = 1f;
+            //rb.gravityScale = -9f;
         }
         else
         {
@@ -174,9 +174,16 @@ public class EnemyMovementController : MonoBehaviour
         Vector2 force;
         if (currentTarget == Playertarget)
         {
-            force = direction * speed * 2 * Time.deltaTime;
-            if (runAway) force *= -1;
-            rb.AddForce(force);
+            force = direction * speed * Time.deltaTime;
+            if (runAway) 
+            {
+                force.x *= -1;
+                if (force.y > 0)
+                {
+                    force.y *= -1;
+                }
+            }
+            rb.velocity = force;
         }
         else
         {

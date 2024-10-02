@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FuzzyLogic : MonoBehaviour
@@ -25,7 +23,7 @@ public class FuzzyLogic : MonoBehaviour
 
     void Start()
     {
-        SLOW = 1000; MEDIUM = 2000; FAST = 3000;
+        SLOW = 1200; MEDIUM = 2200; FAST = 3200;
         SetRules();
         setCurvesValues();
     }
