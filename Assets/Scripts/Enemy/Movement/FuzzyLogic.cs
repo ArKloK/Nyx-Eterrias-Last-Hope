@@ -88,7 +88,7 @@ public class FuzzyLogic : MonoBehaviour
             result[2] = playerHighLevel.Evaluate(playerLevel);
         }
 
-        Debug.Log("Player Level: " + result[0] + " " + result[1] + " " + result[2]);
+        // Debug.Log("Player Level: " + result[0] + " " + result[1] + " " + result[2]);
         return result;
     }
 
@@ -104,7 +104,7 @@ public class FuzzyLogic : MonoBehaviour
             result[2] = enemyHighHealth.Evaluate(enemyHealth);
         }
 
-        Debug.Log("Enemy Health: " + result[0] + " " + result[1] + " " + result[2]);
+        // Debug.Log("Enemy Health: " + result[0] + " " + result[1] + " " + result[2]);
         return result;
     }
 

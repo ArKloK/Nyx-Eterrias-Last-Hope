@@ -3,13 +3,17 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
-using Unity.VisualScripting;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] EventSystem eventSystem;
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] Image darkOverlay;
     [SerializeField] TMP_Dropdown textVelocityDropdown;
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject settingsMenu;
 
     [Header("Sliders")]
     [SerializeField] Slider brightnessSlider;
@@ -19,6 +23,14 @@ public class MainMenu : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button newGameButton;
     [SerializeField] private Button loadGameButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button quitGameButton;
+
+    void Awake()
+    {
+        InputManager.EnableUIInput();
+        InputManager.PlayerInputActions.UI.Cancel.started += Cancel;
+    }
 
     void Start()
     {
@@ -28,11 +40,16 @@ public class MainMenu : MonoBehaviour
         DontDestroyOnLoadScript.DestroyAll();
         if (DataPersistenceManager.Instance.HasGameData())
         {
-            loadGameButton.gameObject.SetActive(true);
+            loadGameButton.interactable = true;
+            newGameButton.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnDown = loadGameButton, selectOnUp = quitGameButton };
+            loadGameButton.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnUp = newGameButton, selectOnDown = settingsButton };
+            settingsButton.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnUp = loadGameButton, selectOnDown = quitGameButton };
         }
         else
         {
-            loadGameButton.gameObject.SetActive(false);
+            loadGameButton.interactable = false;
+            newGameButton.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnDown = settingsButton, selectOnUp = quitGameButton };
+            settingsButton.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnUp = newGameButton, selectOnDown = quitGameButton };
         }
     }
     void OnEnable()
@@ -127,6 +144,7 @@ public class MainMenu : MonoBehaviour
     }
     #endregion
     #region Text Velocity
+
     public void LoadTextVelocity()
     {
         if (PlayerPrefs.HasKey("TextVelocity"))
@@ -143,4 +161,24 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
     }
     #endregion
+
+    public void OpenSettingsMenu()
+    {
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(textVelocityDropdown.gameObject);
+    }
+    public void CloseSettingsMenu()
+    {
+        settingsMenu.SetActive(false);
+        mainMenu.SetActive(true);
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(settingsButton.gameObject);
+    }
+    public void Cancel(InputAction.CallbackContext context)
+    {
+        if (context.started && settingsMenu.activeSelf)
+        {
+            CloseSettingsMenu();
+        }
+    }
 }

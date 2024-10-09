@@ -5500,6 +5500,22 @@ PrefabInstance:
       propertyPath: doubleJumpUnlocked
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4088504629393177213, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4088504629393177213, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4088504629393177213, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionId
+      value: a39183ee-ed01-446f-be44-61d08e5dd371
+      objectReference: {fileID: 0}
+    - target: {fileID: 4088504629393177213, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionName
+      value: 'Player/PauseGame[/DualShock4GamepadHID/start,/XInputControllerWindows/start,/Keyboard/escape]'
+      objectReference: {fileID: 0}
     - target: {fileID: 4204290685412497858, guid: bf55c1823f46fba47877fe0a6c44006a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4
@@ -6053,6 +6069,10 @@ PrefabInstance:
       objectReference: {fileID: 641971188}
     - target: {fileID: 1964420242207586013, guid: 4684a2359610cea4e8d839bfd32a51dc, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3103726496461795092, guid: 4684a2359610cea4e8d839bfd32a51dc, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3141755674949689158, guid: 4684a2359610cea4e8d839bfd32a51dc, type: 3}

@@ -49,6 +49,8 @@ namespace PlayerMovementController
         #endregion
 
         #region Interface and Events
+        PlayerInputActions playerInputActions;
+        PlayerInput playerInput;
         public Vector2 FrameInput => _frameInput.Move;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
@@ -60,9 +62,25 @@ namespace PlayerMovementController
         {
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>();
+            playerInput = GetComponent<PlayerInput>();
             _isFacingRight = true;
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+
+            InputManager.EnablePlayerInput();
+            playerInputActions = InputManager.PlayerInputActions;
+
+            playerInputActions.Player.Dash.started += Dash;
+
+            playerInputActions.Player.Move.performed += Move;
+            playerInputActions.Player.Move.canceled += Move;
+
+            playerInputActions.Player.Jump.started += Jump;
+            playerInputActions.Player.Jump.performed += Jump;
+            playerInputActions.Player.Jump.canceled += Jump;
+
+            playerInputActions.Player.Attack.started += Attack;
+
         }
 
         private void Start()
@@ -120,11 +138,14 @@ namespace PlayerMovementController
         public void Move(InputAction.CallbackContext context)
         {
             if (canMove)
-                _frameInput.Move.x = context.ReadValue<Vector2>().x;
+            {
+                if (context.performed) _frameInput.Move.x = context.ReadValue<Vector2>().x;
+                else if (context.canceled) _frameInput.Move.x = 0;
+            }
+
         }
         public void Jump(InputAction.CallbackContext context)
         {
-            Debug.Log("Jump");
             if (groundHit || IsWalled())
             {
                 if (context.started)
@@ -152,8 +173,9 @@ namespace PlayerMovementController
         }
         public void Dash(InputAction.CallbackContext context)
         {
-            if (context.started && _canDash && canMove)
+            if (context.started && _canDash && canMove && InputManager.PlayerInputActions.Player.enabled)
             {
+                Debug.Log("Dash");
                 StartCoroutine(ExecuteDash());
             }
         }
@@ -550,10 +572,18 @@ namespace PlayerMovementController
         private void HandlePause()
         {
             canMove = false;
+            InputManager.EnableUIInput();
         }
         private void HandleResume()
         {
+            StartCoroutine(EnablePlayerInputWithDelay());
             canMove = true;
+        }
+
+        private IEnumerator EnablePlayerInputWithDelay()
+        {
+            yield return new WaitForSeconds(0.1f); // Un breve retraso para liberar inputs residuales
+            InputManager.EnablePlayerInput();
         }
         #endregion
 

@@ -4,26 +4,51 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseMenuController : MonoBehaviour
 {
-    private PlayerMovementController.PlayerMovementController playerMovementController;
-    public static bool canPause = true;
-    [SerializeField] static bool isPaused = false;
-    [SerializeField] GameObject pauseMenuUI;
-    [SerializeField] GameObject inventoryUI;
-    [SerializeField] Inventory inventory;
+    // Player Input Actions
+    private PlayerInputActions playerInputActions;
+
+    // Game State
+    private static bool canPause = true;
+    [SerializeField] private bool isPaused = false;
+
+    // UI References
+    [Header("UI References")]
+    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject inventoryUI;
+
+    // Inventory System
+    [Header("Inventory")]
+    [SerializeField] private Inventory inventory;
+
+    // Settings
     [Header("Settings")]
-    [SerializeField] AudioMixer audioMixer;
-    [SerializeField] Image darkOverlay;
-    [SerializeField] Slider brightnessSlider;
-    [SerializeField] Slider musicSlider;
-    [SerializeField] Slider sfxSlider;
-    [SerializeField] TMP_Dropdown textVelocityDropdown;
+    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private Image darkOverlay;
+    [SerializeField] private Slider brightnessSlider;
+    [SerializeField] private Slider musicSlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private TMP_Dropdown textVelocityDropdown;
+
+    // Properties
+    public static bool CanPause { get => canPause; set => canPause = value; }
+
+    // Events
     public static event Action OnPause;
     public static event Action OnResume;
+
+    void Awake()
+    {
+        playerInputActions = InputManager.PlayerInputActions;
+        playerInputActions.Player.PauseGame.started += PauseGame;
+        playerInputActions.UI.Submit.started += (callbackContext) => { Debug.Log("Submit"); };
+        playerInputActions.UI.Cancel.started += Cancel;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +56,6 @@ public class PauseMenuController : MonoBehaviour
         LoadVolume();
         LoadDarkOverlay();
         LoadTextVelocity();
-        playerMovementController = FindFirstObjectByType<PlayerMovementController.PlayerMovementController>();
     }
 
     void OnEnable()
@@ -47,33 +71,42 @@ public class PauseMenuController : MonoBehaviour
         ChangeDarkOverlay();
         UpdateMusicVolume();
         UpdateSFXVolume();
-        if (Input.GetKeyDown(KeyCode.Escape) && canPause)
+    }
+
+    public void PauseGame(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.started && CanPause)
+        {
+            if (!isPaused)
+            {
+                Pause();
+            }
+        }
+    }
+
+    public void Cancel(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.started && isPaused)
         {
             if (inventoryUI.activeSelf)
             {
                 inventoryUI.SetActive(false);
                 return;
             }
-            if (!isPaused)
-                Pause();
-            else
-                Resume();
+            Resume();
         }
     }
-
     public void Pause()
     {
         OnPause?.Invoke();
-        //Time.timeScale = 0f;
         isPaused = true;
         pauseMenuUI.SetActive(true);
     }
     public void Resume()
     {
-        OnResume?.Invoke();
-        //Time.timeScale = 1f;
         isPaused = false;
         pauseMenuUI.SetActive(false);
+        OnResume?.Invoke();
     }
     public void OpenInventory()
     {

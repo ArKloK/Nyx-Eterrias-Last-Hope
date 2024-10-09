@@ -186,7 +186,7 @@ public class DialogueManager : MonoBehaviour
                 enemy.CanMove = false;
             }
         }
-        PauseMenuController.canPause = true;
+        PauseMenuController.CanPause = true;
         isDialogueActive = false;
         dialogueText.text = "";
         animator.Play("Close");

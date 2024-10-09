@@ -169,7 +169,7 @@ public class EnemyMovementController : MonoBehaviour
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         speed = GetComponent<FuzzyLogic>().SetEnemySpeed();
-        Debug.Log("Speed: " + speed);
+        // Debug.Log("Speed: " + speed);
 
         Vector2 force;
         if (currentTarget == Playertarget)
