@@ -164,6 +164,8 @@ public class MainMenu : MonoBehaviour
 
     public void OpenSettingsMenu()
     {
+        mainMenu.SetActive(false);
+        settingsMenu.SetActive(true);
         eventSystem.SetSelectedGameObject(null);
         eventSystem.SetSelectedGameObject(textVelocityDropdown.gameObject);
     }
@@ -173,6 +175,9 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         eventSystem.SetSelectedGameObject(null);
         eventSystem.SetSelectedGameObject(settingsButton.gameObject);
+        SaveVolume();
+        SaveDarkOverlay();
+        SaveTextVelocity();
     }
     public void Cancel(InputAction.CallbackContext context)
     {

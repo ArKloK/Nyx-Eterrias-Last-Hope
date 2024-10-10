@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,13 +12,18 @@ public class PauseMenuController : MonoBehaviour
     // Player Input Actions
     private PlayerInputActions playerInputActions;
 
+    // Event System
+    [SerializeField] private EventSystem eventSystem;
+
     // Game State
     private static bool canPause = true;
-    [SerializeField] private bool isPaused = false;
+    private bool isPaused;
+    private bool isButtonPressed;
 
     // UI References
     [Header("UI References")]
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject settingsMenuUI;
     [SerializeField] private GameObject inventoryUI;
 
     // Inventory System
@@ -35,6 +39,12 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private TMP_Dropdown textVelocityDropdown;
 
+    // Buttons
+    [Header("Buttons")]
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button inventoryButton;
+    
+
     // Properties
     public static bool CanPause { get => canPause; set => canPause = value; }
 
@@ -46,7 +56,6 @@ public class PauseMenuController : MonoBehaviour
     {
         playerInputActions = InputManager.PlayerInputActions;
         playerInputActions.Player.PauseGame.started += PauseGame;
-        playerInputActions.UI.Submit.started += (callbackContext) => { Debug.Log("Submit"); };
         playerInputActions.UI.Cancel.started += Cancel;
     }
 
@@ -68,6 +77,7 @@ public class PauseMenuController : MonoBehaviour
     // Update is called once per frame
     public void HandleUpdate()
     {
+        ControlGamepadClick();
         ChangeDarkOverlay();
         UpdateMusicVolume();
         UpdateSFXVolume();
@@ -86,6 +96,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void Cancel(InputAction.CallbackContext callbackContext)
     {
+        if (textVelocityDropdown.IsExpanded) return;
         if (callbackContext.started && isPaused)
         {
             if (inventoryUI.activeSelf)
@@ -93,14 +104,38 @@ public class PauseMenuController : MonoBehaviour
                 inventoryUI.SetActive(false);
                 return;
             }
+            else if (settingsMenuUI.activeSelf)
+            {
+                CloseSettingsMenu();
+                return;
+            }
             Resume();
         }
+    }
+    public void OpenSettingsMenu()
+    {
+        pauseMenuUI.SetActive(false);
+        settingsMenuUI.SetActive(true);
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(textVelocityDropdown.gameObject);
+    }
+    public void CloseSettingsMenu()
+    {
+        settingsMenuUI.SetActive(false);
+        pauseMenuUI.SetActive(true);
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(settingsButton.gameObject);
+        SaveVolume();
+        SaveDarkOverlay();
+        SaveTextVelocity();
     }
     public void Pause()
     {
         OnPause?.Invoke();
         isPaused = true;
         pauseMenuUI.SetActive(true);
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(settingsButton.gameObject);
     }
     public void Resume()
     {
@@ -190,4 +225,20 @@ public class PauseMenuController : MonoBehaviour
         PlayerPrefs.SetInt("TextVelocity", textVelocityDropdown.value);
     }
     #endregion
+
+    void ControlGamepadClick()
+    {
+        if (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame)
+        {
+            if (!isButtonPressed)
+            {
+                eventSystem.enabled = false;
+            }
+        }
+
+        if (Gamepad.current.buttonSouth.wasReleasedThisFrame)
+        {
+            eventSystem.enabled = true;
+        }
+    }
 }
