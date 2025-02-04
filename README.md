@@ -1,4 +1,4 @@
-<h1><em>📜 2D Video Game with AI Applied to NPCs</em></h1> <p align="left"> <img src="https://img.shields.io/badge/STATUS-IN%20DEVELOPMENT-green"> </p> <h2>🎮 General Description</h2>
+<h1><em>📜 2D Video Game with AI Applied to NPCs</em></h1> <p align="left"> <img src="https://img.shields.io/badge/STATUS-FINISHED-red"> </p> <h2>🎮 General Description</h2>
 This is a 2D video game that combines two classic genres: platformer and turn-based combat. The main objective is for the player to advance through different levels, facing AI-controlled enemies that present a challenge both in the platforming environment and in strategic turn-based combat.
 
 The project was developed using the Unity engine and utilizes several Artificial Intelligence (AI) techniques to control the behavior of NPCs (non-playable characters). This provides the game with a dynamic and challenging experience, as enemies adapt to the player’s actions.
